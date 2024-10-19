@@ -1,15 +1,20 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.MoveDirection;
+
 public class World {
     private static void run(String[] args) {
-        for(String step : args)
-            if(step.length() == 1)
-                switch (step.charAt(0)) {
-                    case 'f' -> System.out.println("Zwierzak idzie do przodu");
-                    case 'b' -> System.out.println("Zwierzak idzie do tyłu");
-                    case 'r' -> System.out.println("Zwierzak skręca w prawo");
-                    case 'l' -> System.out.println("Zwierzak skręca w lewo");
-                };
+        MoveDirection steps[] = OptionsParser.parse(args);
+        for(MoveDirection step : steps) {
+            String message = switch (step) {
+                case MoveDirection.FORWARD  -> "Zwierzak idzie do przodu";
+                case MoveDirection.LEFT     -> "Zwierzak skręca w lewo";
+                case MoveDirection.BACKWARD -> "Zwierzak idzie do tyłu";
+                case MoveDirection.RIGHT    -> "Zwierzak skręca w prawo";
+                default                     -> "Nieznana komenda";
+            };
+            System.out.println(message);
+        }
     }
     public static void main(String[] args) {
         System.out.println("Start");
