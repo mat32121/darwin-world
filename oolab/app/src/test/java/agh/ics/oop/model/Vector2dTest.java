@@ -4,12 +4,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Vector2dTest {
-	@Test public void testToString() {
+	@Test
+	public void testToString() {
 		assertTrue((new Vector2d(1,-2)).toString().equals("(1,-2)"));
 		assertTrue((new Vector2d(-40,1)).toString().equals("(-40,1)"));
 	}
 
-	@Test public void testPrecedes() {
+	@Test
+	public void testPrecedes() {
 		final Vector2d first  = new Vector2d(1, 2);
 		final Vector2d second = new Vector2d(1, 1);
 		final Vector2d third  = new Vector2d(2, 1);
@@ -26,7 +28,8 @@ public class Vector2dTest {
 		assertFalse(third.precedes(second));
 	}
 
-	@Test public void testFollows() {
+	@Test
+	public void testFollows() {
 		final Vector2d first  = new Vector2d(1, 2);
 		final Vector2d second = new Vector2d(1, 1);
 		final Vector2d third  = new Vector2d(2, 1);
@@ -43,7 +46,8 @@ public class Vector2dTest {
 		assertTrue(third.follows(second));
 	}
 
-	@Test public void testAdd() {
+	@Test
+	public void testAdd() {
 		final Vector2d first  = new Vector2d(3, 7);
 		final Vector2d second = new Vector2d(1, 4);
 		final Vector2d sum    = new Vector2d(4, 11);
@@ -52,7 +56,8 @@ public class Vector2dTest {
 		assertTrue(second.add(first).equals(sum));
 	}
 
-	@Test public void testSubtract() {
+	@Test
+	public void testSubtract() {
 		final Vector2d first  = new Vector2d(3, 7);
 		final Vector2d second = new Vector2d(1, 4);
 		final Vector2d diffA  = new Vector2d(2, 3);
@@ -62,7 +67,8 @@ public class Vector2dTest {
 		assertTrue(second.subtract(first).equals(diffB));
 	}
 
-	@Test public void testUpperRight() {
+	@Test
+	public void testUpperRight() {
 		final Vector2d first  = new Vector2d(5, 11);
 		final Vector2d second = new Vector2d(7, 6);
 		final Vector2d uRight = new Vector2d(7, 11);
@@ -71,7 +77,8 @@ public class Vector2dTest {
 		assertTrue(second.upperRight(first).equals(uRight));
 	}
 
-	@Test public void testLowerLeft() {
+	@Test
+	public void testLowerLeft() {
 		final Vector2d first  = new Vector2d(5, 11);
 		final Vector2d second = new Vector2d(7, 6);
 		final Vector2d lLeft  = new Vector2d(5, 6);
@@ -80,7 +87,8 @@ public class Vector2dTest {
 		assertTrue(second.lowerLeft(first).equals(lLeft));
 	}
 
-	@Test public void testOpposite() {
+	@Test
+	public void testOpposite() {
 		final Vector2d vecA = new Vector2d(2, 3);
 		final Vector2d vecB = new Vector2d(-2, -3);
 		final Vector2d vecC = new Vector2d(2, -3);
@@ -90,7 +98,8 @@ public class Vector2dTest {
 		assertTrue(vecC.opposite().equals(vecD));
 	}
 
-	@Test public void testEquals() {
+	@Test
+	public void testEquals() {
 		final Vector2d vecA = new Vector2d(2, 3);
 		final Vector2d vecB = new Vector2d(2, 3);
 		final Vector2d vecC = new Vector2d(2, -3);

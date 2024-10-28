@@ -6,7 +6,7 @@ public enum MapDirection {
 	SOUTH("Południe", new Vector2d(0, -1)),
 	WEST("Zachód", new Vector2d(-1, 0));
 
-	private static final MapDirection[] valArray = values();
+	private static final MapDirection[] VAL_ARRAY = values();
 	private final String directionName;
 	private final Vector2d unitVector;
 
@@ -15,16 +15,17 @@ public enum MapDirection {
 		this.unitVector = unitVector;
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return this.directionName;
 	}
 
 	public MapDirection next() {
-		return valArray[(this.ordinal()+1)%valArray.length];
+		return VAL_ARRAY[(this.ordinal()+1)%VAL_ARRAY.length];
 	}
 
 	public MapDirection previous() {
-		return valArray[(this.ordinal()+valArray.length-1)%valArray.length];
+		return VAL_ARRAY[(this.ordinal()+VAL_ARRAY.length-1)%VAL_ARRAY.length];
 	}
 
 	public Vector2d toUnitVector() {

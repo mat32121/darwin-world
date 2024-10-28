@@ -13,7 +13,8 @@ public class Vector2d {
 	public int getX() {return this.x;}
 	public int getY() {return this.y;}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return "(%d,%d)".formatted(this.x, this.y);
 	}
 
@@ -47,17 +48,21 @@ public class Vector2d {
 		return new Vector2d(-this.x, -this.y);
 	}
 
-	@Override public boolean equals(Object other) {
+	@Override
+	public boolean equals(Object other) {
 		if(this == other)
 			return true;
-		if(!(other instanceof Vector2d))
+		if(other == null)
+			return false;
+		if(this.getClass() != other.getClass())
 			return false;
 		Vector2d that = (Vector2d)other;
 		return Objects.equals(this.x, that.x)
 			&& Objects.equals(this.y, that.y);
 	}
 
-	@Override public int hashCode() {
+	@Override
+	public int hashCode() {
 		return Objects.hash(this.x, this.y);
 	}
 }

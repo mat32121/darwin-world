@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import agh.ics.oop.model.MoveDirection;
 
 public class OptionsParserTest {
-	@Test public void testParse() {
+	@Test
+	public void testParse() {
 		final String orderStringA[] = {"f","l","b","r"};
 		final MoveDirection realParsedOrdersA[] = {
 			MoveDirection.FORWARD,
@@ -36,9 +37,9 @@ public class OptionsParserTest {
 		final MoveDirection parsedOrdersC[] = OptionsParser.parse(orderStringC);
 		final MoveDirection parsedOrdersD[] = OptionsParser.parse(orderStringD);
 
-		assertArrayEquals(parsedOrdersA, realParsedOrdersA);
-		assertArrayEquals(parsedOrdersB, realParsedOrdersB);
-		assertArrayEquals(parsedOrdersC, realParsedOrdersC);
-		assertArrayEquals(parsedOrdersD, realParsedOrdersD);
+		assertArrayEquals(realParsedOrdersA, parsedOrdersA);
+		assertArrayEquals(realParsedOrdersB, parsedOrdersB);
+		assertArrayEquals(realParsedOrdersC, parsedOrdersC);
+		assertArrayEquals(realParsedOrdersD, parsedOrdersD);
 	}
 }
