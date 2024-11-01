@@ -4,22 +4,26 @@ import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.MapDirection;
 
-public class World {
-    private static void run(MoveDirection[] steps) {
-        for(MoveDirection step : steps)
-            switch (step) {
-                case MoveDirection.FORWARD  -> System.out.println("Zwierzak idzie do przodu");
-                case MoveDirection.LEFT     -> System.out.println("Zwierzak skręca w lewo");
-                case MoveDirection.BACKWARD -> System.out.println("Zwierzak idzie do tyłu");
-                case MoveDirection.RIGHT    -> System.out.println("Zwierzak skręca w prawo");
-            };
-    }
+import agh.ics.oop.model.Animal;
 
-    public static void main(String[] args) {
-        System.out.println("Start");
-        MoveDirection steps[] = OptionsParser.parse(args);
-        run(steps);
-        System.out.println("Stop");
+import java.util.List;
+
+public class World {
+	private static void run(List<MoveDirection> steps) {
+		for(MoveDirection step : steps)
+			switch (step) {
+				case MoveDirection.FORWARD  -> System.out.println("Zwierzak idzie do przodu");
+				case MoveDirection.LEFT     -> System.out.println("Zwierzak skręca w lewo");
+				case MoveDirection.BACKWARD -> System.out.println("Zwierzak idzie do tyłu");
+				case MoveDirection.RIGHT    -> System.out.println("Zwierzak skręca w prawo");
+			};
+	}
+
+	public static void main(String[] args) {
+		System.out.println("Start");
+		List<MoveDirection> steps = OptionsParser.parse(args);
+		run(steps);
+		System.out.println("Stop");
 
 		Vector2d position1 = new Vector2d(1,2);
 		System.out.println(position1);
@@ -33,5 +37,13 @@ public class World {
 			System.out.println(direction1.toUnitVector());
 			direction1 = direction1.next();
 		}
-    }
+
+		Animal animal = new Animal();
+		System.out.println(animal.toString());
+
+		List<MoveDirection> directions = OptionsParser.parse(args);
+		List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
+		Simulation simulation = new Simulation(positions, directions);
+		simulation.run();
+	}
 }
