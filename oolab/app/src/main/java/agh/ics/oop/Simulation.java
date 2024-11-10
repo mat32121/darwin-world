@@ -6,6 +6,7 @@ import agh.ics.oop.model.Vector2d;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 public class Simulation {
 	private List<Animal> animals;
@@ -21,11 +22,11 @@ public class Simulation {
 	public void run() {
 		for(int i = 0; i < moves.size(); ++i) {
 			this.animals.get(i%animals.size()).move(moves.get(i));
-			System.out.println("Zwierzę %d: %s".formatted(i%animals.size()+1, this.animals.get(i%animals.size()).toString()));
+			System.out.println("Zwierzę %d: %s".formatted(i%animals.size()+1, this.animals.get(i%animals.size())));
 		}
 	}
 
-	public List<Animal> getAnimals() {
-		return this.animals;
+	List<Animal> getAnimals() {
+		return Collections.unmodifiableList(this.animals);
 	}
 }

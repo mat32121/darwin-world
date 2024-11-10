@@ -9,8 +9,7 @@ public class Animal {
 	private Vector2d position;
 
 	public Animal() {
-		this.position = new Vector2d(2, 2);
-		this.direction = MapDirection.NORTH;
+		this(new Vector2d(2, 2));
 	}
 
 	public Animal(Vector2d position) {
@@ -20,7 +19,7 @@ public class Animal {
 
 	@Override
 	public String toString() {
-		return "POS: %s\tDIR: %s".formatted(this.position.toString(), this.direction.toString());
+		return "POS: %s\tDIR: %s".formatted(this.position, this.direction);
 	}
 
 	public boolean isAt(Vector2d position) {
