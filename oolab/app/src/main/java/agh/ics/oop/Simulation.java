@@ -16,12 +16,13 @@ public class Simulation {
 
 	public Simulation(List<Vector2d> initialPositions, List<MoveDirection> moves, WorldMap worldMap) {
 		this.animals = new ArrayList<Animal>();
-		for(Vector2d x : initialPositions)
-			this.animals.add(new Animal(x));
 		this.moves = moves;
 		this.worldMap = worldMap;
-		for(Animal animal : this.animals)
-			this.worldMap.place(animal);
+		for(Vector2d x : initialPositions) {
+			Animal animal = new Animal(x);
+			if(this.worldMap.place(animal))
+				this.animals.add(animal);
+		}
 	}
 
 	public void run() {

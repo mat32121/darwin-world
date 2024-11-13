@@ -18,9 +18,8 @@ public class Animal {
 		this.direction = MapDirection.NORTH;
 	}
 
-	public Vector2d getPosition()
-	{
-		return new Vector2d(this.position.getX(), this.position.getY());
+	public Vector2d getPosition() {
+		return this.position;
 	}
 
 	@Override

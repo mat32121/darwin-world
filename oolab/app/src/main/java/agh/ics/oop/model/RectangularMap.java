@@ -9,18 +9,21 @@ public class RectangularMap implements WorldMap {
 	private final int width, height;
 	private Map<Vector2d, Animal> animals;
 	private final MapVisualizer visualizer;
+	private static final Vector2d ORIGIN = new Vector2d(0, 0);
+	private final Vector2d boundary;
 
 	public RectangularMap(int width, int height) {
 		this.animals = new HashMap<>();
 		this.width = width;
 		this.height = height;
 		this.visualizer = new MapVisualizer(this);
+		this.boundary = new Vector2d(width-1, height-1);
 	}
 
 	@Override
 	public boolean canMoveTo(Vector2d position) {
-		return position.follows(new Vector2d(0, 0))
-		    && position.precedes(new Vector2d(width-1, height-1))
+		return position.follows(ORIGIN)
+		    && position.precedes(boundary)
 		    && !this.isOccupied(position);
 	}
 	@Override
@@ -47,7 +50,6 @@ public class RectangularMap implements WorldMap {
 	}
 	@Override
 	public String toString() {
-		return this.visualizer.draw(new Vector2d(0, 0),
-				                    new Vector2d(width-1, height-1));
+		return this.visualizer.draw(ORIGIN, boundary);
 	}
 };
