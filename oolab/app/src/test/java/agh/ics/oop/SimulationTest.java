@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.RectangularMap;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
@@ -21,13 +22,13 @@ public class SimulationTest {
 		final List<Vector2d> positionsA = new ArrayList<Vector2d>();
 		positionsA.add(new Vector2d(4, 4));
 		positionsA.add(new Vector2d(0, 1));
-		Simulation simulationA = new Simulation(positionsA, directionsA);
+		Simulation simulationA = new Simulation(positionsA, directionsA, new RectangularMap(5, 5));
 
 		final String orderStringB[] = {"l", "l", "l", "l", "l", "f", "l", "f", "r"};
 		final List<MoveDirection> directionsB = OptionsParser.parse(orderStringB);
 		final List<Vector2d> positionsB = new ArrayList<Vector2d>();
 		positionsB.add(new Vector2d(0, 0));
-		Simulation simulationB = new Simulation(positionsB, directionsB);
+		Simulation simulationB = new Simulation(positionsB, directionsB, new RectangularMap(5, 5));
 
 		simulationA.run();
 		simulationB.run();
