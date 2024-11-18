@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.RectangularMap;
@@ -46,5 +47,9 @@ public class World {
 		RectangularMap map = new RectangularMap(5, 5);
 		Simulation simulation = new Simulation(positions, directions, map);
 		simulation.run();
+
+		GrassField grassField = new GrassField(10);
+		Simulation grassSim = new Simulation(positions, directions, grassField);
+		grassSim.run();
 	}
 }
