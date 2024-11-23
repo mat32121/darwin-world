@@ -3,11 +3,6 @@ package agh.ics.oop.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import agh.ics.oop.model.RectangularMap;
-
-import java.util.Collections;
-import java.util.List;
-
 public class RectangularMapTest {
 	@Test
 	public void testCanMoveTo() {

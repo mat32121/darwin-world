@@ -18,7 +18,9 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 
 	@Override
-	public abstract boolean canMoveTo(Vector2d position);
+	public boolean canMoveTo(Vector2d position) {
+		return !this.isOccupied(position);
+	}
 	@Override
 	public boolean place(Animal animal) {
 		if(this.canMoveTo(animal.getPosition())) {
@@ -35,7 +37,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 	@Override
 	public boolean isOccupied(Vector2d position) {
-		return this.objectAt(position) != null;
+		return (this.objectAt(position) instanceof Animal);
 	}
 	@Override
 	public WorldElement objectAt(Vector2d position) {
@@ -44,8 +46,8 @@ public abstract class AbstractWorldMap implements WorldMap {
 	@Override
 	public List<WorldElement> getElements() {
 		List<WorldElement> elements = new ArrayList<>();
-		for(Map.Entry<Vector2d, Animal> entry : this.animals.entrySet())
-			elements.add(entry.getValue());
+		for(Animal entry : this.animals.values())
+			elements.add(entry);
 		return elements;
 	}
 }

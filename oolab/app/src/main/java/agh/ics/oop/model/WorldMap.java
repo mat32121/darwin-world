@@ -1,8 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
-
 import java.util.List;
 
 /**

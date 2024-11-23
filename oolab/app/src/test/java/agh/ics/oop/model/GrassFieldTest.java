@@ -1,8 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.GrassField;
-import agh.ics.oop.model.Animal;
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

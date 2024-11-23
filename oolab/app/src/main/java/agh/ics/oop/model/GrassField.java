@@ -1,10 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
-import agh.ics.oop.model.Grass;
-import agh.ics.oop.model.AbstractWorldMap;
-import agh.ics.oop.model.RandomPositionGenerator;
-
 import java.lang.Math;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +24,9 @@ public class GrassField extends AbstractWorldMap {
 
 		if(this.numGrass > 0) {
 			this.lowerLeftGrass = new Vector2d(this.maxSide, this.maxSide);
-			this.upperRightGrass = super.ORIGIN;
+			this.upperRightGrass = AbstractWorldMap.ORIGIN;
 			RandomPositionGenerator randPosGen = new RandomPositionGenerator(this.maxSide, this.maxSide, this.numGrass);
-			for(int i = 0; i < this.numGrass && randPosGen.hasNext(); ++i) {
-				Vector2d grassPosition = randPosGen.next();
+			for(Vector2d grassPosition : randPosGen) {
 				this.grassPatches.put(grassPosition, new Grass(grassPosition));
 				this.lowerLeftGrass = this.lowerLeftGrass.lowerLeft(grassPosition);
 				this.upperRightGrass = this.upperRightGrass.upperRight(grassPosition);
@@ -42,9 +36,9 @@ public class GrassField extends AbstractWorldMap {
 
 	@Override
 	public boolean canMoveTo(Vector2d position) {
-		return position.follows(this.LOWER_LEFT_INF)
-		    && position.precedes(this.UPPER_RIGHT_INF)
-		    && !(this.objectAt(position) instanceof Animal);
+		return position.follows(GrassField.LOWER_LEFT_INF)
+		    && position.precedes(GrassField.UPPER_RIGHT_INF)
+		    && super.canMoveTo(position);
 	}
 
 	@Override
@@ -74,7 +68,7 @@ public class GrassField extends AbstractWorldMap {
 		}
 
 		if(lowerLeft == null)
-			return this.visualizer.draw(super.ORIGIN, super.ORIGIN);
+			return this.visualizer.draw(GrassField.LOWER_LEFT_INF, GrassField.LOWER_LEFT_INF);
 		return this.visualizer.draw(lowerLeft, upperRight);
 	}
 

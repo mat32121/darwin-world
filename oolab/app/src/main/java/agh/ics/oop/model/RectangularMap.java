@@ -1,10 +1,5 @@
 package agh.ics.oop.model;
 
-import java.util.Map;
-import java.util.HashMap;
-
-import agh.ics.oop.model.util.MapVisualizer;
-
 public class RectangularMap extends AbstractWorldMap {
 	private final int width, height;
 	private final Vector2d boundary;
@@ -17,13 +12,13 @@ public class RectangularMap extends AbstractWorldMap {
 
 	@Override
 	public boolean canMoveTo(Vector2d position) {
-		return position.follows(ORIGIN)
-		    && position.precedes(boundary)
-		    && !super.isOccupied(position);
+		return position.follows(AbstractWorldMap.ORIGIN)
+		    && position.precedes(this.boundary)
+		    && super.canMoveTo(position);
 	}
 	@Override
 	public String toString() {
-		return super.visualizer.draw(ORIGIN, boundary);
+		return super.visualizer.draw(AbstractWorldMap.ORIGIN, this.boundary);
 	}
 	@Override
 	public Animal objectAt(Vector2d position) {

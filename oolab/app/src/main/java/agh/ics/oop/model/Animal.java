@@ -1,10 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.MoveValidator;
-import agh.ics.oop.model.Vector2d;
-
 public class Animal implements WorldElement {
 	private MapDirection direction;
 	private Vector2d position;

@@ -4,11 +4,8 @@ import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.RectangularMap;
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.OptionsParser;
-import agh.ics.oop.Simulation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
