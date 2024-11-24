@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.ConsoleMapDisplay;
 import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
@@ -42,14 +43,18 @@ public class World {
 		Animal animal = new Animal();
 		System.out.println(animal.toString());
 
+		ConsoleMapDisplay mainConsoleMapDisplay = new ConsoleMapDisplay();
+
 		List<MoveDirection> directions = OptionsParser.parse(args);
 		List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
 		RectangularMap map = new RectangularMap(5, 5);
 		Simulation simulation = new Simulation(positions, directions, map);
+		map.addListener(mainConsoleMapDisplay);
 		simulation.run();
 
 		GrassField grassField = new GrassField(10);
 		Simulation grassSim = new Simulation(positions, directions, grassField);
+		grassField.addListener(mainConsoleMapDisplay);
 		grassSim.run();
 	}
 }

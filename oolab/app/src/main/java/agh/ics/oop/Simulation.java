@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.IncorrectPositionException;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.WorldMap;
@@ -20,16 +21,17 @@ public class Simulation {
 		this.worldMap = worldMap;
 		for(Vector2d x : initialPositions) {
 			Animal animal = new Animal(x);
-			if(this.worldMap.place(animal))
+			try {
+				this.worldMap.place(animal);
 				this.animals.add(animal);
+			}
+			catch (IncorrectPositionException e) {}
 		}
 	}
 
 	public void run() {
-		for(int i = 0; i < moves.size(); ++i) {
+		for(int i = 0; i < moves.size(); ++i)
 			this.worldMap.move(animals.get(i%animals.size()), moves.get(i));
-			System.out.println(this.worldMap);
-		}
 	}
 
 	List<Animal> getAnimals() {

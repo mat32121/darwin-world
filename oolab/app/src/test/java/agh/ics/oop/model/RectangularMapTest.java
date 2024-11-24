@@ -14,8 +14,14 @@ public class RectangularMapTest {
 			new Animal(new Vector2d(-1, 0))
 		};
 
-		for(Animal animal : animals)
-			map.place(animal);
+		for(int i = 0; i < 2; ++i) {
+			Animal animal = animals[i];
+			assertDoesNotThrow(() -> map.place(animal));
+		}
+		for(int i = 2; i < 4; ++i) {
+			Animal animal = animals[i];
+			assertThrows(IncorrectPositionException.class, () -> map.place(animal));
+		}
 
 		assertTrue(map.canMoveTo(new Vector2d(1, 0)));
 		assertTrue(map.canMoveTo(new Vector2d(2, 4)));
@@ -35,11 +41,11 @@ public class RectangularMapTest {
 			new Animal(new Vector2d(2, 2))
 		};
 
-		assertTrue(map.place(animals[0]));
-		assertTrue(map.place(animals[1]));
-		assertFalse(map.place(animals[2]));
-		assertFalse(map.place(animals[3]));
-		assertFalse(map.place(animals[4]));
+		assertDoesNotThrow(() -> map.place(animals[0]));
+		assertDoesNotThrow(() -> map.place(animals[1]));
+		assertThrows(IncorrectPositionException.class, () -> map.place(animals[2]));
+		assertThrows(IncorrectPositionException.class, () -> map.place(animals[3]));
+		assertThrows(IncorrectPositionException.class, () -> map.place(animals[4]));
 
 		assertTrue(map.isOccupied(new Vector2d(2, 2)));
 		assertTrue(map.isOccupied(new Vector2d(0, 0)));
@@ -61,7 +67,7 @@ public class RectangularMapTest {
 		};
 
 		for(Animal animal : animals)
-			map.place(animal);
+			assertDoesNotThrow(() -> map.place(animal));
 
 		map.move(animals[2], MoveDirection.BACKWARD);
 		assertSame(animals[2], map.objectAt(new Vector2d(2, 3)));
@@ -103,8 +109,8 @@ public class RectangularMapTest {
 			new Animal(new Vector2d(0, 0))
 		};
 
-		map.place(animals[0]);
-		map.place(animals[1]);
+		assertDoesNotThrow(() -> map.place(animals[0]));
+		assertThrows(IncorrectPositionException.class, () -> map.place(animals[1]));
 
 		assertTrue(map.isOccupied(new Vector2d(2, 2)));
 		assertFalse(map.isOccupied(new Vector2d(3, 5)));
@@ -119,8 +125,14 @@ public class RectangularMapTest {
 			new Animal(new Vector2d(-1, 0))
 		};
 
-		for(Animal animal : animals)
-			map.place(animal);
+		for(int i = 0; i < 2; ++i) {
+			Animal animal = animals[i];
+			assertDoesNotThrow(() -> map.place(animal));
+		}
+		for(int i = 2; i < 3; ++i) {
+			Animal animal = animals[i];
+			assertThrows(IncorrectPositionException.class, () -> map.place(animal));
+		}
 
 		assertSame(animals[0], map.objectAt(new Vector2d(2, 2)));
 		assertSame(animals[1], map.objectAt(new Vector2d(0, 0)));
