@@ -25,7 +25,9 @@ public class Simulation {
 				this.worldMap.place(animal);
 				this.animals.add(animal);
 			}
-			catch (IncorrectPositionException e) {}
+			catch (IncorrectPositionException e) {
+				// Ignoring position. Catch is empty
+			}
 		}
 	}
 

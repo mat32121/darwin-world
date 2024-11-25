@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.IncorrectPositionException;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.RectangularMap;

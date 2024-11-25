@@ -69,7 +69,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	public void removeListener(MapChangeListener newListener) {
 		this.listeners.remove(newListener);
 	}
-	public void notifyListeners(String message) {
+	private void notifyListeners(String message) {
 		for(MapChangeListener listener : this.listeners)
 			listener.mapChanged(this, message);
 	}
