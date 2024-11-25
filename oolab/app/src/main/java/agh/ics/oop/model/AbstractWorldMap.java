@@ -12,9 +12,12 @@ public abstract class AbstractWorldMap implements WorldMap {
 	protected final Map<Vector2d, Animal> animals;
 	protected final MapVisualizer visualizer;
 
+	protected final List<MapChangeListener> listeners;
+
 	protected AbstractWorldMap() {
 		this.animals = new HashMap<>();
 		this.visualizer = new MapVisualizer(this);
+		this.listeners = new ArrayList<>();
 	}
 
 	@Override
@@ -22,18 +25,21 @@ public abstract class AbstractWorldMap implements WorldMap {
 		return !this.isOccupied(position);
 	}
 	@Override
-	public boolean place(Animal animal) {
-		if(this.canMoveTo(animal.getPosition())) {
+	public void place(Animal animal) throws IncorrectPositionException {
+		if(this.canMoveTo(animal.getPosition()))
+		{
 			animals.put(animal.getPosition(), animal);
-			return true;
+			this.notifyListeners("Placed animal " + animal);
 		}
-		return false;
+		else
+			throw new IncorrectPositionException(animal.getPosition());
 	}
 	@Override
 	public void move(Animal animal, MoveDirection direction) {
 		this.animals.remove(animal.getPosition());
 		animal.move(direction, this);
 		this.animals.put(animal.getPosition(), animal);
+		this.notifyListeners("Moved animal at " + animal.getPosition() + " in direction " + direction);
 	}
 	@Override
 	public boolean isOccupied(Vector2d position) {
@@ -49,5 +55,22 @@ public abstract class AbstractWorldMap implements WorldMap {
 		for(Animal entry : this.animals.values())
 			elements.add(entry);
 		return elements;
+	}
+	@Override
+	public abstract Boundary getCurrentBounds();
+	@Override
+	public String toString() {
+		Boundary bounds = this.getCurrentBounds();
+		return this.visualizer.draw(bounds.lowerLeft(), bounds.upperRight());
+	}
+	public void addListener(MapChangeListener newListener) {
+		this.listeners.add(newListener);
+	}
+	public void removeListener(MapChangeListener newListener) {
+		this.listeners.remove(newListener);
+	}
+	public void notifyListeners(String message) {
+		for(MapChangeListener listener : this.listeners)
+			listener.mapChanged(this, message);
 	}
 }

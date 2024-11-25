@@ -18,7 +18,9 @@ public class OptionsParserTest {
 			MoveDirection.RIGHT
 		);
 
-		final String orderStringB[] = {"l","r","34","f","l","ff","f-b","Xb","l","b"};
+		final String orderStringB0[] = {"l","r","34","f","l","ff","f-b","Xb","l","b"};
+		assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(orderStringB0));
+		final String orderStringB[] = {"l","r","f","l","l","b"};
 		final List<MoveDirection> realParsedOrdersB = List.of(
 			MoveDirection.LEFT,
 			MoveDirection.RIGHT,
@@ -31,18 +33,16 @@ public class OptionsParserTest {
 		final String orderStringC[] = {};
 		final List<MoveDirection> realParsedOrdersC = List.of();
 
-		final String orderStringD[] = {"k", "o"};
-		final List<MoveDirection> realParsedOrdersD = List.of();
+		final String orderStringD0[] = {"k", "o"};
+		assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(orderStringD0));
 
 		final List<MoveDirection> parsedOrdersA = OptionsParser.parse(orderStringA);
 		final List<MoveDirection> parsedOrdersB = OptionsParser.parse(orderStringB);
 		final List<MoveDirection> parsedOrdersC = OptionsParser.parse(orderStringC);
-		final List<MoveDirection> parsedOrdersD = OptionsParser.parse(orderStringD);
 
 		assertEquals(realParsedOrdersA, parsedOrdersA);
 		assertEquals(realParsedOrdersB, parsedOrdersB);
 		assertEquals(realParsedOrdersC, parsedOrdersC);
-		assertEquals(realParsedOrdersD, parsedOrdersD);
 		assertNotEquals(realParsedOrdersA, parsedOrdersB);
 	}
 }

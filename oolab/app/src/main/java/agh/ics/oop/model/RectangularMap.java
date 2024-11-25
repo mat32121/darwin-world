@@ -17,11 +17,11 @@ public class RectangularMap extends AbstractWorldMap {
 		    && super.canMoveTo(position);
 	}
 	@Override
-	public String toString() {
-		return super.visualizer.draw(AbstractWorldMap.ORIGIN, this.boundary);
-	}
-	@Override
 	public Animal objectAt(Vector2d position) {
 		return (Animal)super.objectAt(position);
+	}
+	@Override
+	public Boundary getCurrentBounds() {
+		return new Boundary(AbstractWorldMap.ORIGIN, this.boundary);
 	}
 };

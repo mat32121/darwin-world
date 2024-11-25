@@ -50,7 +50,15 @@ public class GrassField extends AbstractWorldMap {
 	}
 
 	@Override
-	public String toString() {
+	public List<WorldElement> getElements() {
+		List<WorldElement> elements = super.getElements();
+		for(Grass grass : this.grassPatches.values())
+			elements.add(grass);
+		return elements;
+	}
+
+	@Override
+	public Boundary getCurrentBounds() {
 		Vector2d lowerLeft = null;
 		Vector2d upperRight = null;
 
@@ -68,15 +76,7 @@ public class GrassField extends AbstractWorldMap {
 		}
 
 		if(lowerLeft == null)
-			return this.visualizer.draw(GrassField.LOWER_LEFT_INF, GrassField.LOWER_LEFT_INF);
-		return this.visualizer.draw(lowerLeft, upperRight);
-	}
-
-	@Override
-	public List<WorldElement> getElements() {
-		List<WorldElement> elements = super.getElements();
-		for(Map.Entry<Vector2d, Grass> grass : this.grassPatches.entrySet())
-			elements.add(grass.getValue());
-		return elements;
+			return new Boundary(GrassField.LOWER_LEFT_INF, GrassField.LOWER_LEFT_INF);
+		return new Boundary(lowerLeft, upperRight);
 	}
 }

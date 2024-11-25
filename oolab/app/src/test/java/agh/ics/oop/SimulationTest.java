@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.IncorrectPositionException;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.RectangularMap;
@@ -14,7 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SimulationTest {
 	@Test
 	public void testRun() {
-		final String orderStringA[] = {"r", "l", "f", "bb", "l", "l", "b", "f"};
+		final String orderStringA0[] = {"r", "l", "f", "bb", "l", "l", "b", "f"};
+		assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(orderStringA0));
+		final String orderStringA[] = {"r", "l", "f", "l", "l", "b", "f"};
 		final List<MoveDirection> directionsA = OptionsParser.parse(orderStringA);
 		final List<Vector2d> positionsA = new ArrayList<Vector2d>();
 		positionsA.add(new Vector2d(4, 4));
