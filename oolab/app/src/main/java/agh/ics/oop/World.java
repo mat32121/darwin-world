@@ -1,14 +1,16 @@
 package agh.ics.oop;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.ConsoleMapDisplay;
 import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.RectangularMap;
+import agh.ics.oop.model.SimulationEngine;
 import agh.ics.oop.model.Vector2d;
-
-import java.util.List;
 
 public class World {
 	private static void run(List<MoveDirection> steps) {
@@ -52,15 +54,31 @@ public class World {
 		catch (IllegalArgumentException e) {
 			directions = List.of();
 		}
-		List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
-		RectangularMap map = new RectangularMap(5, 5);
-		Simulation simulation = new Simulation(positions, directions, map);
-		map.addListener(mainConsoleMapDisplay);
-		simulation.run();
+	
+		List<Simulation> simulations = new ArrayList<>();
+		for(int i = 0; i < 1000; ++i) {
+			List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
+			RectangularMap map = new RectangularMap(5, 5);
+			Simulation simulation = new Simulation(positions, directions, map);
+			map.addListener(mainConsoleMapDisplay);
 
-		GrassField grassField = new GrassField(10);
-		Simulation grassSim = new Simulation(positions, directions, grassField);
-		grassField.addListener(mainConsoleMapDisplay);
-		grassSim.run();
+			GrassField grassField = new GrassField(10);
+			Simulation grassSim = new Simulation(positions, directions, grassField);
+			grassField.addListener(mainConsoleMapDisplay);
+
+			simulations.add(simulation);
+			simulations.add(grassSim);
+		}
+
+		SimulationEngine simEngine = new SimulationEngine(simulations);
+		simEngine.runAsyncInThreadPool();
+		try {
+			simEngine.awaitSimulationsEnd();
+		}
+		catch (InterruptedException e) {
+			// A thread got interrupted. Leaving catch empty.
+		}
+
+		System.out.println("System zakończył działanie");
 	}
 }
