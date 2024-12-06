@@ -1,12 +1,10 @@
-package agh.ics.oop.model;
+package agh.ics.oop;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import agh.ics.oop.Simulation;
 
 public class SimulationEngine {
     private final List<Simulation> simulations;

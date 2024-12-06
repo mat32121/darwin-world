@@ -9,7 +9,6 @@ import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.RectangularMap;
-import agh.ics.oop.model.SimulationEngine;
 import agh.ics.oop.model.Vector2d;
 
 public class World {
