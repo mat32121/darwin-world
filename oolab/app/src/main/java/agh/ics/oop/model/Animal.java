@@ -20,10 +20,10 @@ public class Animal implements WorldElement {
 	@Override
 	public String toString() {
 		return switch(this.direction) {
-			case NORTH -> "N";
-			case WEST  -> "W";
-			case SOUTH -> "S";
-			case EAST  -> "E";
+			case NORTH -> "/\\";
+			case WEST  -> "<";
+			case SOUTH -> "\\/";
+			case EAST  -> ">";
 		};
 	}
 

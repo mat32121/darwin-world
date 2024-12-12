@@ -14,6 +14,7 @@ public class Simulation implements Runnable {
 	private List<Animal> animals;
 	private List<MoveDirection> moves;
 	private WorldMap worldMap;
+	private static final long MILLIS_INTERVAL = 1000;
 
 	public Simulation(List<Vector2d> initialPositions, List<MoveDirection> moves, WorldMap worldMap) {
 		this.animals = new ArrayList<>();
@@ -33,8 +34,16 @@ public class Simulation implements Runnable {
 
 	@Override
 	public void run() {
-		for(int i = 0; i < moves.size(); ++i)
-			this.worldMap.move(animals.get(i%animals.size()), moves.get(i));
+		if(this.animals.isEmpty())
+			return;
+		for(int i = 0; i < moves.size(); ++i) {
+			try {
+				Thread.sleep(this.MILLIS_INTERVAL);
+			} catch (InterruptedException e) {
+				// Sleep was interrupted. Leaving catch empty.
+			}
+			this.worldMap.move(this.animals.get(i%this.animals.size()), this.moves.get(i));
+		}
 	}
 
 	List<Animal> getAnimals() {
