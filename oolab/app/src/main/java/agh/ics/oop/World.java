@@ -24,7 +24,7 @@ public class World {
 
 	public static void main(String[] args) {
 		System.out.println("Start");
-		List<MoveDirection> steps = OptionsParser.parse(args);
+		List<MoveDirection> steps = OptionsParser.parse(List.of(args));
 		run(steps);
 		System.out.println("Stop");
 
@@ -48,7 +48,7 @@ public class World {
 
 		List<MoveDirection> directions;
 		try {
-			directions = OptionsParser.parse(args);
+			directions = OptionsParser.parse(List.of(args));
 		}
 		catch (IllegalArgumentException e) {
 			directions = List.of();
@@ -77,6 +77,8 @@ public class World {
 		catch (InterruptedException e) {
 			// A thread got interrupted. Leaving catch empty.
 		}
+
+		// Application.launch(SimulationApp.class, args);	
 
 		System.out.println("System zakończył działanie");
 	}
