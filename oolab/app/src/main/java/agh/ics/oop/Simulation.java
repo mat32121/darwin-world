@@ -36,13 +36,13 @@ public class Simulation implements Runnable {
 	public void run() {
 		if(this.animals.isEmpty())
 			return;
-		for(int i = 0; i < moves.size(); ++i) {
-			try {
-				Thread.sleep(this.MILLIS_INTERVAL);
-			} catch (InterruptedException e) {
-				// Sleep was interrupted. Leaving catch empty.
+		try {
+			for(int i = 0; i < moves.size(); ++i) {
+				Thread.sleep(Simulation.MILLIS_INTERVAL);
+				this.worldMap.move(this.animals.get(i%this.animals.size()), this.moves.get(i));
 			}
-			this.worldMap.move(this.animals.get(i%this.animals.size()), this.moves.get(i));
+		} catch (InterruptedException e) {
+			// Sleep was interrupted. Leaving catch empty.
 		}
 	}
 
