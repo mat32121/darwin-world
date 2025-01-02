@@ -20,7 +20,7 @@ public class Simulation implements Runnable {
 		this.moves = moves;
 		this.worldMap = worldMap;
 		for(Vector2d x : initialPositions) {
-			Animal animal = new Animal(x);
+			Animal animal = new Animal(x, 5);
 			try {
 				this.worldMap.place(animal);
 				this.animals.add(animal);
@@ -38,7 +38,17 @@ public class Simulation implements Runnable {
 		try {
 			for(int i = 0; i < moves.size(); ++i) {
 				Thread.sleep(Simulation.MILLIS_INTERVAL);
-				this.worldMap.move(this.animals.get(i%this.animals.size()), this.moves.get(i));
+				//*** do poprawy, usuniecie redundancji, plus dodanie genomu
+				if (this.animals.get(i%this.animals.size()).getEnergy()==0) {
+					this.animals.get(i%this.animals.size()).setLiveStatus(false);
+				}
+
+				if (this.animals.get(i%this.animals.size()).getLiveStatus()) {
+					this.worldMap.move(this.animals.get(i%this.animals.size()), this.moves.get(i));
+				} else {
+					this.animals.get(i%this.animals.size()).incrementDaysAfterDeath();
+				}
+				System.out.println(this.animals.get(i%this.animals.size()).getDaysAfterDeath());
 			}
 		} catch (InterruptedException e) {
 			// Sleep was interrupted. Leaving catch empty.

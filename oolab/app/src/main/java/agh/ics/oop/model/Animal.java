@@ -10,27 +10,54 @@ public class Animal implements WorldElement {
 	//private int plantsEaten = 0;
 	private MapDirection direction;
 	private Vector2d position;
-	//private int energy;
+	private int energy;
+	private boolean liveStatus;
+	private int daysAfterDeath;
+
 	//private int genotypeIndex;
-	//private int dayOfDeath;
 
 	public Animal() {
-		this(new Vector2d(2, 2));
+		this(new Vector2d(2, 2),5);
 	}
 
-	public Animal(Vector2d position) {
+	public Animal(Vector2d position, int energy) {
 		this.position = position;
+		this.energy=energy;
         this.direction = MapDirection.NORTH;
+		this.liveStatus=true;
+		this.daysAfterDeath=0;
+		//***zakladam, ze zawsze tworzymy zywego zwierzaka
+	}
+
+	public boolean getLiveStatus() {
+		return this.liveStatus;
+	}
+
+	public int getEnergy() {
+		return this.energy;
 	}
 
 	public Vector2d getPosition() {
 		return this.position;
 	}
 
+	public int getDaysAfterDeath() {
+		return daysAfterDeath;
+	}
+
+	public void setLiveStatus(boolean status) {
+		this.liveStatus=status;
+	}
+
+	public void incrementDaysAfterDeath() {
+		this.daysAfterDeath += 1;
+	}
+
+
 	@Override
 	public String toString() {
 		return switch(this.direction) {
-			//mapa jest odwrocona, dlatego NORTH -> "↓"
+			//***mapa jest odwrocona, dlatego NORTH -> "↓", do poprawy!
 			case NORTH -> "↓";
 			case NORTH_WEST->"↙";
 			case WEST  -> "←";
@@ -54,11 +81,14 @@ public class Animal implements WorldElement {
 		//*** do poprawy skladni!!!
 		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
 		newPosition=newPosition.add(this.direction.toUnitVector());
+		this.energy-=1;
+		//dodac liczbe zalezna od wspolrzednej y
 		this.direction=this.direction.next(n);
 		//uwaga, zwierze wpierw rusza sie o jeden, a dopiero potem zmienia kierunek na ten w kodzie genetycznym.
 		//wymagana poprawa, ale do tego potrzeba jest przebudowa simulation.
 		if(validator.canMoveTo(newPosition)) {
 			this.position = newPosition;
 		}
+		System.out.println(this.energy);
 	}
 }

@@ -40,11 +40,14 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 	@Override
 	public void move(Animal animal, Integer direction) {
+		//*** do przeniesienia, gdzie indziej, funkcja usuwajaca martwe zwierzaki!!!
 		this.animals.remove(animal.getPosition());
 		animal.move(direction, this);
 		this.animals.put(animal.getPosition(), animal);
 		this.notifyListeners("Moved animal at " + animal.getPosition() + " in direction " + direction);
+
 	}
+
 
 	@Override
 	public boolean isOccupied(Vector2d position) {
@@ -59,8 +62,13 @@ public abstract class AbstractWorldMap implements WorldMap {
 	@Override
 	public List<WorldElement> getElements() {
 		List<WorldElement> elements = new ArrayList<>();
-		for(Animal entry : this.animals.values())
-			elements.add(entry);
+
+		for(Animal entry : this.animals.values()) {
+			if (entry.getLiveStatus()){
+				elements.add(entry);
+			}
+		}
+
 		return elements;
 	}
 	@Override
