@@ -3,18 +3,21 @@ package agh.ics.oop;
 import java.util.ArrayList;
 import java.util.List;
 
-import agh.ics.oop.model.MoveDirection;
-
 public class OptionsParser {
-    public static List<MoveDirection> parse(List<String> steps_string) {
-        List<MoveDirection> result = new ArrayList<>();
+    //***do usuniecia
+    public static List<Integer> parse(List<String> steps_string) {
+        ArrayList<Integer> result = new ArrayList<>();
         for(String step : steps_string) {
             if(step.length() == 1) {
 				switch(step.charAt(0)) {
-					case 'f' -> result.add(MoveDirection.FORWARD);
-					case 'l' -> result.add(MoveDirection.LEFT);
-					case 'b' -> result.add(MoveDirection.BACKWARD);
-					case 'r' -> result.add(MoveDirection.RIGHT);
+					case '0' -> result.add(0);
+					case '1' -> result.add(1);
+					case '2' -> result.add(2);
+					case '3' -> result.add(3);
+                    case '4' -> result.add(4);
+                    case '5' -> result.add(5);
+                    case '6' -> result.add(6);
+                    case '7' -> result.add(7);
                     default  -> throw new IllegalArgumentException(step + " is not a legal move specification");
 				};
             }

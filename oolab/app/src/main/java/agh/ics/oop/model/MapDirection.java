@@ -2,9 +2,13 @@ package agh.ics.oop.model;
 
 public enum MapDirection {
 	NORTH("Północ", new Vector2d(0, 1)),
+	NORTH_WEST("Północny Zachód", new Vector2d(-1, 1)),
 	WEST("Zachód", new Vector2d(-1, 0)),
+	SOUTH_WEST("Południowy Zachód", new Vector2d(-1, -1)),
 	SOUTH("Południe", new Vector2d(0, -1)),
-	EAST("Wschód", new Vector2d(1, 0));
+	SOUTH_EAST("Południowy Wschód", new Vector2d(1, -1)),
+	EAST("Wschód", new Vector2d(1, 0)),
+	NORTH_EAST("Północny Wschód", new Vector2d(1, 1));
 
 	private static final MapDirection[] VAL_ARRAY = values();
 	private final String directionName;
@@ -20,12 +24,9 @@ public enum MapDirection {
 		return this.directionName;
 	}
 
-	public MapDirection next() {
-		return VAL_ARRAY[(this.ordinal()+1)%VAL_ARRAY.length];
-	}
-
-	public MapDirection previous() {
-		return VAL_ARRAY[(this.ordinal()+VAL_ARRAY.length-1)%VAL_ARRAY.length];
+	public MapDirection next(int n) {
+		//zakladamy, ze n<8, ale jakby bylo wieksze(mniejsze), to nic nie zmineia.
+		return VAL_ARRAY[(this.ordinal()+n)%VAL_ARRAY.length];
 	}
 
 	public Vector2d toUnitVector() {

@@ -1,18 +1,12 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
 
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.RectangularMap;
-import agh.ics.oop.model.Vector2d;
 
 public class SimulationTest {
+
+	/*
 	@Test
 	public void testRun() {
 		final String orderStringA0[] = {"r", "l", "f", "bb", "l", "l", "b", "f"};
@@ -41,4 +35,6 @@ public class SimulationTest {
 		assertTrue(simulationB.getAnimals().get(0).isAt(new Vector2d(0, 0)));
 		assertTrue(simulationB.getAnimals().get(0).isHeaded(MapDirection.WEST));
 	}
+	 */
+
 }

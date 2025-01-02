@@ -1,8 +1,18 @@
 package agh.ics.oop.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Animal implements WorldElement {
+	//private List<Animal> children = new ArrayList<>();
+	//protected final List<Integer> genotype;
+	//private int age = 0;
+	//private int plantsEaten = 0;
 	private MapDirection direction;
 	private Vector2d position;
+	//private int energy;
+	//private int genotypeIndex;
+	//private int dayOfDeath;
 
 	public Animal() {
 		this(new Vector2d(2, 2));
@@ -10,21 +20,30 @@ public class Animal implements WorldElement {
 
 	public Animal(Vector2d position) {
 		this.position = position;
-		this.direction = MapDirection.NORTH;
+        this.direction = MapDirection.NORTH;
 	}
 
 	public Vector2d getPosition() {
 		return this.position;
 	}
 
+	public void eatingGrass(Grass grass) {
+
+	}
+
 	@Override
 	public String toString() {
 		return switch(this.direction) {
-			case NORTH -> "/\\";
-			case WEST  -> "<";
-			case SOUTH -> "\\/";
-			case EAST  -> ">";
-		};
+			//mapa jest odwrocona, dlatego NORTH -> "↓"
+			case NORTH -> "↓";
+			case NORTH_WEST->"↙";
+			case WEST  -> "←";
+            case SOUTH_WEST -> "↖";
+            case SOUTH -> "↑";
+            case SOUTH_EAST -> "↗";
+            case EAST  -> "→";
+            case NORTH_EAST -> "↘";
+        };
 	}
 
 	public boolean isAt(Vector2d position) {
@@ -35,16 +54,14 @@ public class Animal implements WorldElement {
 		return this.direction == direction;
 	}
 
-	public void move(MoveDirection direction, MoveValidator validator) {
+	public void move(int n, MoveValidator validator) {
+		//*** do poprawy skladni!!!
 		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
-		switch(direction) {
-			case LEFT -> this.direction = this.direction.next();
-			case RIGHT -> this.direction = this.direction.previous();
-			case FORWARD -> newPosition = this.position.add(this.direction.toUnitVector());
-			case BACKWARD -> newPosition = this.position.subtract(this.direction.toUnitVector());
-		};
+		newPosition=newPosition.add(this.direction.toUnitVector());
+		this.direction=this.direction.next(n);
 
-		if(validator.canMoveTo(newPosition))
+		if(validator.canMoveTo(newPosition)) {
 			this.position = newPosition;
+		}
 	}
 }

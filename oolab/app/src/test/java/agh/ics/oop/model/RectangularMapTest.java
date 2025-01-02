@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RectangularMapTest {
+	/*
 	@Test
 	public void testCanMoveTo() {
 		final RectangularMap map = new RectangularMap(3, 5);
@@ -138,4 +139,6 @@ public class RectangularMapTest {
 		assertSame(animals[1], map.objectAt(new Vector2d(0, 0)));
 		assertNull(map.objectAt(new Vector2d(-1, 0)));
 	}
+
+	 */
 }

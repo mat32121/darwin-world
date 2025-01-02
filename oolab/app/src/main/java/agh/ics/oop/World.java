@@ -1,17 +1,8 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.ConsoleMapDisplay;
-import agh.ics.oop.model.GrassField;
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.RectangularMap;
-import agh.ics.oop.model.Vector2d;
 
 public class World {
+	/*
 	private static void run(List<MoveDirection> steps) {
 		for(MoveDirection step : steps)
 			switch (step) {
@@ -21,8 +12,14 @@ public class World {
 				case MoveDirection.RIGHT    -> System.out.println("Zwierzak skręca w prawo");
 			};
 	}
-
+	*/
 	public static void main(String[] args) {
+
+
+		System.out.println("Działam");
+
+
+		/*
 		System.out.println("Start");
 		List<MoveDirection> steps = OptionsParser.parse(List.of(args));
 		run(steps);
@@ -81,5 +78,7 @@ public class World {
 		// Application.launch(SimulationApp.class, args);	
 
 		System.out.println("System zakończył działanie");
+
+		 */
 	}
 }

@@ -6,17 +6,16 @@ import java.util.List;
 
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.IncorrectPositionException;
-import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.WorldMap;
 
 public class Simulation implements Runnable {
 	private List<Animal> animals;
-	private List<MoveDirection> moves;
+	private List<Integer> moves;
 	private WorldMap worldMap;
 	private static final long MILLIS_INTERVAL = 1000;
 
-	public Simulation(List<Vector2d> initialPositions, List<MoveDirection> moves, WorldMap worldMap) {
+	public Simulation(List<Vector2d> initialPositions, List<Integer> moves, WorldMap worldMap) {
 		this.animals = new ArrayList<>();
 		this.moves = moves;
 		this.worldMap = worldMap;
