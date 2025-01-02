@@ -27,10 +27,6 @@ public class Animal implements WorldElement {
 		return this.position;
 	}
 
-	public void eatingGrass(Grass grass) {
-
-	}
-
 	@Override
 	public String toString() {
 		return switch(this.direction) {
@@ -59,7 +55,8 @@ public class Animal implements WorldElement {
 		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
 		newPosition=newPosition.add(this.direction.toUnitVector());
 		this.direction=this.direction.next(n);
-
+		//uwaga, zwierze wpierw rusza sie o jeden, a dopiero potem zmienia kierunek na ten w kodzie genetycznym.
+		//wymagana poprawa, ale do tego potrzeba jest przebudowa simulation.
 		if(validator.canMoveTo(newPosition)) {
 			this.position = newPosition;
 		}

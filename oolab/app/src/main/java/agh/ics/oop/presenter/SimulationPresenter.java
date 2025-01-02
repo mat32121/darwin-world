@@ -47,18 +47,21 @@ public class SimulationPresenter implements MapChangeListener {
         GridPane.setHalignment(yx, HPos.CENTER);
         this.mapGrid.add(yx, 0, 0, 1, 1);
         Boundary mapBoundary = worldMap.getCurrentBounds();
+
         for (int i = mapBoundary.lowerLeft().getX(); i <= mapBoundary.upperRight().getX(); ++i) {
             this.mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
             Label newLabel = new Label(Integer.toString(i));
             GridPane.setHalignment(newLabel, HPos.CENTER);
             this.mapGrid.add(newLabel, i-mapBoundary.lowerLeft().getX()+1, 0, 1, 1);
         }
+
         for (int i = mapBoundary.lowerLeft().getY(); i <= mapBoundary.upperRight().getY(); ++i) {
             this.mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
             Label newLabel = new Label(Integer.toString(i));
             GridPane.setHalignment(newLabel, HPos.CENTER);
             this.mapGrid.add(newLabel, 0, i-mapBoundary.lowerLeft().getY()+1, 1, 1);
         }
+
         for(WorldElement elem : this.worldMap.getElements()) {
             Label newLabel = new Label(elem.toString());
             GridPane.setHalignment(newLabel, HPos.CENTER);

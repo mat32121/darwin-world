@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import agh.ics.oop.model.AbstractWorldMap;
 import agh.ics.oop.model.GrassField;
+import agh.ics.oop.model.RectangularMap;
 import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +20,8 @@ public class SimulationApp extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
         SimulationPresenter presenter = loader.getController();
-        AbstractWorldMap map = new GrassField(5);
+        AbstractWorldMap map = new RectangularMap(20, 6, 10);
+        //trzeba zrobic, by mapa dopasowywala sie do ekranu!!!
         presenter.setWorldMap(map);
         map.addListener(presenter);
 
