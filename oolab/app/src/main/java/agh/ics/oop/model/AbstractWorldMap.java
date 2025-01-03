@@ -24,6 +24,11 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 
 	@Override
+	public void mapTicks(String message){
+		this.notifyListeners(message);
+	}
+
+	@Override
 	public boolean canMoveTo(Vector2d position) {
 		return !this.isOccupied(position);
 	}
@@ -39,13 +44,11 @@ public abstract class AbstractWorldMap implements WorldMap {
 			throw new IncorrectPositionException(animal.getPosition());
 	}
 	@Override
-	public void move(Animal animal, Integer direction) {
+	public void move(Animal animal) {
 		//*** do przeniesienia, gdzie indziej, funkcja usuwajaca martwe zwierzaki!!!
 		this.animals.remove(animal.getPosition());
-		animal.move(direction, this);
+		animal.move(this);
 		this.animals.put(animal.getPosition(), animal);
-		this.notifyListeners("Moved animal at " + animal.getPosition() + " in direction " + direction);
-
 	}
 
 
@@ -62,6 +65,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	@Override
 	public List<WorldElement> getElements() {
 		List<WorldElement> elements = new ArrayList<>();
+
 
 		for(Animal entry : this.animals.values()) {
 			if (entry.getLiveStatus()){
@@ -85,6 +89,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	public void removeListener(MapChangeListener newListener) {
 		this.listeners.remove(newListener);
 	}
+
 	private void notifyListeners(String message) {
 		for(MapChangeListener listener : this.listeners)
 			listener.mapChanged(this, message);

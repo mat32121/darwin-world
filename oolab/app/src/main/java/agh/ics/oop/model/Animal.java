@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Animal implements WorldElement {
 	//private List<Animal> children = new ArrayList<>();
-	//protected final List<Integer> genotype;
 	//private int age = 0;
 	//private int plantsEaten = 0;
 	private MapDirection direction;
@@ -13,19 +12,20 @@ public class Animal implements WorldElement {
 	private int energy;
 	private boolean liveStatus;
 	private int daysAfterDeath;
+	private int genIndex;
+	protected final int[] genotype;
+
 
 	//private int genotypeIndex;
 
-	public Animal() {
-		this(new Vector2d(2, 2),5);
-	}
-
-	public Animal(Vector2d position, int energy) {
+	public Animal(Vector2d position, int energy, int[] genotype) {
 		this.position = position;
 		this.energy=energy;
-        this.direction = MapDirection.NORTH;
+        this.direction = MapDirection.NORTH; //zmienic na losowy
 		this.liveStatus=true;
+		this.genotype=genotype;
 		this.daysAfterDeath=0;
+		this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
 		//***zakladam, ze zawsze tworzymy zywego zwierzaka
 	}
 
@@ -54,6 +54,7 @@ public class Animal implements WorldElement {
 	}
 
 
+
 	@Override
 	public String toString() {
 		return switch(this.direction) {
@@ -77,13 +78,14 @@ public class Animal implements WorldElement {
 		return this.direction == direction;
 	}
 
-	public void move(int n, MoveValidator validator) {
+	public void move(MoveValidator validator) {
 		//*** do poprawy skladni!!!
 		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
 		newPosition=newPosition.add(this.direction.toUnitVector());
 		this.energy-=1;
 		//dodac liczbe zalezna od wspolrzednej y
-		this.direction=this.direction.next(n);
+		this.direction=this.direction.next(genotype[genIndex]);
+		genIndex=(genIndex+1)%genotype.length;
 		//uwaga, zwierze wpierw rusza sie o jeden, a dopiero potem zmienia kierunek na ten w kodzie genetycznym.
 		//wymagana poprawa, ale do tego potrzeba jest przebudowa simulation.
 		if(validator.canMoveTo(newPosition)) {

@@ -25,6 +25,12 @@ public class RectangularMap extends AbstractWorldMap {
 		}
 	}
 
+	public boolean grassAt(Vector2d position) {
+		return grassPatches.containsKey(position);
+	}
+
+
+	//***do poprawy, na jednym polu moze byc wiele zwierzat, poza tym zwierze moze poruszyc sie na dowolne pole
 	@Override
 	public boolean canMoveTo(Vector2d position) {
 		return position.follows(AbstractWorldMap.ORIGIN)
