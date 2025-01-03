@@ -25,7 +25,8 @@ public class Animal implements WorldElement {
 		this.liveStatus=true;
 		this.genotype=genotype;
 		this.daysAfterDeath=0;
-		this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
+		//this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
+		this.genIndex=0; //**** do usuniecia!!! poprawna wersja wyzej /\
 		//***zakladam, ze zawsze tworzymy zywego zwierzaka
 	}
 
@@ -49,8 +50,14 @@ public class Animal implements WorldElement {
 		this.liveStatus=status;
 	}
 
+	//*** przydalby sie moze ladniejszy mechanizm
+
 	public void incrementDaysAfterDeath() {
 		this.daysAfterDeath += 1;
+	}
+
+	public void incrementEnergy() {
+		this.energy += 4;
 	}
 
 

@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import java.util.List;
 import java.util.UUID;
 
+//całe do usuniecia;
 /**
  * The interface responsible for interacting with the map of the world.
  * Assumes that Vector2d and MoveDirection classes are defined.
@@ -26,6 +27,9 @@ public interface WorldMap extends MoveValidator {
      */
     void move(Animal animal);
     void mapTicks(String message);
+    boolean grassAt(Vector2d position);
+    void animalEatsGrass(Animal animal);
+    void removeGrass(Vector2d position);
     /**
      * Return true if given position on the map is occupied. Should not be
      * confused with canMove since there might be empty positions where the animal
@@ -43,6 +47,7 @@ public interface WorldMap extends MoveValidator {
      * @return animal or null if the position is not occupied.
      */
     WorldElement objectAt(Vector2d position);
+
 
 	List<WorldElement> getElements();
 	Boundary getCurrentBounds();

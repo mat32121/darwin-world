@@ -1,3 +1,5 @@
+/*
+do usuniecia!!!!!
 package agh.ics.oop.model;
 
 import java.lang.Math;
@@ -80,3 +82,5 @@ public class GrassField extends AbstractWorldMap {
 		return new Boundary(lowerLeft, upperRight);
 	}
 }
+
+ */

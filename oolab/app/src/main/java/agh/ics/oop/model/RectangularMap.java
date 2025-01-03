@@ -22,13 +22,27 @@ public class RectangularMap extends AbstractWorldMap {
 			for(Vector2d grassPosition : randPosGen) {
 				this.grassPatches.put(grassPosition, new Grass(grassPosition));
 			}
+			//*** do usuniecia, testy!!!
+			Vector2d testVector=new Vector2d(5,5);
+			this.grassPatches.put(testVector, new Grass(testVector));
 		}
 	}
 
+	@Override
 	public boolean grassAt(Vector2d position) {
 		return grassPatches.containsKey(position);
 	}
 
+	@Override
+	public void animalEatsGrass(Animal animal) {
+		animal.incrementEnergy();
+		this.removeGrass(animal.getPosition());
+	}
+
+	@Override
+	public void removeGrass(Vector2d position) {
+		grassPatches.remove(position);
+	}
 
 	//***do poprawy, na jednym polu moze byc wiele zwierzat, poza tym zwierze moze poruszyc sie na dowolne pole
 	@Override

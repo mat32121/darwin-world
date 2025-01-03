@@ -18,7 +18,7 @@ public class Simulation implements Runnable {
 		this.animals = new ArrayList<>();
 		this.worldMap = worldMap;
 		for(Vector2d x : initialPositions) {
-			Animal animal = new Animal(x, 5, new int[] {1,1,1,1,1,1,1,1});
+			Animal animal = new Animal(x, 10, new int[] {6,0,0,0,0,5,1,1,1,1});
 			try {
 				this.worldMap.place(animal);
 				this.animals.add(animal);
@@ -37,7 +37,7 @@ public class Simulation implements Runnable {
 			//*** for zaminiec na while, ktory w warunku ma ilosc jeszcze zjacych zwierzat
 			//*** do poprawy, usuniecie redundancji, plus dodanie genomu
 			//*** dodac zatrzymanie zwierzaka na czas jedzenia i kopulacji?
-			ArrayList<Animal> eatingQueue;
+			ArrayList<Animal> eatingQueue = new ArrayList<>();
 			for(int i = 0; i < 100; ++i) {
 				Thread.sleep(Simulation.MILLIS_INTERVAL);
                 for (Animal animal : animals) {
@@ -48,18 +48,21 @@ public class Simulation implements Runnable {
                     //potem ruszamy zwierzakami
                     if (animal.getLiveStatus()) {
                         this.worldMap.move(animal);
-						if (this.worldMap) {
-
+						if (this.worldMap.grassAt(animal.getPosition())) {
+							eatingQueue.add(animal);
 						}
                     } else {
                         animal.incrementDaysAfterDeath();
 						System.out.println(animal.getDaysAfterDeath());
 					}
 				}
-				for(int j = 0; j<animals.size(); ++j) {
+				for(Animal animal : eatingQueue) {
+					if (this.worldMap.grassAt(animal.getPosition())) {
+						this.worldMap.animalEatsGrass(animal);
+					}
 					// zwierzeta jedza, potrzebne petle na na kazdy etap
-
 				}
+				eatingQueue.clear();
 				//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
 				this.worldMap.mapTicks(i + " dni od rozpoczecia symulacji");
 

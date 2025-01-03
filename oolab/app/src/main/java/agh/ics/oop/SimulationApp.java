@@ -3,7 +3,6 @@ package agh.ics.oop;
 import java.io.IOException;
 
 import agh.ics.oop.model.AbstractWorldMap;
-import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.RectangularMap;
 import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
