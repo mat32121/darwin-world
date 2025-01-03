@@ -20,7 +20,8 @@ public interface WorldMap extends MoveValidator {
      * @throws IncorrectPositionException 
      */
     void place(Animal animal) throws IncorrectPositionException;
-
+    void grassGrows();
+    void addFreePosition(Vector2d position);
     /**
      * Moves an animal (if it is present on the map) according to specified direction.
      * If the move is not possible, this method has no effect.

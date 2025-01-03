@@ -1,30 +1,43 @@
 package agh.ics.oop.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RectangularMap extends AbstractWorldMap {
 	private final int width, height;
 	private final Vector2d boundary;
-	private final int startingGrass;
 	private Map<Vector2d, Grass> grassPatches;
+	private ArrayList<Vector2d> freePositions;
 
-	public RectangularMap(int width, int height, int startingGrass) {
+	//*** czy wystepuje startowa ilosc trawy?
+	public RectangularMap(int width, int height) {
 		this.width = width;
 		this.height = height;
-        this.startingGrass = startingGrass;
 		this.grassPatches = new HashMap<>();
         this.boundary = new Vector2d(width-1, height-1);
+		this.freePositions = new ArrayList<>(width * height);
 
-		if(this.startingGrass > 0) {
-			RandomPositionGenerator randPosGen = new RandomPositionGenerator(this.height, this.width, this.startingGrass);
-			for(Vector2d grassPosition : randPosGen) {
-				this.grassPatches.put(grassPosition, new Grass(grassPosition));
+		//przygotowywujemy tablice wolnych miejsc.
+		for(int i = 0; i < width; ++i)
+			for(int j = 0; j < height; ++j)
+				this.freePositions.add(new Vector2d(i, j));
+	}
+
+	@Override
+	public void addFreePosition(Vector2d position) {
+		this.freePositions.add(position);
+	}
+	//*** do poprawy, czas O(n)!! ~ chociaz ilosc elementow to max 3000
+	@Override
+	public void grassGrows() {
+		int i = 0;
+		while (i < this.freePositions.size()) {
+			if (Math.random() < 0.02) {
+				Vector2d position = this.freePositions.get(i);
+				this.grassPatches.put(position, new Grass(position));
+				this.freePositions.remove(i); // Usunięcie elementu bez zwiększania indeksu
+			} else {
+				i++; // Przejście do następnego elementu tylko, gdy nie usuwamy
 			}
-			//*** do usuniecia, testy!!!
-			Vector2d testVector=new Vector2d(5,5);
-			this.grassPatches.put(testVector, new Grass(testVector));
 		}
 	}
 

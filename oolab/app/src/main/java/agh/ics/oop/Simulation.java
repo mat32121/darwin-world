@@ -60,10 +60,13 @@ public class Simulation implements Runnable {
 				for(Animal animal : eatingQueue) {
 					if (this.worldMap.grassAt(animal.getPosition())) {
 						this.worldMap.animalEatsGrass(animal);
+						this.worldMap.addFreePosition(animal.getPosition());
 					}
 					// zwierzeta jedza, potrzebne petle na na kazdy etap
 				}
+
 				eatingQueue.clear();
+				this.worldMap.grassGrows();
 				//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
 				this.worldMap.mapTicks(i + " dni od rozpoczecia symulacji");
 

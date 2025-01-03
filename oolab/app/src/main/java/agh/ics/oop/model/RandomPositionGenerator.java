@@ -15,12 +15,9 @@ public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vec
 		return this;
 	}
 
-	public RandomPositionGenerator(int maxWidth, int maxHeight, int grassCount) {
-		this.positions = new ArrayList<Vector2d>(maxWidth*maxHeight);
+	public RandomPositionGenerator(ArrayList<Vector2d> wholeSpace, int grassCount) {
+		this.positions = wholeSpace;
 		this.counter = grassCount;
-		for(int i = 0; i < maxHeight; ++i)
-			for(int j = 0; j < maxWidth; ++j)
-				this.positions.add(new Vector2d(i, j));
 		Collections.shuffle(this.positions);
 	}
 
