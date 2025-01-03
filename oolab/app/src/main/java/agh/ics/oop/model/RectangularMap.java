@@ -35,7 +35,8 @@ public class RectangularMap extends AbstractWorldMap {
 
 	@Override
 	public void animalEatsGrass(Animal animal) {
-		animal.incrementEnergy();
+		animal.changeEnergy(4);
+		//wartosc energetyczna rosliny do ustawienia
 		this.removeGrass(animal.getPosition());
 	}
 
@@ -45,12 +46,14 @@ public class RectangularMap extends AbstractWorldMap {
 	}
 
 	//***do poprawy, na jednym polu moze byc wiele zwierzat, poza tym zwierze moze poruszyc sie na dowolne pole
+	/*
 	@Override
 	public boolean canMoveTo(Vector2d position) {
 		return position.follows(AbstractWorldMap.ORIGIN)
 		    && position.precedes(this.boundary)
 		    && super.canMoveTo(position);
 	}
+	 */
 
 	@Override
 	public List<WorldElement> getElements() {

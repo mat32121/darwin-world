@@ -56,8 +56,8 @@ public class Animal implements WorldElement {
 		this.daysAfterDeath += 1;
 	}
 
-	public void incrementEnergy() {
-		this.energy += 4;
+	public void changeEnergy(int n) {
+		this.energy += n;
 	}
 
 
@@ -85,19 +85,21 @@ public class Animal implements WorldElement {
 		return this.direction == direction;
 	}
 
-	public void move(MoveValidator validator) {
+	public void move(Boundary boundary) {
 		//*** do poprawy skladni!!!
 		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
 		newPosition=newPosition.add(this.direction.toUnitVector());
-		this.energy-=1;
+		this.changeEnergy(-1);
 		//dodac liczbe zalezna od wspolrzednej y
 		this.direction=this.direction.next(genotype[genIndex]);
 		genIndex=(genIndex+1)%genotype.length;
 		//uwaga, zwierze wpierw rusza sie o jeden, a dopiero potem zmienia kierunek na ten w kodzie genetycznym.
-		//wymagana poprawa, ale do tego potrzeba jest przebudowa simulation.
-		if(validator.canMoveTo(newPosition)) {
-			this.position = newPosition;
+		//***prawdopodobnie da sie szybciej zrobic funkcje, ktora zapetla mape, niz ta ponizej
+		if (!newPosition.isWithinBounds(boundary)){
+			newPosition=newPosition.placeWithinBounds(boundary);
 		}
+		this.position = newPosition;
+
 		System.out.println(this.energy);
 	}
 }

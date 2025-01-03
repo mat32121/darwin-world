@@ -28,14 +28,17 @@ public abstract class AbstractWorldMap implements WorldMap {
 		this.notifyListeners(message);
 	}
 
+	/*
 	@Override
 	public boolean canMoveTo(Vector2d position) {
 		return !this.isOccupied(position);
 	}
+	 */
+
 
 	@Override
 	public void place(Animal animal) throws IncorrectPositionException {
-		if(this.canMoveTo(animal.getPosition()))
+		if(animal.getPosition().isWithinBounds(this.getCurrentBounds()))
 		{
 			animals.put(animal.getPosition(), animal);
 			this.notifyListeners("Placed animal " + animal);
@@ -47,7 +50,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	public void move(Animal animal) {
 		//*** do przeniesienia, gdzie indziej, funkcja usuwajaca martwe zwierzaki!!!
 		this.animals.remove(animal.getPosition());
-		animal.move(this);
+		animal.move(this.getCurrentBounds());
 		this.animals.put(animal.getPosition(), animal);
 	}
 

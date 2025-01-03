@@ -19,7 +19,7 @@ public class SimulationApp extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
         SimulationPresenter presenter = loader.getController();
-        AbstractWorldMap map = new RectangularMap(20, 6, 10);
+        AbstractWorldMap map = new RectangularMap(10, 6, 10);
         //trzeba zrobic, by mapa dopasowywala sie do ekranu!!!
         presenter.setWorldMap(map);
         map.addListener(presenter);

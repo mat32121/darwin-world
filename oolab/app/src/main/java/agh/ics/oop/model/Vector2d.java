@@ -35,18 +35,54 @@ public class Vector2d {
 	}
 
 	public Vector2d upperRight(Vector2d other) {
-		return new Vector2d((this.x > other.x ? this.x : other.x),
-							(this.y > other.y ? this.y : other.y));
+		return new Vector2d((Math.max(this.x, other.x)),
+							(Math.max(this.y, other.y)));
 	}
 
 	public Vector2d lowerLeft(Vector2d other) {
-		return new Vector2d((this.x < other.x ? this.x : other.x),
-							(this.y < other.y ? this.y : other.y));
+		return new Vector2d((Math.min(this.x, other.x)),
+							(Math.min(this.y, other.y)));
 	}
 
 	public Vector2d opposite() {
 		return new Vector2d(-this.x, -this.y);
 	}
+
+	public Vector2d placeWithinBounds(Boundary boundary) {
+		int yMax = boundary.upperRight().getY();
+		int yMin = boundary.lowerLeft().getY();
+		int xMax = boundary.upperRight().getX();
+		int xMin = boundary.lowerLeft().getX();
+
+		int rangeX = xMax - xMin + 1;
+		int rangeY = yMax - yMin + 1;
+
+		int newX = this.x;
+		int newY = this.y;
+
+		if (this.x < xMin) {
+			newX = xMax + 1 - Math.abs((this.x - xMin) % rangeX);
+		} else if (this.x > xMax) {
+			newX = xMin - 1 + Math.abs((this.x - xMax) % rangeX);
+		}
+
+		if (this.y < yMin) {
+			newY = yMax + 1 - Math.abs((this.y - yMin) % rangeY);
+		} else if (this.y > yMax) {
+			newY = yMin - 1 + Math.abs((this.y - yMax) % rangeY);
+		}
+
+		return new Vector2d(newX, newY);
+	}
+
+	public boolean isWithinBounds(Boundary boundary) {
+		Vector2d lowerLeftCorner = boundary.lowerLeft();
+		Vector2d upperRightCorner = boundary.upperRight();
+		return this.x >= lowerLeftCorner.getX() && this.x <= upperRightCorner.getX()
+				&& this.y >= lowerLeftCorner.getY() && this.y <= upperRightCorner.getY();
+	}
+
+
 
 	@Override
 	public boolean equals(Object other) {
