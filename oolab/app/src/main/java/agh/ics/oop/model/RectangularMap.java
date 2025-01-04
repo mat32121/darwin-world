@@ -16,7 +16,6 @@ public class RectangularMap extends AbstractWorldMap {
         this.boundary = new Vector2d(width-1, height-1);
 		this.freePositions = new ArrayList<>(width * height);
 
-		//przygotowywujemy tablice wolnych miejsc.
 		for(int i = 0; i < width; ++i)
 			for(int j = 0; j < height; ++j)
 				this.freePositions.add(new Vector2d(i, j));
@@ -26,12 +25,13 @@ public class RectangularMap extends AbstractWorldMap {
 	public void addFreePosition(Vector2d position) {
 		this.freePositions.add(position);
 	}
-	//*** do poprawy, czas O(n)!! ~ chociaz ilosc elementow to max 3000
+	//*** do poprawy, czas O(n)!! ~ chociaz ilosc elementow to max 3000, ale i tak warto by bylo
+	//przeniesc mechanizm losowania do innej klasy.
 	@Override
 	public void grassGrows() {
 		int i = 0;
 		while (i < this.freePositions.size()) {
-			if (Math.random() < 0.02) {
+			if (Math.random() < 0.05) {
 				Vector2d position = this.freePositions.get(i);
 				this.grassPatches.put(position, new Grass(position));
 				this.freePositions.remove(i); // Usunięcie elementu bez zwiększania indeksu
@@ -49,7 +49,7 @@ public class RectangularMap extends AbstractWorldMap {
 	@Override
 	public void animalEatsGrass(Animal animal) {
 		animal.changeEnergy(4);
-		//wartosc energetyczna rosliny do ustawienia
+		//*** mozliwosc ustawienia wartosci energetycznej rosliny do dodania!
 		this.removeGrass(animal.getPosition());
 	}
 
@@ -57,6 +57,7 @@ public class RectangularMap extends AbstractWorldMap {
 	public void removeGrass(Vector2d position) {
 		grassPatches.remove(position);
 	}
+
 
 	//***do poprawy, na jednym polu moze byc wiele zwierzat, poza tym zwierze moze poruszyc sie na dowolne pole
 	/*
@@ -71,8 +72,7 @@ public class RectangularMap extends AbstractWorldMap {
 	@Override
 	public List<WorldElement> getElements() {
 		List<WorldElement> elements = super.getElements();
-		for(Grass grass : this.grassPatches.values())
-			elements.add(grass);
+        elements.addAll(this.grassPatches.values());
 		return elements;
 	}
 

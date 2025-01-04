@@ -73,7 +73,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void onSimulationStartClicked() {
-        List<Vector2d> positions = List.of(new Vector2d(3,4));
+        List<Vector2d> positions = List.of(new Vector2d(3,4), new Vector2d(5,4));
         Simulation simulation = new Simulation(positions, this.worldMap);
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
         engine.runAsync();

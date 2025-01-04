@@ -2,16 +2,12 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
 	private final UUID id;
 	protected static final Vector2d ORIGIN = new Vector2d(0, 0);
-	protected final Map<Vector2d, Animal> animals;
+	protected final Map<Vector2d, Set<Animal>> animals;
 	protected final MapVisualizer visualizer;
 
 	protected final List<MapChangeListener> listeners;
@@ -40,7 +36,13 @@ public abstract class AbstractWorldMap implements WorldMap {
 	public void place(Animal animal) throws IncorrectPositionException {
 		if(animal.getPosition().isWithinBounds(this.getCurrentBounds()))
 		{
-			animals.put(animal.getPosition(), animal);
+			if(animals.containsKey(animal.getPosition())){
+				animals.get(animal.getPosition()).add(animal);
+			} else {
+				Set<Animal> animalSet = new HashSet<>();
+				animalSet.add(animal);
+				animals.put(animal.getPosition(), animalSet);
+			}
 			this.notifyListeners("Placed animal " + animal);
 		}
 		else
@@ -48,33 +50,53 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 	@Override
 	public void move(Animal animal) {
-		//*** do przeniesienia, gdzie indziej, funkcja usuwajaca martwe zwierzaki!!!
-		this.animals.remove(animal.getPosition());
+		if (1<this.animals.get(animal.getPosition()).size()){
+			this.animals.get(animal.getPosition()).remove(animal);
+		} else {
+			this.animals.remove(animal.getPosition());
+		}
 		animal.move(this.getCurrentBounds());
-		this.animals.put(animal.getPosition(), animal);
-	}
+		//wiele zwierzat na jednej pozycji
+		if (this.animals.containsKey(animal.getPosition())){
+			this.animals.get(animal.getPosition()).add(animal);
+		} else {
+			HashSet<Animal> newAnimalSet=new HashSet<>();
+			newAnimalSet.add(animal);
+			this.animals.put(animal.getPosition(), newAnimalSet);
 
+		}
+	}
 
 	@Override
-	public boolean isOccupied(Vector2d position) {
-		return (this.objectAt(position) instanceof Animal);
+	public Set<Animal> getAnimalsOnPosition(Vector2d position) {
+		return this.animals.get(position);
 	}
 
+
+	//@Override
+	//public boolean isOccupied(Vector2d position) {
+	//	return (this.objectAt(position) instanceof Animal);
+	//}
+	//***do poprawy jutro!!!!
+	//*** czy da sie zrobic tak, by rysowalo wszystkie zwierzaki w jednym miejscu?
+	//*** aktualnie wybiera 'losowego' zwierzaka i jego rysuje.
 	@Override
 	public WorldElement objectAt(Vector2d position) {
-		return this.animals.get(position);
+		return this.animals.get(position).iterator().next();
 	}
 
 	@Override
 	public List<WorldElement> getElements() {
 		List<WorldElement> elements = new ArrayList<>();
 
-
-		for(Animal entry : this.animals.values()) {
-			if (entry.getLiveStatus()){
-				elements.add(entry);
+		for (Set<Animal> animalList : this.animals.values()){
+			for(Animal entry : animalList) {
+				if (entry.getLiveStatus()){
+					elements.add(entry);
+				}
 			}
 		}
+
 
 		return elements;
 	}

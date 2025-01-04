@@ -48,6 +48,7 @@ public class Vector2d {
 		return new Vector2d(-this.x, -this.y);
 	}
 
+	//*** nie wiem, czy nie lepiej przeniesc ta funkcje gdzies indziej
 	public Vector2d placeWithinBounds(Boundary boundary) {
 		int yMax = boundary.upperRight().getY();
 		int yMin = boundary.lowerLeft().getY();

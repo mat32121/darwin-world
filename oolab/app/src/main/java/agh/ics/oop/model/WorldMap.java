@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 //całe do usuniecia;
@@ -31,6 +32,7 @@ public interface WorldMap extends MoveValidator {
     boolean grassAt(Vector2d position);
     void animalEatsGrass(Animal animal);
     void removeGrass(Vector2d position);
+    Set<Animal> getAnimalsOnPosition(Vector2d position);
     /**
      * Return true if given position on the map is occupied. Should not be
      * confused with canMove since there might be empty positions where the animal
@@ -39,7 +41,7 @@ public interface WorldMap extends MoveValidator {
      * @param position Position to check.
      * @return True if the position is occupied.
      */
-    boolean isOccupied(Vector2d position);
+    //boolean isOccupied(Vector2d position);
 
     /**
      * Return an animal at a given position.

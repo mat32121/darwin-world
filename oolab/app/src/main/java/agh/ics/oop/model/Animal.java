@@ -13,7 +13,7 @@ public class Animal implements WorldElement {
 	private boolean liveStatus;
 	private int daysAfterDeath;
 	private int genIndex;
-	protected final int[] genotype;
+	private final int[] genotype;
 
 
 	//private int genotypeIndex;
@@ -60,7 +60,19 @@ public class Animal implements WorldElement {
 		this.energy += n;
 	}
 
+	//public Animal breeding(Animal animal) {
+		//*** trzeba dodac, ze wyrzua blad kiedy zwierzeta nie sa na tej samej pozycji.
+	//	int newEnergy = (this.energy^2 + animal.energy^2)/(this.energy+animal.energy);
+	//	this.changeEnergy(-newEnergy);
+	//	animal.changeEnergy(-newEnergy);
 
+	//	int[] dominantGenotype = this.genotype;
+	//	int[] recessiveGenotype = animal.genotype;
+
+
+
+	//	return new Animal(this.getPosition(), newEnergy, );
+	//}
 
 	@Override
 	public String toString() {
