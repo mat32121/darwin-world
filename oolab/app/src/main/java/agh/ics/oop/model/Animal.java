@@ -1,8 +1,5 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Animal implements WorldElement {
 	//private List<Animal> children = new ArrayList<>();
 	//private int age = 0;
@@ -78,14 +75,14 @@ public class Animal implements WorldElement {
 	public String toString() {
 		return switch(this.direction) {
 			//***mapa jest odwrocona, dlatego NORTH -> "↓", do poprawy!
-			case NORTH -> "↓";
-			case NORTH_WEST->"↙";
+			case NORTH -> "↑";
+			case NORTH_WEST->"↖";
 			case WEST  -> "←";
-            case SOUTH_WEST -> "↖";
-            case SOUTH -> "↑";
-            case SOUTH_EAST -> "↗";
+            case SOUTH_WEST -> "↙";
+            case SOUTH -> "↓";
+            case SOUTH_EAST -> "↘";
             case EAST  -> "→";
-            case NORTH_EAST -> "↘";
+            case NORTH_EAST -> "↗";
         };
 	}
 

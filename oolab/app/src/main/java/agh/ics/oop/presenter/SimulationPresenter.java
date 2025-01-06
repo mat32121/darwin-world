@@ -14,10 +14,12 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 
 public class SimulationPresenter implements MapChangeListener {
-    // private static final int CELL_WIDTH = 25, CELL_HEIGHT = 25;
+    private static final int CELL_WIDTH = 20, CELL_HEIGHT = 20;
     private WorldMap worldMap;
     @FXML
     private Label infoLabel;
@@ -40,25 +42,25 @@ public class SimulationPresenter implements MapChangeListener {
 
     private void drawMap() {
         this.clearGrid();
-        // this.mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
-        // this.mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
+        this.mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
+        this.mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
         Label yx = new Label("y\\x");
         GridPane.setHalignment(yx, HPos.CENTER);
         this.mapGrid.add(yx, 0, 0, 1, 1);
         Boundary mapBoundary = worldMap.getCurrentBounds();
 
-        for (int i = mapBoundary.lowerLeft().getX(); i <= mapBoundary.upperRight().getX(); ++i) {
-            // this.mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
+        for(int i = mapBoundary.lowerLeft().getX(); i <= mapBoundary.upperRight().getX(); ++i) {
+            this.mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
             Label newLabel = new Label(Integer.toString(i));
             GridPane.setHalignment(newLabel, HPos.CENTER);
             this.mapGrid.add(newLabel, i-mapBoundary.lowerLeft().getX()+1, 0, 1, 1);
         }
 
-        for (int i = mapBoundary.lowerLeft().getY(); i <= mapBoundary.upperRight().getY(); ++i) {
-            // this.mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
-            Label newLabel = new Label(Integer.toString(i));
+        for(int i = 0; i <= mapBoundary.upperRight().getY()-mapBoundary.lowerLeft().getY(); ++i) {
+            this.mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
+            Label newLabel = new Label(Integer.toString(mapBoundary.upperRight().getY()-i));
             GridPane.setHalignment(newLabel, HPos.CENTER);
-            this.mapGrid.add(newLabel, 0, i-mapBoundary.lowerLeft().getY()+1, 1, 1);
+            this.mapGrid.add(newLabel, 0, i+1, 1, 1);
         }
 
         for(WorldElement elem : this.worldMap.getElements()) {
@@ -66,7 +68,7 @@ public class SimulationPresenter implements MapChangeListener {
             GridPane.setHalignment(newLabel, HPos.CENTER);
             this.mapGrid.add(newLabel,
                 elem.getPosition().getX()-mapBoundary.lowerLeft().getX()+1,
-                elem.getPosition().getY()-mapBoundary.lowerLeft().getY()+1);
+                mapBoundary.upperRight().getY()-elem.getPosition().getY()+1);
         }
     }
 
