@@ -37,6 +37,11 @@ public class SimulationEngine {
         executorService.awaitTermination(10, TimeUnit.SECONDS);
     }
 
+    public void stopSimulations() {
+        for(Simulation simulation : this.simulations)
+            simulation.stop();
+    }
+
     public void runAsyncInThreadPool() {
         for(Simulation simulation : this.simulations)
             this.executorService.submit(simulation);

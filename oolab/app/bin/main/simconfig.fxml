@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="5">
+    <Label fx:id="mapWidthFieldLabel" text="Map width" textAlignment="center"/>
+    <TextField fx:id="mapWidthField"/>
+
+    <Label fx:id="mapHeightFieldLabel" text="Map height" textAlignment="center"/>
+    <TextField fx:id="mapHeightField"/>
+
+    <Label fx:id="numInitialGrassFieldLabel" text="Number of initial grass fields" textAlignment="center"/>
+    <TextField fx:id="numInitialGrassField"/>
+
+    <Label fx:id="energyPerGrassFieldLabel" text="Energy per grass field" textAlignment="center"/>
+    <TextField fx:id="energyPerGrassField"/>
+
+    <Label fx:id="numGrassPerDayFieldLabel" text="Number of new grass per day" textAlignment="center"/>
+    <TextField fx:id="numGrassPerDayField"/>
+
+    <Label fx:id="numInitialAnimalsFieldLabel" text="Number of initial animals" textAlignment="center"/>
+    <TextField fx:id="numInitialAnimalsField"/>
+
+    <Label fx:id="initialEnergyFieldLabel" text="Amount of initial energy in each animal" textAlignment="center"/>
+    <TextField fx:id="initialEnergyField"/>
+
+    <Label fx:id="minCopulateEnergyFieldLabel" text="Minimal energy needed to copulate" textAlignment="center"/>
+    <TextField fx:id="minCopulateEnergyField"/>
+
+    <Label fx:id="copulateEnergyUsedFieldLabel" text="Energy used after copulation" textAlignment="center"/>
+    <TextField fx:id="copulateEnergyUsedField"/>
+
+    <Label fx:id="minChildMutationsFieldLabel" text="Minimal number of child mutations" textAlignment="center"/>
+    <TextField fx:id="minChildMutationsField"/>
+
+    <Label fx:id="maxChildMutationsFieldLabel" text="Maximal number of child mutations" textAlignment="center"/>
+    <TextField fx:id="maxChildMutationsField"/>
+
+    <Label fx:id="numGenesFieldLabel" text="Number of gene fields" textAlignment="center"/>
+    <TextField fx:id="numGenesField"/>
+
+    <Button fx:id="startButton" text="Start simulation!" textAlignment="center"/>
+</VBox>

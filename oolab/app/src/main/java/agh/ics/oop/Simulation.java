@@ -12,7 +12,9 @@ import agh.ics.oop.model.WorldMap;
 public class Simulation implements Runnable {
 	private List<Animal> animals;
 	private WorldMap worldMap;
-	private static final long MILLIS_INTERVAL = 1000;
+	private static final long MILLIS_INTERVAL = 100;
+
+	private boolean isRunning = true;
 
 	public Simulation(List<Vector2d> initialPositions, WorldMap worldMap) {
 		this.animals = new ArrayList<>();
@@ -46,7 +48,7 @@ public class Simulation implements Runnable {
 
 			ArrayList<Animal> eatingQueue = new ArrayList<>();
 			ArrayList<Vector2d> breedingPositions = new ArrayList<>();
-			for(int i = 0; i < 100; ++i) {
+			for(int i = 0; this.isRunning; ++i) {
 				Thread.sleep(Simulation.MILLIS_INTERVAL);
                 for (Animal animal : animals) {
                     //wpierw usuwamy martwe zwierzaki
@@ -86,13 +88,15 @@ public class Simulation implements Runnable {
 				eatingQueue.clear();
 				this.worldMap.grassGrows();
 				//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
-				this.worldMap.mapTicks(i + " dni od rozpoczecia symulacji");
+				this.worldMap.mapTicks(i + (i == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
 
 			}
 		} catch (InterruptedException e) {
 			// Sleep was interrupted. Leaving catch empty.
 		}
 	}
+
+	public void stop() {this.isRunning = false;}
 
 	List<Animal> getAnimals() {
 		return Collections.unmodifiableList(this.animals);
