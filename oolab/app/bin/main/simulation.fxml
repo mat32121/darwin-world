@@ -5,6 +5,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
@@ -22,4 +24,7 @@
             </right>
         </BorderPane>
     </bottom>
+    <right>
+        <VBox fx:id="statisticsBox"/>
+    </right>
 </BorderPane>

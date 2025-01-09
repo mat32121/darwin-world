@@ -5,8 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 import agh.ics.oop.model.Animal;
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.Grass;
 import agh.ics.oop.model.IncorrectPositionException;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.WorldElement;
 import agh.ics.oop.model.WorldMap;
 
 public class Simulation implements Runnable {
@@ -99,7 +102,38 @@ public class Simulation implements Runnable {
 
 	public void stop() {this.isRunning = false;}
 
-	List<Animal> getAnimals() {
+	public List<Animal> getAnimals() {
 		return Collections.unmodifiableList(this.animals);
+	}
+
+	public int getNumAnimals() {
+		int result = 0;
+		for(WorldElement elem : this.worldMap.getElements())
+			if(elem instanceof Animal)
+				++result;
+		return result;
+	}
+
+	public int getNumGrass() {
+		int result = 0;
+		for(WorldElement elem : this.worldMap.getElements())
+			if(elem instanceof Grass)
+				++result;
+		return result;
+	}
+
+	public int getNumFreeSquares() {
+		Boundary bounds = this.worldMap.getCurrentBounds();
+		return (bounds.upperRight().getX()-bounds.lowerLeft().getX()+1)*
+		       (bounds.upperRight().getY()-bounds.lowerLeft().getY()+1)-
+			   this.getNumAnimals();
+	}
+
+	public double getAverageEnergy() {
+		double energySum = 0.0;
+		for(WorldElement elem : this.worldMap.getElements())
+			if(elem instanceof Animal animal)
+				energySum += animal.getEnergy();
+		return energySum/this.getNumAnimals();
 	}
 }

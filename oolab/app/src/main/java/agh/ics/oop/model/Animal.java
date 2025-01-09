@@ -11,6 +11,7 @@ public class Animal implements WorldElement, Comparable {
 	private int daysAfterDeath;
 	private int genIndex;
 	private final int[] genotype;
+	// TODO: Add children list!!!
 
 
 	//private int genotypeIndex;

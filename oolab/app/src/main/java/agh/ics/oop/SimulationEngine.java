@@ -46,4 +46,37 @@ public class SimulationEngine {
         for(Simulation simulation : this.simulations)
             this.executorService.submit(simulation);
     }
+
+	public int getNumAnimals() {
+		int result = 0;
+		for(Simulation sim : this.simulations)
+            result += sim.getNumAnimals();
+		return result;
+	}
+
+	public int getNumGrass() {
+		int result = 0;
+		for(Simulation sim : this.simulations)
+            result += sim.getNumGrass();
+		return result;
+	}
+
+	public int getNumFreeSquares() {
+		int result = 0;
+		for(Simulation sim : this.simulations)
+            result += sim.getNumFreeSquares();
+		return result;
+	}
+
+	public double getAverageEnergy() {
+		double result = 0.0;
+        double weight_sum = 0.0;
+		for(Simulation sim : this.simulations) {
+            result += sim.getAverageEnergy()*sim.getNumAnimals();
+            weight_sum += sim.getNumAnimals();
+        }
+        if(!this.simulations.isEmpty())
+            result /= weight_sum;
+		return result;
+	}
 }

@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -33,6 +34,8 @@ public class SimulationPresenter implements MapChangeListener {
     private TextField movesField;
     @FXML
     private GridPane mapGrid;
+    @FXML
+    private VBox statisticsBox;
     
     private SimulationEngine simulationEngine;
     private boolean simulationStarted = false;
@@ -49,13 +52,26 @@ public class SimulationPresenter implements MapChangeListener {
 
     // Energy could be of any range, so a sigmoid function is used
     // Higher energy -> darker animal
-    private static double energyCurve(int energy) {
+    private static double energyCurve(double energy) {
         // System.out.println("Energy: " + Integer.toString(energy));
         // System.out.println(1.0-0.8*(2.0/(1.0+Math.pow(SimulationPresenter.ENERGY_COLOR_COEFF, (double)(-energy)))-1));
-        return 1.0-0.8*(2.0/(1.0+Math.pow(SimulationPresenter.ENERGY_COLOR_COEFF, (double)(-energy)))-1);
+        return 1.0-0.8*(2.0/(1.0+Math.pow(SimulationPresenter.ENERGY_COLOR_COEFF, -energy))-1);
+    }
+
+    private void printStatistics() {
+        this.statisticsBox.getChildren().clear();
+        this.statisticsBox.getChildren().add(new Label("Number of animals: "+this.simulationEngine.getNumAnimals()));
+        this.statisticsBox.getChildren().add(new Label("Number of grass pieces: "+this.simulationEngine.getNumGrass()));
+        this.statisticsBox.getChildren().add(new Label("Number of free squares: "+this.simulationEngine.getNumFreeSquares()));
+        String genotypeList = "";
+        this.statisticsBox.getChildren().add(new Label("Most popular genotypes:\n"+genotypeList));
+        this.statisticsBox.getChildren().add(new Label("Average animal energy: "+this.simulationEngine.getAverageEnergy()));
+        this.statisticsBox.getChildren().add(new Label("Average lifespan of currently dead animals: "));
+        this.statisticsBox.getChildren().add(new Label("Average number of children of living animals: "));
     }
 
     private void drawMap() {
+        this.printStatistics();
         this.clearGrid();
         this.mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
         this.mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
@@ -82,7 +98,7 @@ public class SimulationPresenter implements MapChangeListener {
             if(elem instanceof Animal animal) {
                 Circle newCircle = new Circle();
                 newCircle.setRadius(Math.min(SimulationPresenter.CELL_WIDTH*0.75, SimulationPresenter.CELL_HEIGHT*0.75)/2);
-                Color fillColor = (Color.hsb(0.25, 1.0, SimulationPresenter.energyCurve(animal.getEnergy())));
+                Color fillColor = (Color.hsb(0.1, 0.5, SimulationPresenter.energyCurve(animal.getEnergy())));
                 newCircle.setFill(fillColor);
                 GridPane.setHalignment(newCircle, HPos.CENTER);
                 this.mapGrid.add(newCircle,
