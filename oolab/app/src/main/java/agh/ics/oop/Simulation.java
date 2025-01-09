@@ -52,7 +52,7 @@ public class Simulation implements Runnable {
 				Thread.sleep(Simulation.MILLIS_INTERVAL);
                 for (Animal animal : animals) {
                     //wpierw usuwamy martwe zwierzaki
-                    if (animal.getEnergy() == 0) {
+                    if (animal.getEnergy() <= 0) {
                         animal.setLiveStatus(false);
 					}
                     //potem ruszamy zwierzakami
@@ -61,6 +61,7 @@ public class Simulation implements Runnable {
 						if (this.worldMap.grassAt(animal.getPosition())) {
 							eatingQueue.add(animal);
 						}
+						// zmienic eatingQueue na eatingPositions, wtedy bedzie jeden mechanizm porownywania
 						int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
 						if(positionAnimalCount==2){
 							breedingPositions.add(animal.getPosition());

@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-public class Animal implements WorldElement {
+public class Animal implements WorldElement, Comparable {
 	//private List<Animal> children = new ArrayList<>();
 	//private int age = 0;
 	//private int plantsEaten = 0;
@@ -25,6 +25,11 @@ public class Animal implements WorldElement {
 		//this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
 		this.genIndex=0; //**** do usuniecia!!! poprawna wersja wyzej /\
 		//***zakladam, ze zawsze tworzymy zywego zwierzaka
+	}
+
+	// TODO: Implement compareTo
+	public int compareTo(Object other) {
+		return 0;
 	}
 
 	public boolean getLiveStatus() {
