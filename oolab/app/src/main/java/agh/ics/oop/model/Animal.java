@@ -1,8 +1,10 @@
 package agh.ics.oop.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Animal implements WorldElement, Comparable {
-	//private List<Animal> children = new ArrayList<>();
-	//private int age = 0;
 	//private int plantsEaten = 0;
 	private MapDirection direction;
 	private Vector2d position;
@@ -11,7 +13,9 @@ public class Animal implements WorldElement, Comparable {
 	private int daysAfterDeath;
 	private int genIndex;
 	private final int[] genotype;
-	// TODO: Add children list!!!
+	private List<Animal> children;
+	private int age;
+	private Random rng;
 
 
 	//private int genotypeIndex;
@@ -26,11 +30,24 @@ public class Animal implements WorldElement, Comparable {
 		//this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
 		this.genIndex=0; //**** do usuniecia!!! poprawna wersja wyzej /\
 		//***zakladam, ze zawsze tworzymy zywego zwierzaka
+		this.children = new ArrayList<>();
+		this.age = 0;
+		this.rng = new Random();
 	}
 
-	// TODO: Implement compareTo
 	public int compareTo(Object other) {
-		return 0;
+		if(other instanceof Animal animal) {
+			int res = animal.getEnergy()-this.energy;
+			if(res == 0)
+				res = animal.getAge()-this.age;
+			if(res == 0)
+				res = animal.getNumChildren()-this.getNumChildren();
+			if(res == 0)
+				res = this.rng.ints(0, 2).findFirst().getAsInt()*2-1;
+			return res;
+		}
+		else
+			throw new IllegalArgumentException("Cannot compare Animal to different class!");
 	}
 
 	public boolean getLiveStatus() {
@@ -46,7 +63,7 @@ public class Animal implements WorldElement, Comparable {
 	}
 
 	public int getDaysAfterDeath() {
-		return daysAfterDeath;
+		return this.daysAfterDeath;
 	}
 
 	public void setLiveStatus(boolean status) {
@@ -116,5 +133,18 @@ public class Animal implements WorldElement, Comparable {
 		this.position = newPosition;
 
 		System.out.println(this.energy);
+	}
+
+	// TODO: Implement
+	// public Animal copulate(Animal mate) {
+		// return new Animal();
+	// }
+
+    public int getAge() {
+        return age;
+    }
+
+	public int getNumChildren() {
+		return this.children.size();
 	}
 }

@@ -42,5 +42,7 @@
     <Label fx:id="numGenesFieldLabel" text="Number of gene fields" textAlignment="center"/>
     <TextField fx:id="numGenesField"/>
 
+    <Button fx:id="readButton" text="Read parameters from file" textAlignment="center"/>
+    <Button fx:id="writeButton" text="Write parameters to file" textAlignment="center"/>
     <Button fx:id="startButton" text="Start simulation!" textAlignment="center"/>
 </VBox>

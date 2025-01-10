@@ -1,13 +1,19 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.UUID;
 
-import java.util.*;
+import agh.ics.oop.model.util.MapVisualizer;
 
 public abstract class AbstractWorldMap implements WorldMap {
 	private final UUID id;
 	protected static final Vector2d ORIGIN = new Vector2d(0, 0);
-	protected final Map<Vector2d, Set<Animal>> animals;
+	protected final Map<Vector2d, SortedSet<Animal>> animals;
 	protected final MapVisualizer visualizer;
 
 	protected final List<MapChangeListener> listeners;
@@ -39,7 +45,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 			if(animals.containsKey(animal.getPosition())){
 				animals.get(animal.getPosition()).add(animal);
 			} else {
-				Set<Animal> animalSet = new HashSet<>();
+				SortedSet<Animal> animalSet = new TreeSet<>();
 				animalSet.add(animal);
 				animals.put(animal.getPosition(), animalSet);
 			}
@@ -60,7 +66,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 		if (this.animals.containsKey(animal.getPosition())){
 			this.animals.get(animal.getPosition()).add(animal);
 		} else {
-			HashSet<Animal> newAnimalSet=new HashSet<>();
+			SortedSet<Animal> newAnimalSet=new TreeSet<>();
 			newAnimalSet.add(animal);
 			this.animals.put(animal.getPosition(), newAnimalSet);
 
@@ -68,7 +74,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 
 	@Override
-	public Set<Animal> getAnimalsOnPosition(Vector2d position) {
+	public SortedSet<Animal> getAnimalsOnPosition(Vector2d position) {
 		return this.animals.get(position);
 	}
 
@@ -89,7 +95,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	public List<WorldElement> getElements() {
 		List<WorldElement> elements = new ArrayList<>();
 
-		for (Set<Animal> animalList : this.animals.values()){
+		for (SortedSet<Animal> animalList : this.animals.values()){
 			for(Animal entry : animalList) {
 				if (entry.getLiveStatus()){
 					elements.add(entry);

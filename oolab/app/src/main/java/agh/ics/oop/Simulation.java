@@ -66,7 +66,7 @@ public class Simulation implements Runnable {
 						}
 						// zmienic eatingQueue na eatingPositions, wtedy bedzie jeden mechanizm porownywania
 						int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
-						if(positionAnimalCount==2){
+						if(positionAnimalCount>=2){
 							breedingPositions.add(animal.getPosition());
 						}
 

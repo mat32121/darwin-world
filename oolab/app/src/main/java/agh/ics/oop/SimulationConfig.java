@@ -1,6 +1,10 @@
 package agh.ics.oop;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 import agh.ics.oop.model.AbstractWorldMap;
 import agh.ics.oop.model.RectangularMap;
@@ -10,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class SimulationConfig {
@@ -73,19 +78,10 @@ public class SimulationConfig {
         this.maxChildMutationsField = (TextField)vbox.lookup("#maxChildMutationsField");
         this.numGenesField = (TextField)vbox.lookup("#numGenesField");
     
-        this.mapWidthField.setText(Integer.toString(this.mapWidth));
-        this.mapHeightField.setText(Integer.toString(this.mapHeight));
-        this.numInitialGrassField.setText(Integer.toString(this.numInitialGrass));
-        this.energyPerGrassField.setText(Integer.toString(this.energyPerGrass));
-        this.numGrassPerDayField.setText(Integer.toString(this.numGrassPerDay));
-        this.numInitialAnimalsField.setText(Integer.toString(this.numInitialAnimals));
-        this.initialEnergyField.setText(Integer.toString(this.initialEnergy));
-        this.minCopulateEnergyField.setText(Integer.toString(this.minCopulateEnergy));
-        this.copulateEnergyUsedField.setText(Integer.toString(this.copulateEnergyUsed));
-        this.minChildMutationsField.setText(Integer.toString(this.minChildMutations));
-        this.maxChildMutationsField.setText(Integer.toString(this.maxChildMutations));
-        this.numGenesField.setText(Integer.toString(this.numGenes));
+        this.updateFieldsText();
 
+        ((Button)vbox.lookup("#readButton")).setOnAction((actionEvent) -> {this.readFromCSV();});
+        ((Button)vbox.lookup("#writeButton")).setOnAction((actionEvent) -> {this.writeToCSV();});
         ((Button)vbox.lookup("#startButton")).setOnAction((actionEvent) -> {this.setParamsFromFields(); setSimulationParamsStage.close();});
 
         Scene scene = new Scene(vbox);
@@ -108,5 +104,73 @@ public class SimulationConfig {
         this.minChildMutations = Integer.parseInt(this.minChildMutationsField.getText());
         this.maxChildMutations = Integer.parseInt(this.maxChildMutationsField.getText());
         this.numGenes = Integer.parseInt(this.numGenesField.getText());
+    }
+
+    private void updateFieldsText() {
+        this.mapWidthField.setText(Integer.toString(this.mapWidth));
+        this.mapHeightField.setText(Integer.toString(this.mapHeight));
+        this.numInitialGrassField.setText(Integer.toString(this.numInitialGrass));
+        this.energyPerGrassField.setText(Integer.toString(this.energyPerGrass));
+        this.numGrassPerDayField.setText(Integer.toString(this.numGrassPerDay));
+        this.numInitialAnimalsField.setText(Integer.toString(this.numInitialAnimals));
+        this.initialEnergyField.setText(Integer.toString(this.initialEnergy));
+        this.minCopulateEnergyField.setText(Integer.toString(this.minCopulateEnergy));
+        this.copulateEnergyUsedField.setText(Integer.toString(this.copulateEnergyUsed));
+        this.minChildMutationsField.setText(Integer.toString(this.minChildMutations));
+        this.maxChildMutationsField.setText(Integer.toString(this.maxChildMutations));
+        this.numGenesField.setText(Integer.toString(this.numGenes));
+    }
+
+    private void readFromCSV() {
+        Stage fileOpenStage = new Stage();
+        fileOpenStage.setTitle("Choose a file to read parameters from");
+        FileChooser fileChooser = new FileChooser();
+        File readFile = fileChooser.showOpenDialog(fileOpenStage);
+        if(readFile != null) {
+            try (Scanner scanner = new Scanner(readFile)) {
+                this.mapWidth = scanner.nextInt();
+                this.mapHeight = scanner.nextInt();
+                this.numInitialGrass = scanner.nextInt();
+                this.energyPerGrass = scanner.nextInt();
+                this.numGrassPerDay = scanner.nextInt();
+                this.numInitialAnimals = scanner.nextInt();
+                this.initialEnergy = scanner.nextInt();
+                this.minCopulateEnergy = scanner.nextInt();
+                this.copulateEnergyUsed = scanner.nextInt();
+                this.minChildMutations = scanner.nextInt();
+                this.maxChildMutations = scanner.nextInt();
+                this.numGenes = scanner.nextInt();
+            } catch (FileNotFoundException e) {
+                System.err.println("File " + readFile.getName() + " not found!");
+            } catch (RuntimeException e) {
+                System.err.println("Error while reading file " + readFile.getName());
+            }
+            this.updateFieldsText();
+        }
+    }
+
+    private void writeToCSV() {
+        Stage fileOpenStage = new Stage();
+        fileOpenStage.setTitle("Choose a file to write parameters to");
+        FileChooser fileChooser = new FileChooser();
+        File writeFile = fileChooser.showOpenDialog(fileOpenStage);
+        if(writeFile != null) {
+            try (PrintWriter writer = new PrintWriter(writeFile)) {
+                writer.println(this.mapWidth);
+                writer.println(this.mapHeight);
+                writer.println(this.numInitialGrass);
+                writer.println(this.energyPerGrass);
+                writer.println(this.numGrassPerDay);
+                writer.println(this.numInitialAnimals);
+                writer.println(this.initialEnergy);
+                writer.println(this.minCopulateEnergy);
+                writer.println(this.copulateEnergyUsed);
+                writer.println(this.minChildMutations);
+                writer.println(this.maxChildMutations);
+                writer.println(this.numGenes);
+            } catch (FileNotFoundException e) {
+                System.err.println("File " + writeFile.getName() + " not found!");
+            }
+        }
     }
 }
