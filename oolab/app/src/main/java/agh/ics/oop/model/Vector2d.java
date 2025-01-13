@@ -55,22 +55,19 @@ public class Vector2d {
 		int xMax = boundary.upperRight().getX();
 		int xMin = boundary.lowerLeft().getX();
 
-		int rangeX = xMax - xMin + 1;
-		int rangeY = yMax - yMin + 1;
-
 		int newX = this.x;
 		int newY = this.y;
 
 		if (this.x < xMin) {
-			newX = xMax + 1 - Math.abs((this.x - xMin) % rangeX);
+			newX = xMax - 1;
 		} else if (this.x > xMax) {
-			newX = xMin - 1 + Math.abs((this.x - xMax) % rangeX);
+			newX = xMin +1;
 		}
 
 		if (this.y < yMin) {
-			newY = yMax + 1 - Math.abs((this.y - yMin) % rangeY);
+			newY = yMax;
 		} else if (this.y > yMax) {
-			newY = yMin - 1 + Math.abs((this.y - yMax) % rangeY);
+			newY = yMin;
 		}
 
 		return new Vector2d(newX, newY);

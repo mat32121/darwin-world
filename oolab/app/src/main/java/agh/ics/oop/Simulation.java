@@ -18,6 +18,7 @@ public class Simulation implements Runnable {
 	private static final long MILLIS_INTERVAL = 100;
 
 	private boolean isRunning = true;
+	private boolean isPaused = false;
 
 	public Simulation(List<Vector2d> initialPositions, WorldMap worldMap) {
 		this.animals = new ArrayList<>();
@@ -51,50 +52,51 @@ public class Simulation implements Runnable {
 
 			ArrayList<Animal> eatingQueue = new ArrayList<>();
 			ArrayList<Vector2d> breedingPositions = new ArrayList<>();
-			for(int i = 0; this.isRunning; ++i) {
-				Thread.sleep(Simulation.MILLIS_INTERVAL);
-                for (Animal animal : animals) {
-                    //wpierw usuwamy martwe zwierzaki
-                    if (animal.getEnergy() <= 0) {
-                        animal.setLiveStatus(false);
+			for(int i = 0; this.isRunning;)
+				if(!this.isPaused) {
+					Thread.sleep(Simulation.MILLIS_INTERVAL);
+					for (Animal animal : animals) {
+						//wpierw usuwamy martwe zwierzaki
+						if (animal.getEnergy() <= 0) {
+							animal.setLiveStatus(false);
+						}
+						//potem ruszamy zwierzakami
+						if (animal.getLiveStatus()) {
+							this.worldMap.move(animal);
+							if (this.worldMap.grassAt(animal.getPosition())) {
+								eatingQueue.add(animal);
+							}
+							// zmienic eatingQueue na eatingPositions, wtedy bedzie jeden mechanizm porownywania
+							int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
+							if(positionAnimalCount>=2){
+								breedingPositions.add(animal.getPosition());
+							}
+
+
+						} else {
+							animal.incrementDaysAfterDeath();
+							System.out.println(animal.getDaysAfterDeath());
+						}
 					}
-                    //potem ruszamy zwierzakami
-                    if (animal.getLiveStatus()) {
-                        this.worldMap.move(animal);
+					for(Animal animal : eatingQueue) {
 						if (this.worldMap.grassAt(animal.getPosition())) {
-							eatingQueue.add(animal);
+							this.worldMap.animalEatsGrass(animal);
+							this.worldMap.addFreePosition(animal.getPosition());
 						}
-						// zmienic eatingQueue na eatingPositions, wtedy bedzie jeden mechanizm porownywania
-						int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
-						if(positionAnimalCount>=2){
-							breedingPositions.add(animal.getPosition());
-						}
-
-
-                    } else {
-                        animal.incrementDaysAfterDeath();
-						System.out.println(animal.getDaysAfterDeath());
+						// zwierzeta jedza, potrzebne petle na na kazdy etap
 					}
-				}
-				for(Animal animal : eatingQueue) {
-					if (this.worldMap.grassAt(animal.getPosition())) {
-						this.worldMap.animalEatsGrass(animal);
-						this.worldMap.addFreePosition(animal.getPosition());
+
+					for(Vector2d positions : breedingPositions) {
+
 					}
-					// zwierzeta jedza, potrzebne petle na na kazdy etap
+
+					breedingPositions.clear();
+					eatingQueue.clear();
+					this.worldMap.grassGrows();
+					//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
+					this.worldMap.mapTicks(i + (i == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
+					++i;
 				}
-
-				for(Vector2d positions : breedingPositions) {
-
-				}
-
-				breedingPositions.clear();
-				eatingQueue.clear();
-				this.worldMap.grassGrows();
-				//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
-				this.worldMap.mapTicks(i + (i == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
-
-			}
 		} catch (InterruptedException e) {
 			// Sleep was interrupted. Leaving catch empty.
 		}
