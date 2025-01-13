@@ -119,20 +119,47 @@ public class Animal implements WorldElement, Comparable {
 
 	public void move(Boundary boundary) {
 		//*** do poprawy skladni!!!
-		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
-		newPosition=newPosition.add(this.direction.toUnitVector());
-		this.changeEnergy(-1);
-		//dodac liczbe zalezna od wspolrzednej y
 		this.direction=this.direction.next(genotype[genIndex]);
 		genIndex=(genIndex+1)%genotype.length;
+
+		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
+		newPosition=newPosition.add(this.direction.toUnitVector());
+		this.position = newPosition;
+		this.placeWithinBounds(boundary);
+		this.changeEnergy(-1);
+		//dodac liczbe zalezna od wspolrzednej y
+
 		//uwaga, zwierze wpierw rusza sie o jeden, a dopiero potem zmienia kierunek na ten w kodzie genetycznym.
 		//***prawdopodobnie da sie szybciej zrobic funkcje, ktora zapetla mape, niz ta ponizej
-		if (!newPosition.isWithinBounds(boundary)){
-			newPosition=newPosition.placeWithinBounds(boundary);
-		}
-		this.position = newPosition;
 
-		System.out.println(this.energy);
+
+	}
+
+	public void placeWithinBounds(Boundary boundary) {
+		int yMax = boundary.upperRight().getY();
+		int yMin = boundary.lowerLeft().getY();
+		int xMax = boundary.upperRight().getX();
+		int xMin = boundary.lowerLeft().getX();
+
+		int xNew = this.getPosition().getX();
+		int yNew = this.getPosition().getY();
+
+		if (xNew < xMin) {
+			xNew = xMax;
+		} else if (xNew > xMax) {
+			xNew = xMin;
+		}
+
+		if (yNew < yMin) {
+			yNew = yMin;
+			this.direction=this.direction.next(4);
+		} else if (yNew > yMax) {
+			yNew = yMax;
+			this.direction=this.direction.next(4);
+		}
+
+		this.position = new Vector2d(xNew, yNew);
+
 	}
 
 	// TODO: Implement

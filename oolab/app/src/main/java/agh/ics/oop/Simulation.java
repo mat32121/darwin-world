@@ -25,10 +25,10 @@ public class Simulation implements Runnable {
 		this.worldMap = worldMap;
 		//*** do poprawy
 		for(Vector2d x : initialPositions) {
-			Animal animal = new Animal(x, 10, new int[] {6,0,0,0,0,0,0,0,0,0,0,5,1,1,1,1});
+			Animal animal = new Animal(x, 100, new int[] {6,0,0,0,0,0,0,0,0,0,0,5,1,1,1,1});
 
 			if (x.equals(new Vector2d(5,4))){
-				animal = new Animal(x, 10, new int[] {2,0,0,0,0,0,0,0,0,0,0,5,1,1,1,1});
+				animal = new Animal(x, 100, new int[] {2,0,0,0,0,0,0,0,0,0,0,5,1,1,1,1});
 			}
 			try {
 				this.worldMap.place(animal);

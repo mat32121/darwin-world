@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 public class SimulationConfig {
     // Simulation parameters
-    private int mapWidth = 50, mapHeight = 30;
+    private int mapWidth = 10, mapHeight = 10;
     private int numInitialGrass = 5;
     private int energyPerGrass = 1;
     private int numGrassPerDay = 5;

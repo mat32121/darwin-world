@@ -31,7 +31,7 @@ public class RectangularMap extends AbstractWorldMap {
 	public void grassGrows() {
 		int i = 0;
 		while (i < this.freePositions.size()) {
-			if (Math.random() < 0.05) {
+			if (Math.random() < 0.01) {
 				Vector2d position = this.freePositions.get(i);
 				this.grassPatches.put(position, new Grass(position));
 				this.freePositions.remove(i); // Usunięcie elementu bez zwiększania indeksu
