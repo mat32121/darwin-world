@@ -37,6 +37,11 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 	 */
 
+	// TODO: Implement
+	@Override
+	public boolean isJungle(Vector2d position) {
+		return (position.getX()%2 == 0 ? true : false);
+	}
 
 	@Override
 	public void place(Animal animal) throws IncorrectPositionException {

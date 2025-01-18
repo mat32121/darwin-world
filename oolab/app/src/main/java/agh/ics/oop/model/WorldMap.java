@@ -33,6 +33,7 @@ public interface WorldMap extends MoveValidator {
     void animalEatsGrass(Animal animal);
     void removeGrass(Vector2d position);
     Set<Animal> getAnimalsOnPosition(Vector2d position);
+    boolean isJungle(Vector2d position);
     /**
      * Return true if given position on the map is occupied. Should not be
      * confused with canMove since there might be empty positions where the animal

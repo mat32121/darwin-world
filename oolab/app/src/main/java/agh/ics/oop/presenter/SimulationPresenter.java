@@ -14,6 +14,7 @@ import agh.ics.oop.model.WorldMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
@@ -35,10 +36,13 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
     @FXML
+    private Button startButton;
+    @FXML
     private VBox statisticsBox;
     
     private SimulationEngine simulationEngine;
     private boolean simulationStarted = false;
+    private boolean simulationPaused = false;
     
     public void setWorldMap(WorldMap map) {
         this.worldMap = map;
@@ -106,14 +110,14 @@ public class SimulationPresenter implements MapChangeListener {
                     mapBoundary.upperRight().getY()-elem.getPosition().getY()+1);
             }
             else if(elem instanceof Grass) {
-                Rectangle newRectangle = new Rectangle(CELL_WIDTH*0.75, CELL_HEIGHT*0.75, Color.GREEN);
+                Color grassColor = (this.simulationPaused ? (this.worldMap.isJungle(elem.getPosition()) ? Color.DARKGREEN : Color.LIGHTGREEN) : Color.GREEN);
+                Rectangle newRectangle = new Rectangle(CELL_WIDTH*0.75, CELL_HEIGHT*0.75, grassColor);
                 GridPane.setHalignment(newRectangle, HPos.CENTER);
                 this.mapGrid.add(newRectangle,
                     elem.getPosition().getX()-mapBoundary.lowerLeft().getX()+1,
                     mapBoundary.upperRight().getY()-elem.getPosition().getY()+1);
             }
-            else
-            {
+            else if(elem instanceof Object) {
                 Label newLabel = new Label(elem.toString());
                 GridPane.setHalignment(newLabel, HPos.CENTER);
                 this.mapGrid.add(newLabel,
@@ -131,6 +135,17 @@ public class SimulationPresenter implements MapChangeListener {
             this.simulationEngine = new SimulationEngine(List.of(simulation));
             this.simulationEngine.runAsync();
             this.simulationStarted = true;
+            this.startButton.setText("Pauza");
+        }
+        else if(this.simulationEngine.togglePause()) {
+            this.startButton.setText("Start");
+            this.simulationPaused = true;
+            this.drawMap();
+        }
+        else {
+            this.startButton.setText("Pauza");
+            this.simulationPaused = false;
+            this.drawMap();
         }
     }
 

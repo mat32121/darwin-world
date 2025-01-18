@@ -52,9 +52,9 @@ public class Simulation implements Runnable {
 
 			ArrayList<Animal> eatingQueue = new ArrayList<>();
 			ArrayList<Vector2d> breedingPositions = new ArrayList<>();
-			for(int i = 0; this.isRunning;)
+			for(int i = 0; this.isRunning;) {
+				Thread.sleep(Simulation.MILLIS_INTERVAL);
 				if(!this.isPaused) {
-					Thread.sleep(Simulation.MILLIS_INTERVAL);
 					for (Animal animal : animals) {
 						//wpierw usuwamy martwe zwierzaki
 						if (animal.getEnergy() <= 0) {
@@ -97,6 +97,7 @@ public class Simulation implements Runnable {
 					this.worldMap.mapTicks(i + (i == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
 					++i;
 				}
+			}
 		} catch (InterruptedException e) {
 			// Sleep was interrupted. Leaving catch empty.
 		}
@@ -108,11 +109,16 @@ public class Simulation implements Runnable {
 		return Collections.unmodifiableList(this.animals);
 	}
 
+	public boolean togglePause() {
+		this.isPaused = !this.isPaused;
+		return this.isPaused;
+	}
+
 	public int getNumAnimals() {
 		int result = 0;
 		// System.out.println("BEGIN COUNTING");
 		for(WorldElement elem : this.worldMap.getElements())
-			if(elem instanceof Animal animal){
+			if(elem instanceof Animal){
 				// System.out.println(animal.getPosition());
 				++result;
 			}

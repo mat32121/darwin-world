@@ -47,6 +47,13 @@ public class SimulationEngine {
             this.executorService.submit(simulation);
     }
 
+	public boolean togglePause() {
+        boolean result = false;
+        for(Simulation simulation : this.simulations)
+            result |= simulation.togglePause(); // All simulations have the same isPaused value
+        return result;
+	}
+
 	public int getNumAnimals() {
 		int result = 0;
 		for(Simulation sim : this.simulations)
