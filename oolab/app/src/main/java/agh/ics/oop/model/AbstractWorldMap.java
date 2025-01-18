@@ -2,10 +2,10 @@ package agh.ics.oop.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Set;
 import java.util.UUID;
 
 import agh.ics.oop.model.util.MapVisualizer;
@@ -13,7 +13,7 @@ import agh.ics.oop.model.util.MapVisualizer;
 public abstract class AbstractWorldMap implements WorldMap {
 	private final UUID id;
 	protected static final Vector2d ORIGIN = new Vector2d(0, 0);
-	protected final Map<Vector2d, SortedSet<Animal>> animals;
+	protected final Map<Vector2d, Set<Animal>> animals;
 	protected final MapVisualizer visualizer;
 
 	protected final List<MapChangeListener> listeners;
@@ -45,7 +45,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 			if(animals.containsKey(animal.getPosition())){
 				animals.get(animal.getPosition()).add(animal);
 			} else {
-				SortedSet<Animal> animalSet = new TreeSet<>();
+				Set<Animal> animalSet = new HashSet<>();
 				animalSet.add(animal);
 				animals.put(animal.getPosition(), animalSet);
 			}
@@ -56,25 +56,41 @@ public abstract class AbstractWorldMap implements WorldMap {
 	}
 	@Override
 	public void move(Animal animal) {
-		if (1<this.animals.get(animal.getPosition()).size()){
-			this.animals.get(animal.getPosition()).remove(animal);
-		} else {
-			this.animals.remove(animal.getPosition());
+		// int currentNumAnimals = 0;
+		// System.out.println("BEFORE:");
+		// for(Set<Animal> animalSet : this.animals.values()) {
+		// 	currentNumAnimals += animalSet.size();
+		// 	for(Animal anim : animalSet) {
+		// 		System.out.println(anim.hashCode());
+		// 	}
+		// }
+		if(this.animals.get(animal.getPosition()).remove(animal)) {
+			animal.move(this.getCurrentBounds());
+			//wiele zwierzat na jednej pozycji
+			if(this.animals.containsKey(animal.getPosition())) {
+				this.animals.get(animal.getPosition()).add(animal);
+			}
+			else {
+				Set<Animal> newAnimalSet=new HashSet<>();
+				newAnimalSet.add(animal);
+				this.animals.put(animal.getPosition(), newAnimalSet);
+			}
 		}
-		animal.move(this.getCurrentBounds());
-		//wiele zwierzat na jednej pozycji
-		if (this.animals.containsKey(animal.getPosition())){
-			this.animals.get(animal.getPosition()).add(animal);
-		} else {
-			SortedSet<Animal> newAnimalSet=new TreeSet<>();
-			newAnimalSet.add(animal);
-			this.animals.put(animal.getPosition(), newAnimalSet);
-
-		}
+		else
+			System.out.println("Animal " + animal.hashCode() + " did not exist!"); // DEBUG, optional
+		// System.out.println(animal.equals(animal));
+		// System.out.println("AFTER:");
+		// for(Set<Animal> animalSet : this.animals.values()) {
+		// 	currentNumAnimals -= animalSet.size();
+		// 	for(Animal anim : animalSet)
+		// 		System.out.println(anim.hashCode());
+		// }
+		// if(currentNumAnimals != 0)
+		// 	System.out.println("NO ANIMAL BALANCE");
 	}
 
 	@Override
-	public SortedSet<Animal> getAnimalsOnPosition(Vector2d position) {
+	public Set<Animal> getAnimalsOnPosition(Vector2d position) {
 		return this.animals.get(position);
 	}
 
@@ -95,7 +111,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 	public List<WorldElement> getElements() {
 		List<WorldElement> elements = new ArrayList<>();
 
-		for (SortedSet<Animal> animalList : this.animals.values()){
+		for (Set<Animal> animalList : this.animals.values()){
 			for(Animal entry : animalList) {
 				if (entry.getLiveStatus()){
 					elements.add(entry);

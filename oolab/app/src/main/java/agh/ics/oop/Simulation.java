@@ -110,9 +110,13 @@ public class Simulation implements Runnable {
 
 	public int getNumAnimals() {
 		int result = 0;
+		// System.out.println("BEGIN COUNTING");
 		for(WorldElement elem : this.worldMap.getElements())
-			if(elem instanceof Animal)
+			if(elem instanceof Animal animal){
+				// System.out.println(animal.getPosition());
 				++result;
+			}
+		// System.out.println("FOUND: " + Integer.toString(result));
 		return result;
 	}
 

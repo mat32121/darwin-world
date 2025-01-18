@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Animal implements WorldElement, Comparable {
+public class Animal implements WorldElement, Comparable<Animal> {
 	//private int plantsEaten = 0;
 	private MapDirection direction;
 	private Vector2d position;
@@ -35,13 +35,14 @@ public class Animal implements WorldElement, Comparable {
 		this.rng = new Random();
 	}
 
-	public int compareTo(Object other) {
-		if(other instanceof Animal animal) {
-			int res = animal.getEnergy()-this.energy;
+	@Override
+	public int compareTo(Animal other) {
+		if(other instanceof Animal) {
+			int res = other.getEnergy()-this.energy;
 			if(res == 0)
-				res = animal.getAge()-this.age;
+				res = other.getAge()-this.age;
 			if(res == 0)
-				res = animal.getNumChildren()-this.getNumChildren();
+				res = other.getNumChildren()-this.getNumChildren();
 			if(res == 0)
 				res = this.rng.ints(0, 2).findFirst().getAsInt()*2-1;
 			return res;
