@@ -80,12 +80,8 @@ public class Simulation implements Runnable {
 						}
 					}
 					for(Vector2d position : eatingPositions) {
-
-
-						//if (this.worldMap.grassAt(animal.getPosition())) {
-						//	this.worldMap.animalEatsGrass(animal);
-						//	this.worldMap.addFreePosition(animal.getPosition());
-						//}
+						this.worldMap.animalEatsGrass(this.worldMap.getFittestAnimalOnPosition(position));
+						this.worldMap.addFreePosition(position);
 						// zwierzeta jedza, potrzebne petle na na kazdy etap
 					}
 
