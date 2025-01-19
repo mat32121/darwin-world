@@ -15,7 +15,7 @@ import agh.ics.oop.model.WorldMap;
 public class Simulation implements Runnable {
 	private List<Animal> animals;
 	private WorldMap worldMap;
-	private static final long MILLIS_INTERVAL = 100;
+	private static final long MILLIS_INTERVAL = 1000;
 
 	private boolean isRunning = true;
 	private boolean isPaused = false;

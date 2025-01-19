@@ -5,6 +5,8 @@ import java.util.*;
 public class RectangularMap extends AbstractWorldMap {
 	private final int width, height;
 	private final Vector2d boundary;
+	private final int jungleLowerBound;
+	private final int jungleUpperBound;
 	private Map<Vector2d, Grass> grassPatches;
 	private ArrayList<Vector2d> freePositions;
 
@@ -16,9 +18,21 @@ public class RectangularMap extends AbstractWorldMap {
         this.boundary = new Vector2d(width-1, height-1);
 		this.freePositions = new ArrayList<>(width * height);
 
+		int p = 0;
+		if (this.height%2==0) {
+			p+=1;
+		}
+		this.jungleLowerBound = (this.height / 2) - (int) Math.ceil(this.height * 0.1);
+		this.jungleUpperBound = (this.height / 2) + (int) Math.ceil(this.height * 0.1) - p;
+
 		for(int i = 0; i < width; ++i)
 			for(int j = 0; j < height; ++j)
 				this.freePositions.add(new Vector2d(i, j));
+	}
+
+	@Override
+	public boolean isJungle(Vector2d position) {
+		return position.getY() >= this.jungleLowerBound && position.getY() <= this.jungleUpperBound;
 	}
 
 	@Override
@@ -27,6 +41,7 @@ public class RectangularMap extends AbstractWorldMap {
 	}
 	//*** do poprawy, czas O(n)!! ~ chociaz ilosc elementow to max 3000, ale i tak warto by bylo
 	//przeniesc mechanizm losowania do innej klasy.
+
 	@Override
 	public void grassGrows() {
 		int i = 0;
