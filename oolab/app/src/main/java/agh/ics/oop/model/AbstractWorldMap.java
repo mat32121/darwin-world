@@ -1,6 +1,13 @@
 package agh.ics.oop.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import agh.ics.oop.model.util.MapVisualizer;
 
@@ -94,17 +101,24 @@ public abstract class AbstractWorldMap implements WorldMap {
 		Set<Animal> animalsAtPosition = this.animals.get(position);
 
 		if (animalsAtPosition == null || animalsAtPosition.isEmpty()) {
-			return null; // Zwracamy null, jeśli brak zwierząt na pozycji
+			return null;
 		}
 
-		// Znalezienie najlepszego zwierzęcia za pomocą Comparatora
 		Animal bestAnimal = animalsAtPosition.stream()
 				.max(Animal::compareTo)
-				.orElse(null); // Zwraca null, jeśli lista jest pusta
+				.orElse(null);
 
 		return bestAnimal;
 	}
 
+	@Override
+	public List<Vector2d> getAnimalPositions() {
+		List<Vector2d> result = new LinkedList<>();
+		for(Vector2d key : this.animals.keySet())
+			if(!this.animals.get(key).isEmpty())
+				result.add(key);
+		return result;
+	}
 
 	//@Override
 	//public boolean isOccupied(Vector2d position) {
