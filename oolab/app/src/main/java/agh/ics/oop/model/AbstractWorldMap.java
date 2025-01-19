@@ -56,6 +56,13 @@ public abstract class AbstractWorldMap implements WorldMap {
 		else
 			throw new IncorrectPositionException(animal.getPosition());
 	}
+
+	@Override
+	public void removeAnimal(Animal animal) {
+		animals.get(animal.getPosition()).remove(animal);
+	}
+
+
 	@Override
 	public void move(Animal animal) {
 		// int currentNumAnimals = 0;
@@ -143,7 +150,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 				}
 			}
 		}
-
+		System.out.println(elements);
 
 		return elements;
 	}

@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,14 +81,48 @@ public class Simulation implements Runnable {
 						}
 					}
 					for(Vector2d position : eatingPositions) {
-						this.worldMap.animalEatsGrass(this.worldMap.getFittestAnimalOnPosition(position));
+						Animal eatingAnimal = this.worldMap.getFittestAnimalOnPosition(position);
+						this.worldMap.animalEatsGrass(eatingAnimal);
 						this.worldMap.addFreePosition(position);
 						// zwierzeta jedza, potrzebne petle na na kazdy etap
 					}
 
-					for(Vector2d positions : breedingPositions) {
+					for (Vector2d position : breedingPositions) {
+						try {
+							// Pobranie pierwszego zwierzęcia
+							Animal animal1 = this.worldMap.getFittestAnimalOnPosition(position);
+							if (animal1 == null) {
+								continue; // Przejdź do kolejnej pozycji, jeśli brak zwierząt
+							}
 
+							this.worldMap.removeAnimal(animal1);
+
+							// Pobranie drugiego zwierzęcia
+							Animal animal2 = this.worldMap.getFittestAnimalOnPosition(position);
+							this.worldMap.place(animal1); // Przywrócenie pierwszego zwierzęcia
+
+							// Sprawdzenie, czy oboje rodzice są dostępni
+							if (animal2 == null) {
+								continue; // Przejdź do kolejnej pozycji, jeśli brak drugiego zwierzęcia
+							}
+
+							// Próba rozmnażania
+							Animal offspring = animal1.copulate(animal2, this.worldMap.getMinCopulateEnergy());
+							if (offspring != null) {
+								System.out.println("Dodaję potomka z energią: " + offspring.getEnergy());
+								this.worldMap.place(offspring); // Dodanie potomka na mapę
+								this.animals.add(offspring); // Dodanie potomka do listy zwierząt
+							}
+
+						} catch (IncorrectPositionException e) {
+							// Obsługa wyjątku - logowanie błędu
+							System.err.println("Nie można umieścić zwierzęcia na pozycji: " + e.getMessage());
+						} catch (Exception e) {
+							// Obsługa innych nieoczekiwanych błędów
+							System.err.println("Wystąpił nieoczekiwany błąd: " + e.getMessage());
+						}
 					}
+
 
 					breedingPositions.clear();
 					eatingPositions.clear();

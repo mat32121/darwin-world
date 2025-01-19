@@ -7,16 +7,18 @@ public class RectangularMap extends AbstractWorldMap {
 	private final Vector2d boundary;
 	private final int jungleLowerBound;
 	private final int jungleUpperBound;
+	private final int minCopulateEnergy;
 	private Map<Vector2d, Grass> grassPatches;
 	private ArrayList<Vector2d> freePositions;
 
 	//*** czy wystepuje startowa ilosc trawy?
-	public RectangularMap(int width, int height) {
+	public RectangularMap(int width, int height, int numInitialGrass, int energyPerGrass, int numGrassPerDay, int numInitialAnimals, int initialEnergy, int minCopulateEnergy, int copulateEnergyUsed, int minChildMutations, int maxChildMutations, int numGenes) {
 		this.width = width;
 		this.height = height;
 		this.grassPatches = new HashMap<>();
         this.boundary = new Vector2d(width-1, height-1);
 		this.freePositions = new ArrayList<>(width * height);
+		this.minCopulateEnergy = minCopulateEnergy;
 
 		int p = 0;
 		if (this.height%2==0) {
@@ -28,6 +30,11 @@ public class RectangularMap extends AbstractWorldMap {
 		for(int i = 0; i < width; ++i)
 			for(int j = 0; j < height; ++j)
 				this.freePositions.add(new Vector2d(i, j));
+	}
+
+	@Override
+	public int getMinCopulateEnergy() {
+		return minCopulateEnergy;
 	}
 
 	@Override
@@ -46,7 +53,7 @@ public class RectangularMap extends AbstractWorldMap {
 	public void grassGrows() {
 		int i = 0;
 		while (i < this.freePositions.size()) {
-			if (Math.random() < 0.1) {
+			if (Math.random() < 0.01) {
 				Vector2d position = this.freePositions.get(i);
 				this.grassPatches.put(position, new Grass(position));
 				this.freePositions.remove(i); // Usunięcie elementu bez zwiększania indeksu
@@ -72,6 +79,8 @@ public class RectangularMap extends AbstractWorldMap {
 	public void removeGrass(Vector2d position) {
 		grassPatches.remove(position);
 	}
+
+
 
 
 	//***do poprawy, na jednym polu moze byc wiele zwierzat, poza tym zwierze moze poruszyc sie na dowolne pole
