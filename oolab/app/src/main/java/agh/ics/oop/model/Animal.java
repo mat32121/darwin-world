@@ -118,6 +118,11 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		return this.direction == direction;
 	}
 
+	public int getChildrenCount() {
+		//dopisac dzieci dzieci
+		return this.children.size();
+	}
+
 	public void move(Boundary boundary) {
 		//*** do poprawy skladni!!!
 		this.direction=this.direction.next(genotype[genIndex]);

@@ -50,7 +50,7 @@ public class Simulation implements Runnable {
 			//*** dodac zatrzymanie zwierzaka na czas jedzenia i kopulacji?
 			//***kazdy element przeniesc do osobnej funkcji w simulation
 
-			ArrayList<Animal> eatingQueue = new ArrayList<>();
+			ArrayList<Vector2d> eatingPositions = new ArrayList<>();
 			ArrayList<Vector2d> breedingPositions = new ArrayList<>();
 			for(int i = 0; this.isRunning;) {
 				Thread.sleep(Simulation.MILLIS_INTERVAL);
@@ -63,12 +63,13 @@ public class Simulation implements Runnable {
 						//potem ruszamy zwierzakami
 						if (animal.getLiveStatus()) {
 							this.worldMap.move(animal);
-							if (this.worldMap.grassAt(animal.getPosition())) {
-								eatingQueue.add(animal);
+							int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
+							if (this.worldMap.grassAt(animal.getPosition()) && positionAnimalCount==1) {
+								eatingPositions.add(animal.getPosition());
 							}
 							// zmienic eatingQueue na eatingPositions, wtedy bedzie jeden mechanizm porownywania
-							int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
-							if(positionAnimalCount>=2){
+
+							if(positionAnimalCount==2){
 								breedingPositions.add(animal.getPosition());
 							}
 
@@ -78,11 +79,13 @@ public class Simulation implements Runnable {
 							System.out.println(animal.getDaysAfterDeath());
 						}
 					}
-					for(Animal animal : eatingQueue) {
-						if (this.worldMap.grassAt(animal.getPosition())) {
-							this.worldMap.animalEatsGrass(animal);
-							this.worldMap.addFreePosition(animal.getPosition());
-						}
+					for(Vector2d position : eatingPositions) {
+
+
+						//if (this.worldMap.grassAt(animal.getPosition())) {
+						//	this.worldMap.animalEatsGrass(animal);
+						//	this.worldMap.addFreePosition(animal.getPosition());
+						//}
 						// zwierzeta jedza, potrzebne petle na na kazdy etap
 					}
 
@@ -91,7 +94,7 @@ public class Simulation implements Runnable {
 					}
 
 					breedingPositions.clear();
-					eatingQueue.clear();
+					eatingPositions.clear();
 					this.worldMap.grassGrows();
 					//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
 					this.worldMap.mapTicks(i + (i == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");

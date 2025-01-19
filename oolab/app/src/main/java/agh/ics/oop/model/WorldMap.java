@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -43,6 +44,8 @@ public interface WorldMap extends MoveValidator {
      * @return True if the position is occupied.
      */
     //boolean isOccupied(Vector2d position);
+
+    Animal getFittestAnimalOnPosition(Vector2d position);
 
     /**
      * Return an animal at a given position.
