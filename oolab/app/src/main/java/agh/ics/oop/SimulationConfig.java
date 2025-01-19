@@ -49,7 +49,16 @@ public class SimulationConfig {
     public SimulationConfig() throws IOException {
         this.setSimulationParams();
         if(this.simulationStarts)
-            this.worldMap = new RectangularMap(this.mapWidth, this.mapHeight);
+            this.worldMap = new RectangularMap(this.mapWidth = 10, this.mapHeight = 10,
+        this.numInitialGrass,
+        this.energyPerGrass,
+        this.numGrassPerDay,
+        this.numInitialAnimals,
+        this.initialEnergy,
+        this.minCopulateEnergy,
+        this.copulateEnergyUsed,
+        this.minChildMutations, this.maxChildMutations,
+        this.numGenes);
         else
             this.worldMap = null;
     }

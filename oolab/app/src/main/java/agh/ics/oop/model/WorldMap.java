@@ -55,8 +55,11 @@ public interface WorldMap extends MoveValidator {
      */
     WorldElement objectAt(Vector2d position);
 
+    void removeAnimal(Animal animal);
 
-	List<WorldElement> getElements();
+    int getMinCopulateEnergy();
+
+    List<WorldElement> getElements();
 	Boundary getCurrentBounds();
     UUID getId();
 }
