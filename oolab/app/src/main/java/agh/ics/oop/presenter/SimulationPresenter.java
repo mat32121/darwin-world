@@ -21,7 +21,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -87,21 +89,21 @@ public class SimulationPresenter implements MapChangeListener {
         int cell_width = (int)gridBounds.getWidth()/(mapBoundary.upperRight().getX()-mapBoundary.lowerLeft().getX()+2), cell_height = (int)gridBounds.getHeight()/(mapBoundary.upperRight().getY()-mapBoundary.lowerLeft().getY()+2);
         cell_width = cell_height = Math.min(cell_width, cell_height);
 
-        // this.mapGrid.getColumnConstraints().add(new ColumnConstraints(cell_width));
-        // this.mapGrid.getRowConstraints().add(new RowConstraints(cell_height));
+        this.mapGrid.getColumnConstraints().add(new ColumnConstraints(cell_width));
+        this.mapGrid.getRowConstraints().add(new RowConstraints(cell_height));
         Label yx = new Label("y\\x");
         GridPane.setHalignment(yx, HPos.CENTER);
         this.mapGrid.add(yx, 0, 0, 1, 1);
 
         for(int i = mapBoundary.lowerLeft().getX(); i <= mapBoundary.upperRight().getX(); ++i) {
-            // this.mapGrid.getColumnConstraints().add(new ColumnConstraints(cell_width));
+            this.mapGrid.getColumnConstraints().add(new ColumnConstraints(cell_width));
             Label newLabel = new Label(Integer.toString(i));
             GridPane.setHalignment(newLabel, HPos.CENTER);
             this.mapGrid.add(newLabel, i-mapBoundary.lowerLeft().getX()+1, 0, 1, 1);
         }
 
         for(int i = 0; i <= mapBoundary.upperRight().getY()-mapBoundary.lowerLeft().getY(); ++i) {
-            // this.mapGrid.getRowConstraints().add(new RowConstraints(cell_height));
+            this.mapGrid.getRowConstraints().add(new RowConstraints(cell_height));
             Label newLabel = new Label(Integer.toString(mapBoundary.upperRight().getY()-i));
             GridPane.setHalignment(newLabel, HPos.CENTER);
             this.mapGrid.add(newLabel, 0, i+1, 1, 1);
