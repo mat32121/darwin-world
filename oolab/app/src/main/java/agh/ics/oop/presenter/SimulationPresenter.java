@@ -167,8 +167,7 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private void onSimulationStartClicked() {
         if(!this.simulationStarted) {
-            List<Vector2d> positions = List.of(new Vector2d(3,4), new Vector2d(5,4));
-            this.simulation = new Simulation(positions, this.worldMap);
+            this.simulation = new Simulation(this.worldMap);
             this.simulationEngine.addAsync(this.simulation, this.worldMap.getId());
             this.simulationStarted = true;
             this.startButton.setText("Pauza");

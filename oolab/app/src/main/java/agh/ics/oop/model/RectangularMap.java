@@ -8,17 +8,37 @@ public class RectangularMap extends AbstractWorldMap {
 	private final int jungleLowerBound;
 	private final int jungleUpperBound;
 	private final int minCopulateEnergy;
+	private final int initialEnergy;
+	private final int numInitialGrass;
+	private final int energyPerGrass;
+	private final int numGrassPerDay;
+	private final int numInitialAnimals;
+	private final int copulateEnergyUsed;
+	private final int minChildMutations;
+	private final int maxChildMutations;
+	private final int numGenes;
 	private Map<Vector2d, Grass> grassPatches;
 	private ArrayList<Vector2d> freePositions;
+
+
 
 	//*** czy wystepuje startowa ilosc trawy?
 	public RectangularMap(int width, int height, int numInitialGrass, int energyPerGrass, int numGrassPerDay, int numInitialAnimals, int initialEnergy, int minCopulateEnergy, int copulateEnergyUsed, int minChildMutations, int maxChildMutations, int numGenes) {
 		this.width = width;
 		this.height = height;
+		this.initialEnergy = initialEnergy;
 		this.grassPatches = new HashMap<>();
         this.boundary = new Vector2d(width-1, height-1);
 		this.freePositions = new ArrayList<>(width * height);
 		this.minCopulateEnergy = minCopulateEnergy;
+		this.numInitialGrass = numInitialGrass;
+		this.energyPerGrass = energyPerGrass;
+		this.numGrassPerDay = numGrassPerDay;
+		this.numInitialAnimals = numInitialAnimals;
+		this.copulateEnergyUsed = copulateEnergyUsed;
+		this.minChildMutations = minChildMutations;
+		this.maxChildMutations = maxChildMutations;
+		this.numGenes = numGenes;
 
 		int p = 0;
 		if (this.height%2==0) {
@@ -30,6 +50,47 @@ public class RectangularMap extends AbstractWorldMap {
 		for(int i = 0; i < width; ++i)
 			for(int j = 0; j < height; ++j)
 				this.freePositions.add(new Vector2d(i, j));
+	}
+
+	@Override
+	public int getWidth() {
+		return width;
+	}
+	@Override
+	public int getHeight() {
+		return height;
+	}
+
+
+	@Override
+	public int getNumInitialAnimals() {
+		return numInitialAnimals;
+	}
+
+	@Override
+	public int getCopulateEnergyUsed() {
+		return copulateEnergyUsed;
+	}
+
+	@Override
+	public int getMinChildMutations() {
+		return minChildMutations;
+	}
+
+	@Override
+	public int getMaxChildMutations() {
+		return maxChildMutations;
+	}
+
+	@Override
+	public int getNumGenes() {
+		return numGenes;
+	}
+
+
+	@Override
+	public int getInitialEnergy() {
+		return initialEnergy;
 	}
 
 	@Override

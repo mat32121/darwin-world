@@ -27,8 +27,8 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.liveStatus=true;
 		this.genotype=genotype;
 		this.daysAfterDeath=0;
-		//this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
-		this.genIndex=0; //**** do usuniecia!!! poprawna wersja wyzej /\
+		this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
+		//this.genIndex=0; //**** do usuniecia!!! poprawna wersja wyzej /\
 		//***zakladam, ze zawsze tworzymy zywego zwierzaka
 		this.children = new ArrayList<>();
 		this.age = 0;
@@ -182,6 +182,7 @@ public class Animal implements WorldElement, Comparable<Animal> {
 
 	public Animal copulate(Animal partner, int reproductionEnergyThreshold) {
 		// Suma energii rodziców
+
 		int s1 = this.getEnergy();
 		int s2 = partner.getEnergy();
 		int S = s1 + s2;

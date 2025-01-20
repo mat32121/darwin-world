@@ -59,6 +59,22 @@ public interface WorldMap extends MoveValidator {
 
     int getMinCopulateEnergy();
 
+    int getInitialEnergy();
+
+    int getNumInitialAnimals();
+
+    int getCopulateEnergyUsed();
+
+    int getMinChildMutations();
+
+    int getMaxChildMutations();
+
+    int getNumGenes();
+
+    int getWidth();
+
+    int getHeight();
+
     List<WorldElement> getElements();
 	Boundary getCurrentBounds();
     UUID getId();

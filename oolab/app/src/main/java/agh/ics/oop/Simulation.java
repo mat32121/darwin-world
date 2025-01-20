@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.Boundary;
@@ -21,22 +18,30 @@ public class Simulation implements Runnable {
 	private boolean isRunning = true;
 	private boolean isPaused = false;
 
-	public Simulation(List<Vector2d> initialPositions, WorldMap worldMap) {
+	public Simulation(WorldMap worldMap) {
 		this.animals = new ArrayList<>();
 		this.worldMap = worldMap;
 		//*** do poprawy
-		for(Vector2d x : initialPositions) {
-			Animal animal = new Animal(x, 100, new int[] {6,0,0,0,0,0,0,0,0,0,0,5,1,1,1,1});
+		for(int i = 0; i<this.worldMap.getNumInitialAnimals(); i++) {
+			Random random = new Random();
 
-			if (x.equals(new Vector2d(5,4))){
-				animal = new Animal(x, 100, new int[] {2,0,0,0,0,0,0,0,0,0,0,5,1,1,1,1});
-			}
+			// Generowanie pozycji dla nowego zwierzęcia
+			int x = random.nextInt(this.worldMap.getWidth());
+			int y = random.nextInt(this.worldMap.getHeight());
+			Vector2d newAnimalPosition = new Vector2d(x, y);
+
+			// Generowanie genów dla nowego zwierzęcia
+			int numGenes = this.worldMap.getNumGenes();
+			int[] newAnimalGene = random.ints(numGenes, 0, 8).toArray(); // Generuje tablicę losowych liczb od 0 do 7
+
+			// Tworzenie i umieszczanie zwierzęcia na mapie
+			Animal animal = new Animal(newAnimalPosition, this.worldMap.getInitialEnergy(), newAnimalGene);
+			//TODO usunac wyjatek
 			try {
 				this.worldMap.place(animal);
 				this.animals.add(animal);
-			}
-			catch (IncorrectPositionException e) {
-				// Ignoring position. Catch is empty
+			} catch (IncorrectPositionException e) {
+				// Pozycja zajęta - ignorujemy wyjątek
 			}
 		}
 	}
