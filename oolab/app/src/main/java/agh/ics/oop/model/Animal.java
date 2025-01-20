@@ -87,6 +87,10 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.daysAfterDeath += 1;
 	}
 
+	public void incrementAge() {
+		this.age += 1;
+	}
+
 	public void changeEnergy(int n) {
 		this.energy += n;
 	}
@@ -140,12 +144,7 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		return this.direction == direction;
 	}
 
-
-	public HashSet<Animal> getAllDescendants() {
-		return getAllDescendants(new HashSet<>());
-	}
-
-	private HashSet<Animal> getAllDescendants(HashSet<Animal> countedDescendants) {
+	public HashSet<Animal> getAllDescendants(HashSet<Animal> countedDescendants) {
 		if (this.children.isEmpty()) {
 			return countedDescendants;
 		}
@@ -157,9 +156,7 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		}
 		return countedDescendants;
 	}
-
-
-
+	
 	public void move(Boundary boundary) {
 		//*** do poprawy skladni!!!
 		this.direction=this.direction.next(genotype[genIndex]);

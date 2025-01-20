@@ -1,9 +1,6 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RectangularMap extends AbstractWorldMap {
 	private final int width, height;
@@ -21,8 +18,8 @@ public class RectangularMap extends AbstractWorldMap {
 	private final int maxChildMutations;
 	private final int numGenes;
 	private Map<Vector2d, Grass> grassPatches;
-	private ArrayList<Vector2d> freePositions;
-
+	private ArrayList<Vector2d> freeSteppePositions;
+	private ArrayList<Vector2d> freeJunglePositions;
 
 
 	//*** czy wystepuje startowa ilosc trawy?
@@ -32,7 +29,8 @@ public class RectangularMap extends AbstractWorldMap {
 		this.initialEnergy = initialEnergy;
 		this.grassPatches = new HashMap<>();
         this.boundary = new Vector2d(width-1, height-1);
-		this.freePositions = new ArrayList<>(width * height);
+		this.freeSteppePositions = new ArrayList<>();
+		this.freeJunglePositions = new ArrayList<>();
 		this.minCopulateEnergy = minCopulateEnergy;
 		this.numInitialGrass = numInitialGrass;
 		this.energyPerGrass = energyPerGrass;
@@ -47,12 +45,20 @@ public class RectangularMap extends AbstractWorldMap {
 		if (this.height%2==0) {
 			p+=1;
 		}
-		this.jungleLowerBound = (this.height / 2) - (int) Math.ceil(this.height * 0.1);
-		this.jungleUpperBound = (this.height / 2) + (int) Math.ceil(this.height * 0.1) - p;
+		this.jungleLowerBound = Math.max((this.height / 2) - (int) Math.ceil(this.height * 0.1) + (1 - p),0);
+		this.jungleUpperBound = Math.max((this.height / 2) + (int) Math.ceil(this.height * 0.1) -1,0);
 
 		for(int i = 0; i < width; ++i)
-			for(int j = 0; j < height; ++j)
-				this.freePositions.add(new Vector2d(i, j));
+			for(int j = 0; j < height; ++j) {
+				Vector2d newPosition = new Vector2d(i, j);
+				if (this.isJungle(newPosition))
+					this.freeJunglePositions.add(newPosition);
+				else
+					this.freeSteppePositions.add(newPosition);
+			}
+
+		this.grassGrows(numInitialGrass, true);
+
 	}
 
 	@Override
@@ -89,6 +95,11 @@ public class RectangularMap extends AbstractWorldMap {
 		return numGenes;
 	}
 
+	@Override
+	public int getNumGrassPerDay() {
+		return numGrassPerDay;
+	}
+
 
 	@Override
 	public int getInitialEnergy() {
@@ -107,25 +118,40 @@ public class RectangularMap extends AbstractWorldMap {
 
 	@Override
 	public void addFreePosition(Vector2d position) {
-		this.freePositions.add(position);
+		if (this.isJungle(position))
+			this.freeJunglePositions.add(position);
+		else
+			this.freeSteppePositions.add(position);
 	}
 	//*** do poprawy, czas O(n)!! ~ chociaz ilosc elementow to max 3000, ale i tak warto by bylo
 	//przeniesc mechanizm losowania do innej klasy.
 
 	@Override
-	public void grassGrows() {
-		int i = 0;
-		while (i < this.freePositions.size()) {
-			if (Math.random() < 0.01) {
-				Vector2d position = this.freePositions.get(i);
-				this.grassPatches.put(position, new Grass(position));
-				this.freePositions.remove(i); // Usunięcie elementu bez zwiększania indeksu
-			} else {
-				i++; // Przejście do następnego elementu tylko, gdy nie usuwamy
+	public void grassGrows(int grassNumber, boolean inicialization) {
+		Random random = new Random();
+
+		for (int i = 0; i < grassNumber; i++) {
+			boolean growInSteppe = Math.random() < 0.2;
+			List<Vector2d> targetList = growInSteppe ? this.freeSteppePositions : this.freeJunglePositions;
+			List<Vector2d> backupList = growInSteppe ?  this.freeJunglePositions : this.freeSteppePositions;
+
+			// Sprawdzenie, czy lista nie jest pusta
+			if (!targetList.isEmpty()) {
+				addGrassAtRandomPosition(targetList, random);
+			} else if(inicialization && !backupList.isEmpty()){
+				addGrassAtRandomPosition(backupList, random);
 			}
 		}
 	}
 
+	private void addGrassAtRandomPosition(List<Vector2d> positions, Random random) {
+		if (!positions.isEmpty()) { // Zapewnienie, że lista nie jest pusta
+			int randomIndex = random.nextInt(positions.size());
+			Vector2d position = positions.get(randomIndex);
+			this.grassPatches.put(position, new Grass(position));
+			positions.remove(randomIndex);
+		}
+	}
 	@Override
 	public boolean grassAt(Vector2d position) {
 		return grassPatches.containsKey(position);

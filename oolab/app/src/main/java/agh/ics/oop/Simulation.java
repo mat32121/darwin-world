@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.Boundary;
@@ -75,6 +76,7 @@ public class Simulation implements Runnable {
 						//potem ruszamy zwierzakami
 						if (animal.getLiveStatus()) {
 							this.worldMap.move(animal);
+							animal.incrementAge();
 							int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
 							if (this.worldMap.grassAt(animal.getPosition()) && positionAnimalCount==1) {
 								eatingPositions.add(animal.getPosition());
@@ -137,7 +139,7 @@ public class Simulation implements Runnable {
 
 					breedingPositions.clear();
 					eatingPositions.clear();
-					this.worldMap.grassGrows();
+					this.worldMap.grassGrows(this.worldMap.getNumGrassPerDay(), false);
 					//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
 					this.worldMap.mapTicks(numDays + (numDays == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
 					++numDays;
@@ -181,9 +183,14 @@ public class Simulation implements Runnable {
 
 	public int getNumFreeSquares() {
 		Boundary bounds = this.worldMap.getCurrentBounds();
-		return (bounds.upperRight().getX()-bounds.lowerLeft().getX()+1)*
-		       (bounds.upperRight().getY()-bounds.lowerLeft().getY()+1)-
-			   this.getNumAnimals();
+		int freeSpace = (bounds.upperRight().getX()-bounds.lowerLeft().getX()+1)*
+		       (bounds.upperRight().getY()-bounds.lowerLeft().getY()+1);
+		HashSet<Vector2d> occupiedSpace = new HashSet<>();
+		for(WorldElement elem : this.worldMap.getElements())
+			if(elem instanceof Animal animal)
+				occupiedSpace.add(elem.getPosition());
+		
+		return freeSpace-occupiedSpace.size();
 	}
 
 	public double getAverageEnergy() {
@@ -191,18 +198,52 @@ public class Simulation implements Runnable {
 		for(WorldElement elem : this.worldMap.getElements())
 			if(elem instanceof Animal animal)
 				energySum += animal.getEnergy();
-		return energySum/this.getNumAnimals();
+		return Math.round(energySum * 100.0/this.getNumAnimals())/ 100.0;
 	}
 
     // TODO: Implement
-    public List<String> getGenotypeList() {
-        return List.of();
-    }
+	public List<String> getGenotypeList() {
+		HashMap<int[], Integer> countingGenoms = new HashMap<>();
+
+		// Zliczanie wystąpień genotypów
+		for (WorldElement elem : this.worldMap.getElements()) {
+			if (elem instanceof Animal && ((Animal) elem).getLiveStatus()) {
+				int[] genotype = ((Animal) elem).getGenotype();
+
+				// Zliczanie wystąpień w mapie
+				countingGenoms.put(genotype, countingGenoms.getOrDefault(genotype, 0) + 1);
+			}
+		}
+
+		// Sortowanie genotypów malejąco według liczby wystąpień i przekształcanie na listę
+		List<String> sortedGenotypes = countingGenoms.entrySet()
+				.stream()
+				.sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // Sortuj malejąco po wartości
+				.map(entry -> Arrays.toString(entry.getKey()) + " (Liczba wystąpień: " + entry.getValue() + ")")
+				.collect(Collectors.toList());
+
+		//return sortedGenotypes;
+		return new ArrayList<>();
+	}
+
     public double getAverageLifespan() {
-		return -1.0;
-    }
+		//sredni czas zycia ZMARLYCH zwierzakow
+		int result = 0;
+		for(WorldElement elem : this.worldMap.getElements())
+			if(elem instanceof Animal && !((Animal) elem).getLiveStatus()){
+				result+=((Animal) elem).getAge();
+			}
+		return Math.round(result * 100.0/this.getNumAnimals())/ 100.0;
+	}
+
     public double getAverageNumChildren() {
-		return -1.0;
+		int result = 0;
+		for(WorldElement elem : this.worldMap.getElements())
+			if(elem instanceof Animal){
+				result+=((Animal) elem).getNumChildren();
+			}
+		return Math.round(result * 100.0/this.getNumAnimals())/ 100.0;
+
     }
 
 	public UUID getMapId() {

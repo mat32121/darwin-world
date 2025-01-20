@@ -21,7 +21,7 @@ public interface WorldMap extends MoveValidator {
      * @throws IncorrectPositionException 
      */
     void place(Animal animal) throws IncorrectPositionException;
-    void grassGrows();
+    void grassGrows(int grassPerDay, boolean initialization);
     void addFreePosition(Vector2d position);
     /**
      * Moves an animal (if it is present on the map) according to specified direction.
@@ -74,6 +74,8 @@ public interface WorldMap extends MoveValidator {
     int getWidth();
 
     int getHeight();
+
+    int getNumGrassPerDay();
 
     List<WorldElement> getElements();
 	Boundary getCurrentBounds();
