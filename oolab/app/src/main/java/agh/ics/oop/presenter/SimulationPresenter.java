@@ -18,9 +18,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -48,6 +50,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Button startButton;
     @FXML
     private VBox statisticsBox;
+    @FXML
+    private VBox animalTrackBox;
     
     private SimulationEngine simulationEngine;
     private Simulation simulation;
@@ -56,6 +60,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     private PrintWriter statisticsWriter;
     private int lastStatisticDayWritten = -2;
+    private Animal animalTracked;
 
     public Stage createStage() {
         if(this.simulationStage == null) {
@@ -150,19 +155,6 @@ public class SimulationPresenter implements MapChangeListener {
             this.mapGrid.add(newLabel, 0, i+1, 1, 1);
         }
 
-        Map<Vector2d, Animal> animalDrawMap = new HashMap<>();
-        for(Vector2d animalPos : this.worldMap.getAnimalPositions())
-            animalDrawMap.put(animalPos, this.worldMap.getFittestAnimalOnPosition(animalPos));
-        for(Animal animal : animalDrawMap.values()) {
-            Circle newCircle = new Circle();
-            newCircle.setRadius(Math.min(cell_width, cell_height)/2);
-            Color fillColor = (Color.hsb(0.1, 0.5, SimulationPresenter.energyCurve(animal.getEnergy())));
-            newCircle.setFill(fillColor);
-            GridPane.setHalignment(newCircle, HPos.CENTER);
-            this.mapGrid.add(newCircle,
-                animal.getPosition().getX()-mapBoundary.lowerLeft().getX()+1,
-                mapBoundary.upperRight().getY()-animal.getPosition().getY()+1);
-        }
         for(WorldElement elem : this.worldMap.getElements()) {
             if(elem instanceof Grass) {
                 Color grassColor = (this.simulationPaused ? (this.worldMap.isJungle(elem.getPosition()) ? Color.DARKGREEN : Color.LIGHTGREEN) : Color.GREEN);
@@ -180,6 +172,20 @@ public class SimulationPresenter implements MapChangeListener {
                     mapBoundary.upperRight().getY()-elem.getPosition().getY()+1);
             }
         }
+        Map<Vector2d, Animal> animalDrawMap = new HashMap<>();
+        for(Vector2d animalPos : this.worldMap.getAnimalPositions())
+            animalDrawMap.put(animalPos, this.worldMap.getFittestAnimalOnPosition(animalPos));
+        for(Animal animal : animalDrawMap.values())
+            if(animal.getLiveStatus()) {
+                Circle newCircle = new Circle();
+                newCircle.setRadius(Math.min(cell_width, cell_height)/2);
+                Color fillColor = (Color.hsb(0.1, 0.5, SimulationPresenter.energyCurve(animal.getEnergy())));
+                newCircle.setFill(fillColor);
+                GridPane.setHalignment(newCircle, HPos.CENTER);
+                this.mapGrid.add(newCircle,
+                    animal.getPosition().getX()-mapBoundary.lowerLeft().getX()+1,
+                    mapBoundary.upperRight().getY()-animal.getPosition().getY()+1);
+            }
         this.printStatistics();
         if(this.lastStatisticDayWritten < this.simulation.getNumDays()) {
             this.pushStatisticsToFile(this.simulation.getNumDays(), this.getStatistics(";"));
@@ -195,8 +201,8 @@ public class SimulationPresenter implements MapChangeListener {
             this.statisticsWriter.println();
             this.statisticsWriter.flush();
         }
-        else
-            System.out.println("No stat writer!");
+        // else
+        //     System.out.println("No stat writer!");
     }
 
     @FXML
@@ -216,6 +222,23 @@ public class SimulationPresenter implements MapChangeListener {
             this.startButton.setText("Pauza");
             this.simulationPaused = false;
             this.drawMap();
+        }
+    }
+
+    @FXML
+    private void onGridClicked(MouseEvent event) {
+        Node clickedNode = event.getPickResult().getIntersectedNode();
+        if(clickedNode != this.mainBorderPane) {
+            Integer col = GridPane.getColumnIndex(clickedNode);
+            Integer row = GridPane.getRowIndex(clickedNode);
+            // System.out.println("Mouse clicked at: " + col + ", " + row);
+            if(col != null && row != null) {
+                Boundary mapBoundary = this.worldMap.getCurrentBounds();
+                col += mapBoundary.lowerLeft().getX()-1;
+                row = mapBoundary.upperRight().getY()-row+1;
+                // System.out.println("Map coordinates: " + col + ", " + row);
+                this.animalTracked = this.worldMap.getFittestAnimalOnPosition(new Vector2d(col, row));
+            }
         }
     }
 

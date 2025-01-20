@@ -1,6 +1,9 @@
 package agh.ics.oop.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RectangularMap extends AbstractWorldMap {
 	private final int width, height;
@@ -60,7 +63,6 @@ public class RectangularMap extends AbstractWorldMap {
 	public int getHeight() {
 		return height;
 	}
-
 
 	@Override
 	public int getNumInitialAnimals() {

@@ -104,8 +104,7 @@ public class SimulationConfig {
         this.setParamsFromFields();
         if(this.statSaveBox.isSelected()) {
             this.openStatCSV();
-        }
-        else {
+        } else {
             this.statisticsWriter = null;
         }
         try {

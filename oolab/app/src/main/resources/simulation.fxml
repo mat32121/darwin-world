@@ -13,7 +13,7 @@
             fx:controller="agh.ics.oop.presenter.SimulationPresenter"
             fx:id="mainBorderPane">
     <center>
-        <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="center"/>
+        <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="center" onMouseClicked="#onGridClicked"/>
     </center>
     <bottom>
         <BorderPane>
@@ -26,6 +26,9 @@
         </BorderPane>
     </bottom>
     <right>
-        <VBox fx:id="statisticsBox"/>
+        <BorderPane>
+            <top><VBox fx:id="statisticsBox"/></top>
+            <bottom><VBox fx:id="animalTrackBox"/></bottom>
+        </BorderPane>
     </right>
 </BorderPane>
