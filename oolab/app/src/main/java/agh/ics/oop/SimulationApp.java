@@ -45,7 +45,7 @@ public class SimulationApp extends Application {
         mapStage.setTitle("Simulation app");
         mapStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         mapStage.minHeightProperty().bind(viewRoot.minHeightProperty());
-        mapStage.setResizable(false);
+        // mapStage.setResizable(false);
         viewRoot.setPadding(new Insets(5, 5, 5, 5));
     }
 }

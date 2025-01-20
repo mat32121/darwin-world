@@ -127,7 +127,10 @@ public class SimulationPresenter implements MapChangeListener {
             this.animalTrackBox.getChildren().add(new Label("Energy: " + Integer.toString(this.animalTracked.getEnergy())));
             this.animalTrackBox.getChildren().add(new Label("Grass eaten: "));
             this.animalTrackBox.getChildren().add(new Label("Number of descendants: "));
-            this.animalTrackBox.getChildren().add(new Label("Day od death: "));
+            if(this.animalTracked.getLiveStatus())
+                this.animalTrackBox.getChildren().add(new Label("Days alive: "));
+            else
+                this.animalTrackBox.getChildren().add(new Label("Day od death: "));
         }
     }
 
