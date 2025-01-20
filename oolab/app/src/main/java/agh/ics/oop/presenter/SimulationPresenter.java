@@ -1,6 +1,7 @@
 package agh.ics.oop.presenter;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +117,20 @@ public class SimulationPresenter implements MapChangeListener {
         this.statisticsBox.getChildren().add(new Label("Average number of children of living animals: "+stats.get(6)));
     }
 
+    private void printAnimalTrack() {
+        this.animalTrackBox.getChildren().clear();
+        if(this.animalTracked == null)
+            this.animalTrackBox.getChildren().add(new Label("No animal is currently being tracked"));
+        else {
+            this.animalTrackBox.getChildren().add(new Label("Genome: " + Arrays.stream(this.animalTracked.getGenotype()).boxed().map(a -> Integer.toString(a)).reduce((a, b) -> a + ", " + b).get()));
+            this.animalTrackBox.getChildren().add(new Label("Active gene index: " + Integer.toString(this.animalTracked.getGenIndex())));
+            this.animalTrackBox.getChildren().add(new Label("Energy: " + Integer.toString(this.animalTracked.getEnergy())));
+            this.animalTrackBox.getChildren().add(new Label("Grass eaten: "));
+            this.animalTrackBox.getChildren().add(new Label("Number of descendants: "));
+            this.animalTrackBox.getChildren().add(new Label("Day od death: "));
+        }
+    }
+
     private List<String> getStatistics(String delim) {
         return List.of(
             Integer.toString(this.simulation.getNumAnimals()),
@@ -187,6 +202,7 @@ public class SimulationPresenter implements MapChangeListener {
                     mapBoundary.upperRight().getY()-animal.getPosition().getY()+1);
             }
         this.printStatistics();
+        this.printAnimalTrack();
         if(this.lastStatisticDayWritten < this.simulation.getNumDays()) {
             this.pushStatisticsToFile(this.simulation.getNumDays(), this.getStatistics(";"));
             this.lastStatisticDayWritten = this.simulation.getNumDays();
@@ -236,10 +252,11 @@ public class SimulationPresenter implements MapChangeListener {
                 Boundary mapBoundary = this.worldMap.getCurrentBounds();
                 col += mapBoundary.lowerLeft().getX()-1;
                 row = mapBoundary.upperRight().getY()-row+1;
-                // System.out.println("Map coordinates: " + col + ", " + row);
                 this.animalTracked = this.worldMap.getFittestAnimalOnPosition(new Vector2d(col, row));
+                // System.out.println("Map coordinates: " + col + ", " + row + " -> " + this.animalTracked);
             }
         }
+        this.drawMap();
     }
 
     @Override
