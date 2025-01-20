@@ -46,9 +46,14 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private VBox statisticsBox;
     
-    private SimulationEngine simulationEngine;
+    private SimulationEngine simulationEngine = null;
+    private Simulation simulation = null;
     private boolean simulationStarted = false;
     private boolean simulationPaused = false;
+
+    public void setSimulationEngine(SimulationEngine simulationEngine) {
+        this.simulationEngine = simulationEngine;
+    }
     
     public void setWorldMap(WorldMap map) {
         this.worldMap = map;
@@ -70,12 +75,12 @@ public class SimulationPresenter implements MapChangeListener {
 
     private void printStatistics() {
         this.statisticsBox.getChildren().clear();
-        this.statisticsBox.getChildren().add(new Label("Number of animals: "+this.simulationEngine.getNumAnimals()));
-        this.statisticsBox.getChildren().add(new Label("Number of grass pieces: "+this.simulationEngine.getNumGrass()));
-        this.statisticsBox.getChildren().add(new Label("Number of free squares: "+this.simulationEngine.getNumFreeSquares()));
+        this.statisticsBox.getChildren().add(new Label("Number of animals: "+this.simulation.getNumAnimals()));
+        this.statisticsBox.getChildren().add(new Label("Number of grass pieces: "+this.simulation.getNumGrass()));
+        this.statisticsBox.getChildren().add(new Label("Number of free squares: "+this.simulation.getNumFreeSquares()));
         String genotypeList = "";
         this.statisticsBox.getChildren().add(new Label("Most popular genotypes:\n"+genotypeList));
-        this.statisticsBox.getChildren().add(new Label("Average animal energy: "+this.simulationEngine.getAverageEnergy()));
+        this.statisticsBox.getChildren().add(new Label("Average animal energy: "+this.simulation.getAverageEnergy()));
         this.statisticsBox.getChildren().add(new Label("Average lifespan of currently dead animals: "));
         this.statisticsBox.getChildren().add(new Label("Average number of children of living animals: "));
     }
@@ -145,9 +150,8 @@ public class SimulationPresenter implements MapChangeListener {
     private void onSimulationStartClicked() {
         if(!this.simulationStarted) {
             List<Vector2d> positions = List.of(new Vector2d(3,4), new Vector2d(5,4));
-            Simulation simulation = new Simulation(positions, this.worldMap);
-            this.simulationEngine = new SimulationEngine(List.of(simulation));
-            this.simulationEngine.runAsync();
+            this.simulation = new Simulation(positions, this.worldMap);
+            this.simulationEngine.addAsync(this.simulation, this.worldMap.getId());
             this.simulationStarted = true;
             this.startButton.setText("Pauza");
         }

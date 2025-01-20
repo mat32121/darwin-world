@@ -30,9 +30,9 @@ public class SimulationConfig {
     private int minChildMutations = 1, maxChildMutations = 2;
     private int numGenes = 7;
 
+    private Stage setSimulationParamsStage;
+    private SimulationApp listener;
     private boolean simulationStarts = true;
-
-    private final AbstractWorldMap worldMap;
 
     @FXML
     private TextField mapWidthField, mapHeightField,
@@ -46,7 +46,9 @@ public class SimulationConfig {
         minChildMutationsField, maxChildMutationsField,
         numGenesField;
     
-    public SimulationConfig() throws IOException {
+    public SimulationConfig(Stage primaryStage, SimulationApp listener) throws IOException {
+        this.listener = listener;
+        this.setSimulationParamsStage = primaryStage;
         this.setSimulationParams();
         if(this.simulationStarts)
             this.worldMap = new RectangularMap(this.mapWidth = 10, this.mapHeight = 10,
@@ -63,13 +65,12 @@ public class SimulationConfig {
             this.worldMap = null;
     }
 
-    public AbstractWorldMap getWorldMap() {
-        return this.worldMap;
+    private void addSimulationToListener() throws IOException {
+        AbstractWorldMap newMap = new RectangularMap(this.mapWidth, this.mapHeight);
+        listener.addSimulation(newMap);
     }
     
     private void setSimulationParams() throws IOException {
-        Stage setSimulationParamsStage = new Stage();
-
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simconfig.fxml"));
         VBox vbox = loader.load();
@@ -91,13 +92,20 @@ public class SimulationConfig {
 
         ((Button)vbox.lookup("#readButton")).setOnAction((actionEvent) -> {this.readFromCSV();});
         ((Button)vbox.lookup("#writeButton")).setOnAction((actionEvent) -> {this.writeToCSV();});
-        ((Button)vbox.lookup("#startButton")).setOnAction((actionEvent) -> {this.setParamsFromFields(); setSimulationParamsStage.close();});
+        ((Button)vbox.lookup("#startButton")).setOnAction((actionEvent) -> {
+            this.setParamsFromFields();
+            try {
+                this.addSimulationToListener();
+            } catch (IOException e) {
+                System.err.println("Simulation could not be added to listener!");
+                e.printStackTrace();
+            }});
 
         Scene scene = new Scene(vbox);
 
         setSimulationParamsStage.setScene(scene);
         setSimulationParamsStage.setOnCloseRequest((actionEvent) -> {this.simulationStarts = false; setSimulationParamsStage.close();});
-        setSimulationParamsStage.showAndWait();
+        setSimulationParamsStage.show();
     }
 
     private void setParamsFromFields() {
