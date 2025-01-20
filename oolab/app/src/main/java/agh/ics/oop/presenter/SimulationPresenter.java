@@ -1,5 +1,6 @@
 package agh.ics.oop.presenter;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,9 @@ public class SimulationPresenter implements MapChangeListener {
     private boolean simulationStarted = false;
     private boolean simulationPaused = false;
 
+    private PrintWriter statisticsWriter;
+    private int lastStatisticDayWritten = -2;
+
     public Stage createStage() {
         if(this.simulationStage == null) {
             this.simulationStage = new Stage();
@@ -77,6 +81,10 @@ public class SimulationPresenter implements MapChangeListener {
         this.worldMap = map;
     }
 
+    public void setStatisticsWriter(PrintWriter statisticsWriter) {
+        this.statisticsWriter = statisticsWriter;
+    }
+
     private void clearGrid() {
         this.mapGrid.getChildren().retainAll(this.mapGrid.getChildren().get(0)); // hack to retain visible grid lines
         this.mapGrid.getColumnConstraints().clear();
@@ -92,19 +100,29 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void printStatistics() {
+        List<String> stats = this.getStatistics(",");
         this.statisticsBox.getChildren().clear();
-        this.statisticsBox.getChildren().add(new Label("Number of animals: "+this.simulation.getNumAnimals()));
-        this.statisticsBox.getChildren().add(new Label("Number of grass pieces: "+this.simulation.getNumGrass()));
-        this.statisticsBox.getChildren().add(new Label("Number of free squares: "+this.simulation.getNumFreeSquares()));
-        String genotypeList = "";
-        this.statisticsBox.getChildren().add(new Label("Most popular genotypes:\n"+genotypeList));
-        this.statisticsBox.getChildren().add(new Label("Average animal energy: "+this.simulation.getAverageEnergy()));
-        this.statisticsBox.getChildren().add(new Label("Average lifespan of currently dead animals: "));
-        this.statisticsBox.getChildren().add(new Label("Average number of children of living animals: "));
+        this.statisticsBox.getChildren().add(new Label("Number of animals: "+stats.get(0)));
+        this.statisticsBox.getChildren().add(new Label("Number of grass pieces: "+stats.get(1)));
+        this.statisticsBox.getChildren().add(new Label("Number of free squares: "+stats.get(2)));
+        this.statisticsBox.getChildren().add(new Label("Most popular genotypes:\n"+stats.get(3)));
+        this.statisticsBox.getChildren().add(new Label("Average animal energy: "+stats.get(4)));
+        this.statisticsBox.getChildren().add(new Label("Average lifespan of currently dead animals: "+stats.get(5)));
+        this.statisticsBox.getChildren().add(new Label("Average number of children of living animals: "+stats.get(6)));
+    }
+
+    private List<String> getStatistics(String delim) {
+        return List.of(
+            Integer.toString(this.simulation.getNumAnimals()),
+            Integer.toString(this.simulation.getNumGrass()),
+            Integer.toString(this.simulation.getNumFreeSquares()),
+            String.join(delim, this.simulation.getGenotypeList()),
+            Double.toString(this.simulation.getAverageEnergy()),
+            Double.toString(this.simulation.getAverageLifespan()),
+            Double.toString(this.simulation.getAverageNumChildren()));
     }
 
     private void drawMap() {
-        this.printStatistics();
         this.clearGrid();
 
         Boundary mapBoundary = worldMap.getCurrentBounds();
@@ -162,6 +180,23 @@ public class SimulationPresenter implements MapChangeListener {
                     mapBoundary.upperRight().getY()-elem.getPosition().getY()+1);
             }
         }
+        this.printStatistics();
+        if(this.lastStatisticDayWritten < this.simulation.getNumDays()) {
+            this.pushStatisticsToFile(this.simulation.getNumDays(), this.getStatistics(";"));
+            this.lastStatisticDayWritten = this.simulation.getNumDays();
+        }
+    }
+
+    private void pushStatisticsToFile(final int day, final List<String> statistics) {
+        if(this.statisticsWriter != null) {
+            this.statisticsWriter.print(Integer.toString(day) + ";");
+            for(String stat : statistics)
+                this.statisticsWriter.print(stat + ";");
+            this.statisticsWriter.println();
+            this.statisticsWriter.flush();
+        }
+        else
+            System.out.println("No stat writer!");
     }
 
     @FXML

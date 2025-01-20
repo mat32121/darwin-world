@@ -18,6 +18,8 @@ public class Simulation implements Runnable {
 	private WorldMap worldMap;
 	private static final long MILLIS_INTERVAL = 1000;
 
+	private int numDays = 0;
+
 	private boolean isRunning = true;
 	private boolean isPaused = false;
 
@@ -41,6 +43,10 @@ public class Simulation implements Runnable {
 		}
 	}
 
+	public int getNumDays() {
+		return this.numDays;
+	}
+
 	@Override
 	public void run() {
 		if(this.animals.isEmpty())
@@ -53,7 +59,7 @@ public class Simulation implements Runnable {
 
 			ArrayList<Vector2d> eatingPositions = new ArrayList<>();
 			ArrayList<Vector2d> breedingPositions = new ArrayList<>();
-			for(int i = 0; this.isRunning;) {
+			for(numDays = 0; this.isRunning;) {
 				Thread.sleep(Simulation.MILLIS_INTERVAL);
 				if(!this.isPaused) {
 					for (Animal animal : animals) {
@@ -128,8 +134,8 @@ public class Simulation implements Runnable {
 					eatingPositions.clear();
 					this.worldMap.grassGrows();
 					//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
-					this.worldMap.mapTicks(i + (i == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
-					++i;
+					this.worldMap.mapTicks(numDays + (numDays == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
+					++numDays;
 				}
 			}
 		} catch (InterruptedException e) {
@@ -182,6 +188,17 @@ public class Simulation implements Runnable {
 				energySum += animal.getEnergy();
 		return energySum/this.getNumAnimals();
 	}
+
+    // TODO: Implement
+    public List<String> getGenotypeList() {
+        return List.of();
+    }
+    public double getAverageLifespan() {
+		return -1.0;
+    }
+    public double getAverageNumChildren() {
+		return -1.0;
+    }
 
 	public UUID getMapId() {
 		return this.worldMap.getId();
