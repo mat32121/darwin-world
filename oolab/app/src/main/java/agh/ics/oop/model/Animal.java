@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -27,12 +28,13 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.liveStatus=true;
 		this.genotype=genotype;
 		this.daysAfterDeath=0;
+		this.rng = new Random();
 		this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
 		//this.genIndex=0; //**** do usuniecia!!! poprawna wersja wyzej /\
 		//***zakladam, ze zawsze tworzymy zywego zwierzaka
 		this.children = new ArrayList<>();
 		this.age = 0;
-		this.rng = new Random();
+
 	}
 
 	@Override
@@ -68,7 +70,11 @@ public class Animal implements WorldElement, Comparable<Animal> {
 	}
 
 	public int[] getGenotype() {
-		return this.genotype;
+		return genotype;
+	}
+
+	public int getGenIndex() {
+		return genIndex;
 	}
 
 	public void setLiveStatus(boolean status) {
@@ -91,6 +97,10 @@ public class Animal implements WorldElement, Comparable<Animal> {
 
 	public int getNumChildren() {
 		return this.children.size();
+	}
+
+	public void addChildren(Animal offspring) {
+		this.children.add(offspring);
 	}
 
 	//public Animal breeding(Animal animal) {
@@ -130,10 +140,25 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		return this.direction == direction;
 	}
 
-	public int getChildrenCount() {
-		//dopisac dzieci dzieci
-		return this.children.size();
+
+	public HashSet<Animal> getAllDescendants() {
+		return getAllDescendants(new HashSet<>());
 	}
+
+	private HashSet<Animal> getAllDescendants(HashSet<Animal> countedDescendants) {
+		if (this.children.isEmpty()) {
+			return countedDescendants;
+		}
+		for (Animal child : this.children) {
+			if (!countedDescendants.contains(child)) {
+				countedDescendants.add(child);
+				child.getAllDescendants(countedDescendants);
+			}
+		}
+		return countedDescendants;
+	}
+
+
 
 	public void move(Boundary boundary) {
 		//*** do poprawy skladni!!!
@@ -204,6 +229,10 @@ public class Animal implements WorldElement, Comparable<Animal> {
 
 			// Mutacje w genotypie potomka
 			mutateGenotype(offspring.getGenotype());
+
+			// Przypisanie potomka do rodziców
+			this.addChildren(offspring);
+			partner.addChildren(offspring);
 
 			return offspring;
 		}

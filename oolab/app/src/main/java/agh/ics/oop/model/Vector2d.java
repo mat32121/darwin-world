@@ -48,22 +48,6 @@ public class Vector2d {
 		return new Vector2d(-this.x, -this.y);
 	}
 
-	//*** nie wiem, czy nie lepiej przeniesc ta funkcje gdzies indziej
-	public Vector2d placeWithinBounds(Boundary boundary, Animal animal) {
-		int xMax = boundary.upperRight().getX();
-		int xMin = boundary.lowerLeft().getX();
-
-		int newX = this.x;
-
-		if (this.x < xMin) {
-			newX = xMax - 1;
-		} else if (this.x > xMax) {
-			newX = xMin +1;
-		}
-
-		return new Vector2d(newX, this.y);
-	}
-
 	public boolean isWithinBounds(Boundary boundary) {
 		Vector2d lowerLeftCorner = boundary.lowerLeft();
 		Vector2d upperRightCorner = boundary.upperRight();
