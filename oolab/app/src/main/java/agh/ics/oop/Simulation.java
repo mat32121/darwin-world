@@ -1,9 +1,9 @@
 package agh.ics.oop;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.Boundary;
@@ -181,5 +181,9 @@ public class Simulation implements Runnable {
 			if(elem instanceof Animal animal)
 				energySum += animal.getEnergy();
 		return energySum/this.getNumAnimals();
+	}
+
+	public UUID getMapId() {
+		return this.worldMap.getId();
 	}
 }

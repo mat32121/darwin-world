@@ -28,11 +28,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 public class SimulationPresenter implements MapChangeListener {
     // private static final int CELL_WIDTH = 20, CELL_HEIGHT = 20;
     private static final double ENERGY_COLOR_COEFF = 1.25;
     private WorldMap worldMap;
+    private Stage simulationStage;
     @FXML
     private BorderPane mainBorderPane;
     @FXML
@@ -46,10 +48,26 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private VBox statisticsBox;
     
-    private SimulationEngine simulationEngine = null;
-    private Simulation simulation = null;
+    private SimulationEngine simulationEngine;
+    private Simulation simulation;
     private boolean simulationStarted = false;
     private boolean simulationPaused = false;
+
+    public Stage createStage() {
+        if(this.simulationStage == null) {
+            this.simulationStage = new Stage();
+            this.simulationStage.setOnCloseRequest(actionEvent -> {this.simulationStage.close();
+                if(this.simulation instanceof Simulation)
+                    try {
+                        this.simulation.stop();
+                        this.simulationEngine.joinAsync(this.worldMap.getId());
+                    } catch (InterruptedException e) {
+                        System.err.println("Could not join simulation thread!");
+                        e.printStackTrace();
+                    }});
+        }
+        return this.simulationStage;
+    }
 
     public void setSimulationEngine(SimulationEngine simulationEngine) {
         this.simulationEngine = simulationEngine;
@@ -155,7 +173,7 @@ public class SimulationPresenter implements MapChangeListener {
             this.simulationStarted = true;
             this.startButton.setText("Pauza");
         }
-        else if(this.simulationEngine.togglePause()) {
+        else if(this.simulation.togglePause()) {
             this.startButton.setText("Start");
             this.simulationPaused = true;
             this.drawMap();
@@ -175,10 +193,10 @@ public class SimulationPresenter implements MapChangeListener {
         });
     }
 
-    public void endSimulation() throws InterruptedException {
-        if(this.simulationEngine instanceof SimulationEngine) {
-            this.simulationEngine.stopSimulations();
-            this.simulationEngine.awaitSimulationsEnd();
-        }
-    }
+    // public void endSimulation() throws InterruptedException {
+    //     if(this.simulationEngine instanceof SimulationEngine) {
+    //         this.simulationEngine.stopSimulations();
+    //         this.simulationEngine.awaitSimulationsEnd();
+    //     }
+    // }
 }

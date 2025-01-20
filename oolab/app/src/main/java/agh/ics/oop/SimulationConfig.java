@@ -30,9 +30,8 @@ public class SimulationConfig {
     private int minChildMutations = 1, maxChildMutations = 2;
     private int numGenes = 7;
 
-    private Stage setSimulationParamsStage;
-    private SimulationApp listener;
-    private boolean simulationStarts = true;
+    private final Stage setSimulationParamsStage;
+    private final SimulationApp listener;
 
     @FXML
     private TextField mapWidthField, mapHeightField,
@@ -50,23 +49,19 @@ public class SimulationConfig {
         this.listener = listener;
         this.setSimulationParamsStage = primaryStage;
         this.setSimulationParams();
-        if(this.simulationStarts)
-            this.worldMap = new RectangularMap(this.mapWidth = 10, this.mapHeight = 10,
-        this.numInitialGrass,
-        this.energyPerGrass,
-        this.numGrassPerDay,
-        this.numInitialAnimals,
-        this.initialEnergy,
-        this.minCopulateEnergy,
-        this.copulateEnergyUsed,
-        this.minChildMutations, this.maxChildMutations,
-        this.numGenes);
-        else
-            this.worldMap = null;
     }
 
     private void addSimulationToListener() throws IOException {
-        AbstractWorldMap newMap = new RectangularMap(this.mapWidth, this.mapHeight);
+        AbstractWorldMap newMap = new RectangularMap(this.mapWidth, this.mapHeight,
+            this.numInitialGrass,
+            this.energyPerGrass,
+            this.numGrassPerDay,
+            this.numInitialAnimals,
+            this.initialEnergy,
+            this.minCopulateEnergy,
+            this.copulateEnergyUsed,
+            this.minChildMutations, this.maxChildMutations,
+            this.numGenes);
         listener.addSimulation(newMap);
     }
     
@@ -104,7 +99,6 @@ public class SimulationConfig {
         Scene scene = new Scene(vbox);
 
         setSimulationParamsStage.setScene(scene);
-        setSimulationParamsStage.setOnCloseRequest((actionEvent) -> {this.simulationStarts = false; setSimulationParamsStage.close();});
         setSimulationParamsStage.show();
     }
 
