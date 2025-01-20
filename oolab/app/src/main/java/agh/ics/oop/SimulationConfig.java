@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -32,6 +33,7 @@ public class SimulationConfig {
 
     private final Stage setSimulationParamsStage;
     private final SimulationApp listener;
+    private PrintWriter statisticsWriter;
 
     @FXML
     private TextField mapWidthField, mapHeightField,
@@ -44,6 +46,8 @@ public class SimulationConfig {
         copulateEnergyUsedField,
         minChildMutationsField, maxChildMutationsField,
         numGenesField;
+    @FXML
+    private CheckBox statSaveBox;
     
     public SimulationConfig(Stage primaryStage, SimulationApp listener) throws IOException {
         this.listener = listener;
@@ -84,22 +88,52 @@ public class SimulationConfig {
         this.numGenesField = (TextField)vbox.lookup("#numGenesField");
     
         this.updateFieldsText();
-
+        
+        this.statSaveBox = (CheckBox)vbox.lookup("#statSaveBox");
         ((Button)vbox.lookup("#readButton")).setOnAction((actionEvent) -> {this.readFromCSV();});
         ((Button)vbox.lookup("#writeButton")).setOnAction((actionEvent) -> {this.writeToCSV();});
-        ((Button)vbox.lookup("#startButton")).setOnAction((actionEvent) -> {
-            this.setParamsFromFields();
-            try {
-                this.addSimulationToListener();
-            } catch (IOException e) {
-                System.err.println("Simulation could not be added to listener!");
-                e.printStackTrace();
-            }});
+        ((Button)vbox.lookup("#startButton")).setOnAction((actionEvent) -> {this.startSimulation();});
 
         Scene scene = new Scene(vbox);
 
         setSimulationParamsStage.setScene(scene);
         setSimulationParamsStage.show();
+    }
+
+    private void startSimulation() {
+        this.setParamsFromFields();
+        if(this.statSaveBox.isSelected()) {
+            this.openStatCSV();
+        }
+        else {
+            this.statisticsWriter = null;
+        }
+        try {
+            this.addSimulationToListener();
+        } catch (IOException e) {
+            System.err.println("Simulation could not be added to listener!");
+            e.printStackTrace();
+        }
+    }
+
+    private PrintWriter openStatCSV() {
+        Stage fileOpenStage = new Stage();
+        fileOpenStage.setTitle("Choose a file to write statistics to");
+        FileChooser fileChooser = new FileChooser();
+        File statFile = fileChooser.showOpenDialog(fileOpenStage);
+        try {
+            this.statisticsWriter = new PrintWriter(statFile);
+            this.statisticsWriter.println("day;numAnimals;numGrass;numFreeSquares;genotype;averageEnergy;averageLifespan;averageNumChildren");
+            // System.out.println("Opened stat writer!");
+        } catch (FileNotFoundException e) {
+            System.err.println("File " + statFile.getName() + " not found!");
+            this.statisticsWriter = null;
+        }
+        return this.statisticsWriter;
+    }
+
+    public PrintWriter getStatisticsWriter() {
+        return this.statisticsWriter;
     }
 
     private void setParamsFromFields() {
