@@ -3,6 +3,7 @@ package agh.ics.oop.presenter;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +107,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void printStatistics() {
-        List<String> stats = this.getStatistics(",");
+        List<String> stats = this.getStatistics("\n");
         this.statisticsBox.getChildren().clear();
         this.statisticsBox.getChildren().add(new Label("Number of animals: "+stats.get(0)));
         this.statisticsBox.getChildren().add(new Label("Number of grass pieces: "+stats.get(1)));
@@ -126,11 +127,11 @@ public class SimulationPresenter implements MapChangeListener {
             this.animalTrackBox.getChildren().add(new Label("Active gene index: " + Integer.toString(this.animalTracked.getGenIndex())));
             this.animalTrackBox.getChildren().add(new Label("Energy: " + Integer.toString(this.animalTracked.getEnergy())));
             this.animalTrackBox.getChildren().add(new Label("Grass eaten: "));
-            this.animalTrackBox.getChildren().add(new Label("Number of descendants: "));
+            this.animalTrackBox.getChildren().add(new Label("Number of descendants: " + this.animalTracked.getAllDescendants(new HashSet<Animal>()).size()));
             if(this.animalTracked.getLiveStatus())
                 this.animalTrackBox.getChildren().add(new Label("Days alive: "));
             else
-                this.animalTrackBox.getChildren().add(new Label("Day od death: "));
+                this.animalTrackBox.getChildren().add(new Label("Day of death: "));
         }
     }
 
@@ -190,24 +191,37 @@ public class SimulationPresenter implements MapChangeListener {
                     mapBoundary.upperRight().getY()-elem.getPosition().getY()+1);
             }
         }
+        int[] maxGenome = this.simulation.getMostPopularGenome();
         Map<Vector2d, Animal> animalDrawMap = new HashMap<>();
         for(Vector2d animalPos : this.worldMap.getAnimalPositions())
             animalDrawMap.put(animalPos, this.worldMap.getFittestAnimalOnPosition(animalPos));
         for(Animal animal : animalDrawMap.values())
-            if(animal.getLiveStatus()) {
-                Circle newCircle = new Circle();
-                newCircle.setRadius(Math.min(cell_width, cell_height)/2);
-                Color fillColor = (Color.hsb(0.1, 0.5, SimulationPresenter.energyCurve(animal.getEnergy())));
-                newCircle.setFill(fillColor);
-                GridPane.setHalignment(newCircle, HPos.CENTER);
-                this.mapGrid.add(newCircle,
-                    animal.getPosition().getX()-mapBoundary.lowerLeft().getX()+1,
-                    mapBoundary.upperRight().getY()-animal.getPosition().getY()+1);
-            }
+            if(animal != null)
+                if(animal.getLiveStatus()) {
+                    boolean hasMaxGenome = false;
+                    if(animal.getGenotype().length == maxGenome.length) {
+                        hasMaxGenome = true;
+                        for(int i = 0; i < maxGenome.length; ++i)
+                            if(animal.getGenotype()[i] != maxGenome[i])
+                                hasMaxGenome = false;
+                    }
+                    Circle newCircle = new Circle();
+                    newCircle.setRadius(Math.min(cell_width, cell_height)/2);
+                    Color fillColor = (Color.hsb(0.1, 0.5, SimulationPresenter.energyCurve(animal.getEnergy())));
+                    newCircle.setFill(fillColor);
+                    if(hasMaxGenome && this.simulationPaused) {
+                        newCircle.setStroke(Color.RED);
+                        newCircle.setStrokeWidth(cell_height/10);
+                    }
+                    GridPane.setHalignment(newCircle, HPos.CENTER);
+                    this.mapGrid.add(newCircle,
+                        animal.getPosition().getX()-mapBoundary.lowerLeft().getX()+1,
+                        mapBoundary.upperRight().getY()-animal.getPosition().getY()+1);
+                }
         this.printStatistics();
         this.printAnimalTrack();
         if(this.lastStatisticDayWritten < this.simulation.getNumDays()) {
-            this.pushStatisticsToFile(this.simulation.getNumDays(), this.getStatistics(";"));
+            this.pushStatisticsToFile(this.simulation.getNumDays(), this.getStatistics(", "));
             this.lastStatisticDayWritten = this.simulation.getNumDays();
         }
     }

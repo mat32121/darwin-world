@@ -122,7 +122,7 @@ public class SimulationConfig {
         File statFile = fileChooser.showOpenDialog(fileOpenStage);
         try {
             this.statisticsWriter = new PrintWriter(statFile);
-            this.statisticsWriter.println("day;numAnimals;numGrass;numFreeSquares;genotype;averageEnergy;averageLifespan;averageNumChildren");
+            this.statisticsWriter.println("day;numAnimals;numGrass;numFreeSquares;mostPopularGenotypes;averageEnergy;averageLifespan;averageNumChildren");
             // System.out.println("Opened stat writer!");
         } catch (FileNotFoundException e) {
             System.err.println("File " + statFile.getName() + " not found!");

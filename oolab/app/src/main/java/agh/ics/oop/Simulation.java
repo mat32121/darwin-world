@@ -1,6 +1,13 @@
 package agh.ics.oop;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import agh.ics.oop.model.Animal;
@@ -184,7 +191,7 @@ public class Simulation implements Runnable {
 	public int getNumFreeSquares() {
 		Boundary bounds = this.worldMap.getCurrentBounds();
 		int freeSpace = (bounds.upperRight().getX()-bounds.lowerLeft().getX()+1)*
-		       (bounds.upperRight().getY()-bounds.lowerLeft().getY()+1);
+			   (bounds.upperRight().getY()-bounds.lowerLeft().getY()+1);
 		HashSet<Vector2d> occupiedSpace = new HashSet<>();
 		for(WorldElement elem : this.worldMap.getElements())
 			if(elem instanceof Animal animal)
@@ -201,7 +208,26 @@ public class Simulation implements Runnable {
 		return Math.round(energySum * 100.0/this.getNumAnimals())/ 100.0;
 	}
 
-    // TODO: Implement
+	public int[] getMostPopularGenome() {
+		HashMap<int[], Integer> countingGenoms = new HashMap<>();
+
+		// Zliczanie wystąpień genotypów
+		for (WorldElement elem : this.worldMap.getElements()) {
+			if (elem instanceof Animal && ((Animal) elem).getLiveStatus()) {
+				int[] genotype = ((Animal) elem).getGenotype();
+
+				// Zliczanie wystąpień w mapie
+				countingGenoms.put(genotype, countingGenoms.getOrDefault(genotype, 0) + 1);
+			}
+		}
+
+		// Sortowanie genotypów malejąco według liczby wystąpień i przekształcanie na listę
+		int[] maxGenome = countingGenoms.entrySet()
+				.stream()
+				.max((e1, e2) -> e2.getValue().compareTo(e1.getValue())).get().getKey();
+		return maxGenome;
+	}
+
 	public List<String> getGenotypeList() {
 		HashMap<int[], Integer> countingGenoms = new HashMap<>();
 
@@ -219,11 +245,12 @@ public class Simulation implements Runnable {
 		List<String> sortedGenotypes = countingGenoms.entrySet()
 				.stream()
 				.sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // Sortuj malejąco po wartości
-				.map(entry -> Arrays.toString(entry.getKey()) + " (Liczba wystąpień: " + entry.getValue() + ")")
+				.map(entry -> Arrays.toString(entry.getKey()) + " (Number of animals: " + entry.getValue() + ")")
+				.limit(5)
 				.collect(Collectors.toList());
 
-		//return sortedGenotypes;
-		return new ArrayList<>();
+		return sortedGenotypes;
+		// return new ArrayList<>();
 	}
 
     public double getAverageLifespan() {
