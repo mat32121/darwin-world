@@ -64,11 +64,6 @@ public class Simulation implements Runnable {
 		if(this.animals.isEmpty())
 			return;
 		try {
-			//*** for zaminiec na while, ktory w warunku ma ilosc jeszcze zjacych zwierzat
-			//*** do poprawy, usuniecie redundancji, plus dodanie genomu
-			//*** dodac zatrzymanie zwierzaka na czas jedzenia i kopulacji?
-			//***kazdy element przeniesc do osobnej funkcji w simulation
-
 			ArrayList<Vector2d> eatingPositions = new ArrayList<>();
 			ArrayList<Vector2d> breedingPositions = new ArrayList<>();
 			for(numDays = 0; this.isRunning;) {
@@ -96,7 +91,6 @@ public class Simulation implements Runnable {
 
 						} else {
 							animal.incrementDaysAfterDeath();
-							System.out.println(animal.getDaysAfterDeath());
 						}
 					}
 					for(Vector2d position : eatingPositions) {
