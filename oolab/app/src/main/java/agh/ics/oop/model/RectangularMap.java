@@ -61,6 +61,7 @@ public class RectangularMap extends AbstractWorldMap {
 
 	}
 
+
 	@Override
 	public int getWidth() {
 		return width;
@@ -159,7 +160,7 @@ public class RectangularMap extends AbstractWorldMap {
 
 	@Override
 	public void animalEatsGrass(Animal animal) {
-		animal.changeEnergy(4);
+		animal.changeEnergy(energyPerGrass);
 		//*** mozliwosc ustawienia wartosci energetycznej rosliny do dodania!
 		this.removeGrass(animal.getPosition());
 	}

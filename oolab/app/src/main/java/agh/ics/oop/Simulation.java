@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.Boundary;
@@ -127,7 +126,7 @@ public class Simulation implements Runnable {
 							}
 
 							// Próba rozmnażania
-							Animal offspring = animal1.copulate(animal2, this.worldMap.getMinCopulateEnergy());
+							Animal offspring = animal1.copulate(animal2, this.worldMap.getMinCopulateEnergy(), this.worldMap.getMaxChildMutations(),this.worldMap.getMinChildMutations() );
 							if (offspring != null) {
 								System.out.println("Dodaję potomka z energią: " + offspring.getEnergy());
 								this.worldMap.place(offspring); // Dodanie potomka na mapę
@@ -196,7 +195,7 @@ public class Simulation implements Runnable {
 		for(WorldElement elem : this.worldMap.getElements())
 			if(elem instanceof Animal animal)
 				occupiedSpace.add(elem.getPosition());
-		
+
 		return freeSpace-occupiedSpace.size();
 	}
 
@@ -247,13 +246,13 @@ public class Simulation implements Runnable {
 				.sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // Sortuj malejąco po wartości
 				.map(entry -> Arrays.toString(entry.getKey()) + " (Number of animals: " + entry.getValue() + ")")
 				.limit(5)
-				.collect(Collectors.toList());
+				.toList();
 
 		return sortedGenotypes;
 		// return new ArrayList<>();
 	}
 
-    public double getAverageLifespan() {
+	public double getAverageLifespan() {
 		//sredni czas zycia ZMARLYCH zwierzakow
 		int result = 0;
 		for(WorldElement elem : this.worldMap.getElements())
@@ -263,7 +262,7 @@ public class Simulation implements Runnable {
 		return Math.round(result * 100.0/this.getNumAnimals())/ 100.0;
 	}
 
-    public double getAverageNumChildren() {
+	public double getAverageNumChildren() {
 		int result = 0;
 		for(WorldElement elem : this.worldMap.getElements())
 			if(elem instanceof Animal){
@@ -271,7 +270,7 @@ public class Simulation implements Runnable {
 			}
 		return Math.round(result * 100.0/this.getNumAnimals())/ 100.0;
 
-    }
+	}
 
 	public UUID getMapId() {
 		return this.worldMap.getId();
