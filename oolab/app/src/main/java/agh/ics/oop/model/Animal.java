@@ -39,7 +39,7 @@ public class Animal implements WorldElement, Comparable<Animal> {
 
 	@Override
 	public int compareTo(Animal other) {
-		if(other instanceof Animal) {
+		if(other != null) {
 			int res = other.getEnergy()-this.energy;
 			if(res == 0)
 				res = other.getAge()-this.age;
@@ -158,24 +158,36 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		}
 		return countedDescendants;
 	}
-	
-	public void move(Boundary boundary) {
-		//*** do poprawy skladni!!!
-		this.direction=this.direction.next(genotype[genIndex]);
-		genIndex=(genIndex+1)%genotype.length;
 
-		Vector2d newPosition = new Vector2d(this.position.getX(), this.position.getY());
-		newPosition=newPosition.add(this.direction.toUnitVector());
+	public void move(Boundary boundary) {
+		Random random = new Random();
+
+		// Wybranie genu: 80% przypadków - kolejny gen, 20% przypadków - losowy gen
+		if (random.nextDouble() < 0.8) {
+			genIndex = (genIndex + 1) % genotype.length; // Kolejny gen
+		} else {
+			genIndex = random.nextInt(genotype.length); // Losowy gen
+		}
+
+		// Aktualizacja kierunku na podstawie aktywnego genu
+		this.direction = this.direction.next(genotype[genIndex]);
+
+		// Obliczanie nowej pozycji
+		Vector2d newPosition = this.position.add(this.direction.toUnitVector());
+
+		// Przypisanie nowej pozycji z uwzględnieniem granic mapy
 		this.position = newPosition;
 		this.placeWithinBounds(boundary);
-		this.changeEnergy(-1);
-		//dodac liczbe zalezna od wspolrzednej y
 
-		//uwaga, zwierze wpierw rusza sie o jeden, a dopiero potem zmienia kierunek na ten w kodzie genetycznym.
-		//***prawdopodobnie da sie szybciej zrobic funkcje, ktora zapetla mape, niz ta ponizej
+		// Obliczanie energii zużywanej na ruch w zależności od odległości od centrum mapy
+		int center = (boundary.upperRight().getY()-boundary.lowerLeft().getY())/2;
+		int distanceFromCenter = Math.abs(this.position.getY()-center);
+		int energyCost = 1 + distanceFromCenter; // Bazowy koszt 1 + odległość od centrum
 
-
+		// Zmniejszenie energii zwierzaka
+		this.changeEnergy(-Math.min(energyCost,this.getEnergy()));
 	}
+
 
 	public void placeWithinBounds(Boundary boundary) {
 		int yMax = boundary.upperRight().getY();
