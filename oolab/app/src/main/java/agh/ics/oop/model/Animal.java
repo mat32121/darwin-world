@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Animal implements WorldElement, Comparable<Animal> {
+	private int grassEatenByAnimal;
+	private int dayOfDeath;
 	//private int plantsEaten = 0;
 	private MapDirection direction;
 	private Vector2d position;
@@ -34,6 +36,8 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		//***zakladam, ze zawsze tworzymy zywego zwierzaka
 		this.children = new ArrayList<>();
 		this.age = 0;
+		this.dayOfDeath = -1;
+		this.grassEatenByAnimal = 0;
 
 	}
 
@@ -93,6 +97,10 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.age += 1;
 	}
 
+	public void incrementEatenGrass() {
+		this.grassEatenByAnimal += 1;
+	}
+
 	public void changeEnergy(int n) {
 		this.energy += n;
 	}
@@ -109,15 +117,16 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.children.add(offspring);
 	}
 
-	// TODO: Implement
 	public int getNumGrassEaten() {
-		return -1;
+		return grassEatenByAnimal;
 	}
-	public int getNumDaysAlive() {
-		return -1;
+	public void setDayOfDeath(int date){
+		this.dayOfDeath=date;
 	}
+
 	public int getDayOfDeath() {
-		return -1;
+		//jesli nie umarl zwraca -1
+		return this.dayOfDeath;
 	}
 
 	//public Animal breeding(Animal animal) {
