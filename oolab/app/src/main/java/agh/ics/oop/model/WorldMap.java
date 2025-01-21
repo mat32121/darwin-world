@@ -58,21 +58,13 @@ public interface WorldMap extends MoveValidator {
     void removeAnimal(Animal animal);
 
     int getMinCopulateEnergy();
-
     int getInitialEnergy();
-
     int getNumInitialAnimals();
-
     int getMinChildMutations();
-
     int getMaxChildMutations();
-
     int getNumGenes();
-
     int getWidth();
-
     int getHeight();
-
     int getNumGrassPerDay();
 
     List<WorldElement> getElements();

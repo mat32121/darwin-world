@@ -119,7 +119,6 @@ public class SimulationConfig {
         try {
             this.statisticsWriter = new PrintWriter(statFile);
             this.statisticsWriter.println("day;numAnimals;numGrass;numFreeSquares;mostPopularGenotypes;averageEnergy;averageLifespan;averageNumChildren;");
-            // System.out.println("Opened stat writer!");
         } catch (FileNotFoundException e) {
             System.err.println("File " + statFile.getName() + " not found!");
             this.statisticsWriter = null;

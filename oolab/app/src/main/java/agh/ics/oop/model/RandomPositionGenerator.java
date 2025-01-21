@@ -1,13 +1,12 @@
 package agh.ics.oop.model;
 
-import java.lang.Iterable;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class RandomPositionGenerator implements Iterable<Vector2d>, Iterator<Vector2d> {
-	private List<Vector2d> positions;
+	private final List<Vector2d> positions;
 	private int counter;
 
 	@Override

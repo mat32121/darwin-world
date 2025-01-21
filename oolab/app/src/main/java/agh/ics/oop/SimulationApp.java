@@ -27,7 +27,6 @@ public class SimulationApp extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
         SimulationPresenter presenter = loader.getController();
-        //trzeba zrobic, by mapa dopasowywala sie do ekranu!!!
         presenter.setSimulationEngine(this.simulationEngine);
         presenter.setWorldMap(map);
         presenter.setStatisticsWriter(this.conf.getStatisticsWriter());
@@ -45,7 +44,6 @@ public class SimulationApp extends Application {
         mapStage.setTitle("Simulation app");
         mapStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         mapStage.minHeightProperty().bind(viewRoot.minHeightProperty());
-        // mapStage.setResizable(false);
         viewRoot.setPadding(new Insets(5, 5, 5, 5));
     }
 }

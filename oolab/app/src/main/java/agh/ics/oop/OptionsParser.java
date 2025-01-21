@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OptionsParser {
-    //***do usuniecia
     public static List<Integer> parse(List<String> steps_string) {
         ArrayList<Integer> result = new ArrayList<>();
         for(String step : steps_string) {

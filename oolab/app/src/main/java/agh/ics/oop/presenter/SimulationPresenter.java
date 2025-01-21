@@ -23,7 +23,6 @@ import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -36,7 +35,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class SimulationPresenter implements MapChangeListener {
-    // private static final int CELL_WIDTH = 20, CELL_HEIGHT = 20;
     private static final double ENERGY_COLOR_COEFF = 1.25;
     private WorldMap worldMap;
     private Stage simulationStage;
@@ -44,8 +42,6 @@ public class SimulationPresenter implements MapChangeListener {
     private BorderPane mainBorderPane;
     @FXML
     private Label infoLabel;
-    @FXML
-    private TextField movesField;
     @FXML
     private GridPane mapGrid;
     @FXML
@@ -127,7 +123,7 @@ public class SimulationPresenter implements MapChangeListener {
             this.animalTrackBox.getChildren().add(new Label("Active gene index: " + Integer.toString(this.animalTracked.getGenIndex())));
             this.animalTrackBox.getChildren().add(new Label("Energy: " + Integer.toString(this.animalTracked.getEnergy())));
             this.animalTrackBox.getChildren().add(new Label("Grass eaten: " + Integer.toString(this.animalTracked.getNumGrassEaten())));
-            this.animalTrackBox.getChildren().add(new Label("Number of descendants: " + this.animalTracked.getAllDescendants(new HashSet<Animal>()).size()));
+            this.animalTrackBox.getChildren().add(new Label("Number of descendants: " + this.animalTracked.getAllDescendants(new HashSet<>()).size()));
             if(this.animalTracked.getLiveStatus())
                 this.animalTrackBox.getChildren().add(new Label("Days alive: " + Integer.toString(this.animalTracked.getAge())));
             else
@@ -235,8 +231,6 @@ public class SimulationPresenter implements MapChangeListener {
             this.statisticsWriter.println();
             this.statisticsWriter.flush();
         }
-        // else
-        //     System.out.println("No stat writer!");
     }
 
     @FXML
@@ -284,11 +278,4 @@ public class SimulationPresenter implements MapChangeListener {
             this.drawMap();
         });
     }
-
-    // public void endSimulation() throws InterruptedException {
-    //     if(this.simulationEngine instanceof SimulationEngine) {
-    //         this.simulationEngine.stopSimulations();
-    //         this.simulationEngine.awaitSimulationsEnd();
-    //     }
-    // }
 }

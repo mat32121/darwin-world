@@ -1,6 +1,10 @@
 package agh.ics.oop.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class RectangularMap extends AbstractWorldMap {
 	private final int width, height;
@@ -16,12 +20,11 @@ public class RectangularMap extends AbstractWorldMap {
 	private final int minChildMutations;
 	private final int maxChildMutations;
 	private final int numGenes;
-	private Map<Vector2d, Grass> grassPatches;
-	private ArrayList<Vector2d> freeSteppePositions;
-	private ArrayList<Vector2d> freeJunglePositions;
+	private final Map<Vector2d, Grass> grassPatches;
+	private final ArrayList<Vector2d> freeSteppePositions;
+	private final ArrayList<Vector2d> freeJunglePositions;
+	private final Random random;
 
-
-	//*** czy wystepuje startowa ilosc trawy?
 	public RectangularMap(int width, int height, int numInitialGrass, int energyPerGrass, int numGrassPerDay, int numInitialAnimals, int initialEnergy, int minCopulateEnergy, int minChildMutations, int maxChildMutations, int numGenes) {
 		this.width = width;
 		this.height = height;
@@ -45,6 +48,7 @@ public class RectangularMap extends AbstractWorldMap {
 		}
 		this.jungleLowerBound = Math.max((this.height / 2) - (int) Math.ceil(this.height * 0.1) + (1 - p),0);
 		this.jungleUpperBound = Math.max((this.height / 2) + (int) Math.ceil(this.height * 0.1) -1,0);
+		this.random = new Random();
 
 		for(int i = 0; i < width; ++i)
 			for(int j = 0; j < height; ++j) {
@@ -56,9 +60,7 @@ public class RectangularMap extends AbstractWorldMap {
 			}
 
 		this.grassGrows(numInitialGrass, true);
-
 	}
-
 
 	@Override
 	public int getWidth() {
@@ -94,7 +96,6 @@ public class RectangularMap extends AbstractWorldMap {
 		return numGrassPerDay;
 	}
 
-
 	@Override
 	public int getInitialEnergy() {
 		return initialEnergy;
@@ -117,30 +118,25 @@ public class RectangularMap extends AbstractWorldMap {
 		else
 			this.freeSteppePositions.add(position);
 	}
-	//*** do poprawy, czas O(n)!! ~ chociaz ilosc elementow to max 3000, ale i tak warto by bylo
-	//przeniesc mechanizm losowania do innej klasy.
 
 	@Override
 	public void grassGrows(int grassNumber, boolean inicialization) {
-		Random random = new Random();
-
 		for (int i = 0; i < grassNumber; i++) {
-			boolean growInSteppe = Math.random() < 0.2;
+			boolean growInSteppe = this.random.nextDouble(1.0) < 0.2;
 			List<Vector2d> targetList = growInSteppe ? this.freeSteppePositions : this.freeJunglePositions;
 			List<Vector2d> backupList = growInSteppe ?  this.freeJunglePositions : this.freeSteppePositions;
 
-			// Sprawdzenie, czy lista nie jest pusta
 			if (!targetList.isEmpty()) {
-				addGrassAtRandomPosition(targetList, random);
+				addGrassAtRandomPosition(targetList);
 			} else if(inicialization && !backupList.isEmpty()){
-				addGrassAtRandomPosition(backupList, random);
+				addGrassAtRandomPosition(backupList);
 			}
 		}
 	}
 
-	private void addGrassAtRandomPosition(List<Vector2d> positions, Random random) {
-		if (!positions.isEmpty()) { // Zapewnienie, że lista nie jest pusta
-			int randomIndex = random.nextInt(positions.size());
+	private void addGrassAtRandomPosition(List<Vector2d> positions) {
+		if (!positions.isEmpty()) {
+			int randomIndex = this.random.nextInt(positions.size());
 			Vector2d position = positions.get(randomIndex);
 			this.grassPatches.put(position, new Grass(position));
 			positions.remove(randomIndex);
@@ -154,7 +150,6 @@ public class RectangularMap extends AbstractWorldMap {
 	@Override
 	public void animalEatsGrass(Animal animal) {
 		animal.changeEnergy(energyPerGrass);
-		//*** mozliwosc ustawienia wartosci energetycznej rosliny do dodania!
 		this.removeGrass(animal.getPosition());
 	}
 
@@ -162,19 +157,6 @@ public class RectangularMap extends AbstractWorldMap {
 	public void removeGrass(Vector2d position) {
 		grassPatches.remove(position);
 	}
-
-
-
-
-	//***do poprawy, na jednym polu moze byc wiele zwierzat, poza tym zwierze moze poruszyc sie na dowolne pole
-	/*
-	@Override
-	public boolean canMoveTo(Vector2d position) {
-		return position.follows(AbstractWorldMap.ORIGIN)
-		    && position.precedes(this.boundary)
-		    && super.canMoveTo(position);
-	}
-	 */
 
 	@Override
 	public List<WorldElement> getElements() {

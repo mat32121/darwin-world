@@ -55,8 +55,6 @@ public class Vector2d {
 				&& this.y >= lowerLeftCorner.getY() && this.y <= upperRightCorner.getY();
 	}
 
-
-
 	@Override
 	public boolean equals(Object other) {
 		if(this == other)

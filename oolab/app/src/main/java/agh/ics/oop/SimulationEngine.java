@@ -61,11 +61,4 @@ public class SimulationEngine {
         for(Simulation simulation : this.simulations)
             this.executorService.submit(simulation);
     }
-
-	// public boolean togglePause(UUID mapId) {
-    //     boolean result = false;
-    //     for(Simulation simulation : this.simulations)
-    //         result |= simulation.togglePause(); // All simulations have the same isPaused value
-    //     return result;
-	// }
 }

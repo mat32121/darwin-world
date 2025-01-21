@@ -32,27 +32,22 @@ public class Simulation implements Runnable {
 	public Simulation(WorldMap worldMap) {
 		this.animals = new ArrayList<>();
 		this.worldMap = worldMap;
-		//*** do poprawy
 		for(int i = 0; i<this.worldMap.getNumInitialAnimals(); i++) {
 			Random random = new Random();
 
-			// Generowanie pozycji dla nowego zwierzęcia
 			int x = random.nextInt(this.worldMap.getWidth());
 			int y = random.nextInt(this.worldMap.getHeight());
 			Vector2d newAnimalPosition = new Vector2d(x, y);
 
-			// Generowanie genów dla nowego zwierzęcia
 			int numGenes = this.worldMap.getNumGenes();
-			int[] newAnimalGene = random.ints(numGenes, 0, 8).toArray(); // Generuje tablicę losowych liczb od 0 do 7
+			int[] newAnimalGene = random.ints(numGenes, 0, 8).toArray();
 
-			// Tworzenie i umieszczanie zwierzęcia na mapie
 			Animal animal = new Animal(newAnimalPosition, this.worldMap.getInitialEnergy(), newAnimalGene);
-			//TODO usunac wyjatek
 			try {
 				this.worldMap.place(animal);
 				this.animals.add(animal);
 			} catch (IncorrectPositionException e) {
-				// Pozycja zajęta - ignorujemy wyjątek
+				// Position occupied - ignoring exception
 			}
 		}
 	}
@@ -72,26 +67,18 @@ public class Simulation implements Runnable {
 				Thread.sleep(Simulation.MILLIS_INTERVAL);
 				if(!this.isPaused) {
 					for (Animal animal : animals) {
-						//wpierw usuwamy martwe zwierzaki
 						if (animal.getLiveStatus() && animal.getEnergy() <= 0) {
 							animal.setLiveStatus(false);
 							animal.setDayOfDeath(numDays);
 						}
-						//potem ruszamy zwierzakami
 						if (animal.getLiveStatus()) {
 							this.worldMap.move(animal);
 							animal.incrementAge();
 							int positionAnimalCount = this.worldMap.getAnimalsOnPosition(animal.getPosition()).size();
-							if (this.worldMap.grassAt(animal.getPosition()) && positionAnimalCount==1) {
+							if (this.worldMap.grassAt(animal.getPosition()) && positionAnimalCount==1)
 								eatingPositions.add(animal.getPosition());
-							}
-							// zmienic eatingQueue na eatingPositions, wtedy bedzie jeden mechanizm porownywania
-
-							if(positionAnimalCount==2){
+							if(positionAnimalCount==2)
 								breedingPositions.add(animal.getPosition());
-							}
-
-
 						} else {
 							animal.incrementDaysAfterDeath();
 						}
@@ -101,42 +88,33 @@ public class Simulation implements Runnable {
 						this.worldMap.animalEatsGrass(eatingAnimal);
 						this.worldMap.addFreePosition(position);
 						eatingAnimal.incrementEatenGrass();
-						// zwierzeta jedza, potrzebne petle na na kazdy etap
 					}
 
 					for (Vector2d position : breedingPositions) {
 						try {
-							// Pobranie pierwszego zwierzęcia
 							Animal animal1 = this.worldMap.getFittestAnimalOnPosition(position);
 							if (animal1 == null) {
-								continue; // Przejdź do kolejnej pozycji, jeśli brak zwierząt
+								continue;
 							}
 
 							this.worldMap.removeAnimal(animal1);
 
-							// Pobranie drugiego zwierzęcia
 							Animal animal2 = this.worldMap.getFittestAnimalOnPosition(position);
-							this.worldMap.place(animal1); // Przywrócenie pierwszego zwierzęcia
-
-							// Sprawdzenie, czy oboje rodzice są dostępni
+							this.worldMap.place(animal1);
 							if (animal2 == null) {
-								continue; // Przejdź do kolejnej pozycji, jeśli brak drugiego zwierzęcia
+								continue;
 							}
 
-							// Próba rozmnażania
-							Animal offspring = animal1.copulate(animal2, this.worldMap.getMinCopulateEnergy(), this.worldMap.getMaxChildMutations(),this.worldMap.getMinChildMutations() );
+							Animal offspring = animal1.copulate(animal2, this.worldMap.getMinCopulateEnergy(), this.worldMap.getMaxChildMutations(),this.worldMap.getMinChildMutations());
 							if (offspring != null) {
-								System.out.println("Dodaję potomka z energią: " + offspring.getEnergy());
-								this.worldMap.place(offspring); // Dodanie potomka na mapę
-								this.animals.add(offspring); // Dodanie potomka do listy zwierząt
+								this.worldMap.place(offspring);
+								this.animals.add(offspring);
 							}
 
 						} catch (IncorrectPositionException e) {
-							// Obsługa wyjątku - logowanie błędu
-							System.err.println("Nie można umieścić zwierzęcia na pozycji: " + e.getMessage());
+							System.err.println("Can't place animal on position: " + e.getMessage());
 						} catch (Exception e) {
-							// Obsługa innych nieoczekiwanych błędów
-							System.err.println("Wystąpił nieoczekiwany błąd: " + e.getMessage());
+							System.err.println("Unexpected exception occurred: " + e.getMessage());
 						}
 					}
 
@@ -144,7 +122,6 @@ public class Simulation implements Runnable {
 					breedingPositions.clear();
 					eatingPositions.clear();
 					this.worldMap.grassGrows(this.worldMap.getNumGrassPerDay(), false);
-					//*** to tez mozna poprawic, chodzi o mechanike zwiazana z aktualizacja mapy.
 					this.worldMap.mapTicks(numDays + (numDays == 1 ? " dzień" : " dni") + " od rozpoczęcia symulacji");
 					++numDays;
 				}
@@ -167,13 +144,9 @@ public class Simulation implements Runnable {
 
 	public int getNumAnimals() {
 		int result = 0;
-		// System.out.println("BEGIN COUNTING");
 		for(WorldElement elem : this.worldMap.getElements())
-			if(elem instanceof Animal){
-				// System.out.println(animal.getPosition());
+			if(elem instanceof Animal)
 				++result;
-			}
-		// System.out.println("FOUND: " + Integer.toString(result));
 		return result;
 	}
 
@@ -191,7 +164,7 @@ public class Simulation implements Runnable {
 			   (bounds.upperRight().getY()-bounds.lowerLeft().getY()+1);
 		HashSet<Vector2d> occupiedSpace = new HashSet<>();
 		for(WorldElement elem : this.worldMap.getElements())
-			if(elem instanceof Animal animal)
+			if(elem instanceof Animal)
 				occupiedSpace.add(elem.getPosition());
 
 		return freeSpace-occupiedSpace.size();
@@ -208,17 +181,13 @@ public class Simulation implements Runnable {
 	public int[] getMostPopularGenome() {
 		HashMap<int[], Integer> countingGenoms = new HashMap<>();
 
-		// Zliczanie wystąpień genotypów
 		for (WorldElement elem : this.worldMap.getElements()) {
 			if (elem instanceof Animal && ((Animal) elem).getLiveStatus()) {
 				int[] genotype = ((Animal) elem).getGenotype();
-
-				// Zliczanie wystąpień w mapie
 				countingGenoms.put(genotype, countingGenoms.getOrDefault(genotype, 0) + 1);
 			}
 		}
 
-		// Sortowanie genotypów malejąco według liczby wystąpień i przekształcanie na listę
 		Optional<Entry<int[], Integer>> maxGenome = countingGenoms.entrySet()
 				.stream()
 				.max((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
@@ -231,17 +200,13 @@ public class Simulation implements Runnable {
 	public List<String> getGenotypeList() {
 		HashMap<int[], Integer> countingGenoms = new HashMap<>();
 
-		// Zliczanie wystąpień genotypów
 		for (WorldElement elem : this.worldMap.getElements()) {
 			if (elem instanceof Animal && ((Animal) elem).getLiveStatus()) {
 				int[] genotype = ((Animal) elem).getGenotype();
-
-				// Zliczanie wystąpień w mapie
 				countingGenoms.put(genotype, countingGenoms.getOrDefault(genotype, 0) + 1);
 			}
 		}
 
-		// Sortowanie genotypów malejąco według liczby wystąpień i przekształcanie na listę
 		List<String> sortedGenotypes = countingGenoms.entrySet()
 				.stream()
 				.sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // Sortuj malejąco po wartości
@@ -250,11 +215,9 @@ public class Simulation implements Runnable {
 				.toList();
 
 		return sortedGenotypes;
-		// return new ArrayList<>();
 	}
 
 	public double getAverageLifespan() {
-		//sredni czas zycia ZMARLYCH zwierzakow
 		int result = 0;
 		for(WorldElement elem : this.worldMap.getElements())
 			if(elem instanceof Animal && !((Animal) elem).getLiveStatus()){
@@ -266,9 +229,8 @@ public class Simulation implements Runnable {
 	public double getAverageNumChildren() {
 		int result = 0;
 		for(WorldElement elem : this.worldMap.getElements())
-			if(elem instanceof Animal){
-				result+=((Animal) elem).getNumChildren();
-			}
+			if(elem instanceof Animal animal)
+				result += animal.getNumChildren();
 		return Math.round(result * 100.0/this.getNumAnimals())/ 100.0;
 
 	}

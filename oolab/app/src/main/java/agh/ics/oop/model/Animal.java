@@ -8,7 +8,6 @@ import java.util.Random;
 public class Animal implements WorldElement, Comparable<Animal> {
 	private int grassEatenByAnimal;
 	private int dayOfDeath;
-	//private int plantsEaten = 0;
 	private MapDirection direction;
 	private Vector2d position;
 	private int energy;
@@ -16,29 +15,23 @@ public class Animal implements WorldElement, Comparable<Animal> {
 	private int daysAfterDeath;
 	private int genIndex;
 	private final int[] genotype;
-	private List<Animal> children;
+	private final List<Animal> children;
 	private int age;
-	private Random rng;
-
-
-	//private int genotypeIndex;
+	private final Random rng;
 
 	public Animal(Vector2d position, int energy, int[] genotype) {
 		this.position = position;
 		this.energy=energy;
-        this.direction = MapDirection.NORTH; //zmienic na losowy
+        this.direction = MapDirection.NORTH;
 		this.liveStatus=true;
 		this.genotype=genotype;
 		this.daysAfterDeath=0;
 		this.rng = new Random();
-		this.genIndex=(int) (Math.random() * genotype.length); //mozna poprawic na randomnext
-		//this.genIndex=0; //**** do usuniecia!!! poprawna wersja wyzej /\
-		//***zakladam, ze zawsze tworzymy zywego zwierzaka
+		this.genIndex= this.rng.nextInt(genotype.length);
 		this.children = new ArrayList<>();
 		this.age = 0;
 		this.dayOfDeath = -1;
 		this.grassEatenByAnimal = 0;
-
 	}
 
 	@Override
@@ -87,8 +80,6 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.liveStatus=status;
 	}
 
-	//*** przydalby sie moze ladniejszy mechanizm
-
 	public void incrementDaysAfterDeath() {
 		this.daysAfterDeath += 1;
 	}
@@ -124,29 +115,14 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.dayOfDeath=date;
 	}
 
+	// Returns -1 if the animal is not dead
 	public int getDayOfDeath() {
-		//jesli nie umarl zwraca -1
 		return this.dayOfDeath;
 	}
-
-	//public Animal breeding(Animal animal) {
-		//*** trzeba dodac, ze wyrzua blad kiedy zwierzeta nie sa na tej samej pozycji.
-	//	int newEnergy = (this.energy^2 + animal.energy^2)/(this.energy+animal.energy);
-	//	this.changeEnergy(-newEnergy);
-	//	animal.changeEnergy(-newEnergy);
-
-	//	int[] dominantGenotype = this.genotype;
-	//	int[] recessiveGenotype = animal.genotype;
-
-
-
-	//	return new Animal(this.getPosition(), newEnergy, );
-	//}
 
 	@Override
 	public String toString() {
 		return switch(this.direction) {
-			//***mapa jest odwrocona, dlatego NORTH -> "↓", do poprawy!
 			case NORTH -> "↑";
 			case NORTH_WEST->"↖";
 			case WEST  -> "←";
@@ -180,34 +156,24 @@ public class Animal implements WorldElement, Comparable<Animal> {
 	}
 
 	public void move(Boundary boundary) {
-		Random random = new Random();
+		if (this.rng.nextDouble() < 0.8)
+			genIndex = (genIndex + 1) % genotype.length;
+		else
+			genIndex = this.rng.nextInt(genotype.length);
 
-		// Wybranie genu: 80% przypadków - kolejny gen, 20% przypadków - losowy gen
-		if (random.nextDouble() < 0.8) {
-			genIndex = (genIndex + 1) % genotype.length; // Kolejny gen
-		} else {
-			genIndex = random.nextInt(genotype.length); // Losowy gen
-		}
-
-		// Aktualizacja kierunku na podstawie aktywnego genu
 		this.direction = this.direction.next(genotype[genIndex]);
 
-		// Obliczanie nowej pozycji
 		Vector2d newPosition = this.position.add(this.direction.toUnitVector());
 
-		// Przypisanie nowej pozycji z uwzględnieniem granic mapy
 		this.position = newPosition;
 		this.placeWithinBounds(boundary);
 
-		// Obliczanie energii zużywanej na ruch w zależności od odległości od centrum mapy
 		int center = (boundary.upperRight().getY()-boundary.lowerLeft().getY())/2;
 		int distanceFromCenter = Math.abs(this.position.getY()-center);
-		int energyCost = 1 + distanceFromCenter; // Bazowy koszt 1 + odległość od centrum
+		int energyCost = 1 + distanceFromCenter;
 
-		// Zmniejszenie energii zwierzaka
 		this.changeEnergy(-Math.min(energyCost,this.getEnergy()));
 	}
-
 
 	public void placeWithinBounds(Boundary boundary) {
 		int yMax = boundary.upperRight().getY();
@@ -218,11 +184,10 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		int xNew = this.getPosition().getX();
 		int yNew = this.getPosition().getY();
 
-		if (xNew < xMin) {
+		if (xNew < xMin)
 			xNew = xMax;
-		} else if (xNew > xMax) {
+		else if (xNew > xMax)
 			xNew = xMin;
-		}
 
 		if (yNew < yMin) {
 			yNew = yMin;
@@ -237,37 +202,27 @@ public class Animal implements WorldElement, Comparable<Animal> {
 	}
 
 	public Animal copulate(Animal partner, int reproductionEnergyThreshold, int maxChildMutations, int minChildMutations) {
-		// Pobranie energii rodziców
 		int parentEnergy1 = this.getEnergy();
 		int parentEnergy2 = partner.getEnergy();
 		int totalEnergy = parentEnergy1 + parentEnergy2;
 
-		// Sprawdzenie, czy oboje rodziców mają wystarczającą energię
 		if (parentEnergy1 >= reproductionEnergyThreshold && parentEnergy2 >= reproductionEnergyThreshold) {
-			// Obliczenie energii potomka
 			int offspringEnergy = calculateOffspringEnergy(parentEnergy1, parentEnergy2, totalEnergy);
 
-			// Aktualizacja energii rodziców
 			this.changeEnergy(-calculateEnergyReduction(parentEnergy1, totalEnergy));
 			partner.changeEnergy(-calculateEnergyReduction(parentEnergy2, totalEnergy));
 
-			// Krzyżowanie genotypów
 			int[] offspringGenotype = crossoverGenotypes(this.getGenotype(), partner.getGenotype(), parentEnergy1, parentEnergy2);
 
-			// Mutacje genotypu potomka
 			mutateGenotype(offspringGenotype, maxChildMutations, minChildMutations);
 
-			// Tworzenie nowego zwierzęcia
 			Animal offspring = new Animal(this.getPosition(), offspringEnergy, offspringGenotype);
-
-			// Dodanie potomka do rodziców
 			this.addChildren(offspring);
 			partner.addChildren(offspring);
 
 			return offspring;
 		}
 
-		// Zwraca null, jeśli warunki rozmnażania nie są spełnione
 		return null;
 	}
 
@@ -282,21 +237,16 @@ public class Animal implements WorldElement, Comparable<Animal> {
 	private int[] crossoverGenotypes(int[] genotype1, int[] genotype2, int energy1, int energy2) {
 		int length = genotype1.length;
 		int[] offspringGenotype = new int[length];
-		Random random = new Random();
 
-		// Wyznaczenie punktu podziału
 		double ratio1 = energy1 / (double) (energy1 + energy2);
 		int splitPoint = (int) (length * ratio1);
 
-		// Losowanie strony podziału
-		boolean strongerParentRightSide = random.nextBoolean();
+		boolean strongerParentRightSide = this.rng.nextBoolean();
 
 		if (strongerParentRightSide) {
-			// Silniejszy rodzic daje prawą stronę
 			System.arraycopy(genotype1, 0, offspringGenotype, 0, splitPoint);
 			System.arraycopy(genotype2, splitPoint, offspringGenotype, splitPoint, length - splitPoint);
 		} else {
-			// Silniejszy rodzic daje lewą stronę
 			System.arraycopy(genotype2, 0, offspringGenotype, 0, splitPoint);
 			System.arraycopy(genotype1, splitPoint, offspringGenotype, splitPoint, length - splitPoint);
 		}
@@ -305,20 +255,18 @@ public class Animal implements WorldElement, Comparable<Animal> {
 	}
 
 	private void mutateGenotype(int[] genotype, int maxChildMutations, int minChildMutations) {
-		Random random = new Random();
-
 		// Upewnienie się, że minChildMutations nie przekracza maxChildMutations
 		if (minChildMutations > maxChildMutations) {
 			minChildMutations = maxChildMutations;
 		}
 
 		// Liczba mutacji
-		int numberOfMutations = random.nextInt((maxChildMutations - minChildMutations) + 1) + minChildMutations;
+		int numberOfMutations = this.rng.nextInt((maxChildMutations - minChildMutations) + 1) + minChildMutations;
 
 		// Wprowadzanie mutacji
 		for (int i = 0; i < numberOfMutations; i++) {
-			int index = random.nextInt(genotype.length); // Losowy indeks w genotypie
-			genotype[index] = random.nextInt(8); // Nowa wartość genu (od 0 do 7)
+			int index = this.rng.nextInt(genotype.length); // Losowy indeks w genotypie
+			genotype[index] = this.rng.nextInt(8); // Nowa wartość genu (od 0 do 7)
 		}
 	}
 
