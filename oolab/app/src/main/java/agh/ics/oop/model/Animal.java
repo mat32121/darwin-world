@@ -53,6 +53,8 @@ public class Animal implements WorldElement, Comparable<Animal> {
 			throw new IllegalArgumentException("Cannot compare Animal to different class!");
 	}
 
+
+
 	public boolean getLiveStatus() {
 		return this.liveStatus;
 	}
@@ -202,32 +204,31 @@ public class Animal implements WorldElement, Comparable<Animal> {
 
 	}
 
-	public Animal copulate(Animal partner, int reproductionEnergyThreshold) {
-		// Suma energii rodziców
-
-		int s1 = this.getEnergy();
-		int s2 = partner.getEnergy();
-		int S = s1 + s2;
+	public Animal copulate(Animal partner, int reproductionEnergyThreshold, int maxChildMutations, int minChildMutations) {
+		// Pobranie energii rodziców
+		int parentEnergy1 = this.getEnergy();
+		int parentEnergy2 = partner.getEnergy();
+		int totalEnergy = parentEnergy1 + parentEnergy2;
 
 		// Sprawdzenie, czy oboje rodziców mają wystarczającą energię
-		if (s1 >= reproductionEnergyThreshold && s2 >= reproductionEnergyThreshold) {
-			// Obliczenie energii nowego zwierzęcia
-			int offspringEnergy = (int) ((Math.pow(s1, 2) + Math.pow(s2, 2)) / (double) S);
+		if (parentEnergy1 >= reproductionEnergyThreshold && parentEnergy2 >= reproductionEnergyThreshold) {
+			// Obliczenie energii potomka
+			int offspringEnergy = calculateOffspringEnergy(parentEnergy1, parentEnergy2, totalEnergy);
 
-			// Aktualizacja energii rodziców za pomocą changeEnergy
-			this.changeEnergy(-(int) (Math.pow(s1, 2) / (double) S));
-			partner.changeEnergy(-(int) (Math.pow(s2, 2) / (double) S));
+			// Aktualizacja energii rodziców
+			this.changeEnergy(-calculateEnergyReduction(parentEnergy1, totalEnergy));
+			partner.changeEnergy(-calculateEnergyReduction(parentEnergy2, totalEnergy));
 
-			// Krzyżowanie genotypów rodziców
-			int[] offspringGenotype = crossoverGenotypes(this.getGenotype(), partner.getGenotype(), s1, s2);
+			// Krzyżowanie genotypów
+			int[] offspringGenotype = crossoverGenotypes(this.getGenotype(), partner.getGenotype(), parentEnergy1, parentEnergy2);
 
-			// Tworzenie nowego zwierzęcia z genotypem i energią
-			Animal offspring = new Animal(this.getPosition(),offspringEnergy, offspringGenotype);
+			// Mutacje genotypu potomka
+			mutateGenotype(offspringGenotype, maxChildMutations, minChildMutations);
 
-			// Mutacje w genotypie potomka
-			mutateGenotype(offspring.getGenotype());
+			// Tworzenie nowego zwierzęcia
+			Animal offspring = new Animal(this.getPosition(), offspringEnergy, offspringGenotype);
 
-			// Przypisanie potomka do rodziców
+			// Dodanie potomka do rodziców
 			this.addChildren(offspring);
 			partner.addChildren(offspring);
 
@@ -238,24 +239,32 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		return null;
 	}
 
+	private int calculateOffspringEnergy(int energy1, int energy2, int totalEnergy) {
+		return (int) ((Math.pow(energy1, 2) + Math.pow(energy2, 2)) / (double) totalEnergy);
+	}
+
+	private int calculateEnergyReduction(int parentEnergy, int totalEnergy) {
+		return (int) (Math.pow(parentEnergy, 2) / (double) totalEnergy);
+	}
+
 	private int[] crossoverGenotypes(int[] genotype1, int[] genotype2, int energy1, int energy2) {
-		int length = genotype1.length; // Długość genotypu (stała)
+		int length = genotype1.length;
 		int[] offspringGenotype = new int[length];
 		Random random = new Random();
 
-		// Wyznaczenie proporcji podziału genotypu
+		// Wyznaczenie punktu podziału
 		double ratio1 = energy1 / (double) (energy1 + energy2);
 		int splitPoint = (int) (length * ratio1);
 
-		// Losowanie strony podziału (lewa czy prawa)
+		// Losowanie strony podziału
 		boolean strongerParentRightSide = random.nextBoolean();
 
 		if (strongerParentRightSide) {
-			// Silniejszy rodzic daje prawą stronę genotypu
+			// Silniejszy rodzic daje prawą stronę
 			System.arraycopy(genotype1, 0, offspringGenotype, 0, splitPoint);
 			System.arraycopy(genotype2, splitPoint, offspringGenotype, splitPoint, length - splitPoint);
 		} else {
-			// Silniejszy rodzic daje lewą stronę genotypu
+			// Silniejszy rodzic daje lewą stronę
 			System.arraycopy(genotype2, 0, offspringGenotype, 0, splitPoint);
 			System.arraycopy(genotype1, splitPoint, offspringGenotype, splitPoint, length - splitPoint);
 		}
@@ -263,14 +272,21 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		return offspringGenotype;
 	}
 
-	private void mutateGenotype(int[] genotype) {
+	private void mutateGenotype(int[] genotype, int maxChildMutations, int minChildMutations) {
 		Random random = new Random();
-		// TODO: przekazywac maksymalna ilosc zmiany pozycji
-		int numberOfMutations = random.nextInt(genotype.length) + 1; // Liczba mutacji (co najmniej 1)
 
+		// Upewnienie się, że minChildMutations nie przekracza maxChildMutations
+		if (minChildMutations > maxChildMutations) {
+			minChildMutations = maxChildMutations;
+		}
+
+		// Liczba mutacji
+		int numberOfMutations = random.nextInt((maxChildMutations - minChildMutations) + 1) + minChildMutations;
+
+		// Wprowadzanie mutacji
 		for (int i = 0; i < numberOfMutations; i++) {
-			int index = random.nextInt(genotype.length); // Losowy indeks w tablicy genotypu
-			genotype[index] = random.nextInt(8); // Nowa losowa wartość genu (od 0 do 7)
+			int index = random.nextInt(genotype.length); // Losowy indeks w genotypie
+			genotype[index] = random.nextInt(8); // Nowa wartość genu (od 0 do 7)
 		}
 	}
 
