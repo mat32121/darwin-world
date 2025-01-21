@@ -1,121 +1,111 @@
 package agh.ics.oop.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class Vector2dTest {
-	/*
-	@Test
-	public void testToString() {
-		assertTrue((new Vector2d(1,-2)).toString().equals("(1,-2)"));
-		assertTrue((new Vector2d(-40,1)).toString().equals("(-40,1)"));
-	}
 
-	@Test
-	public void testPrecedes() {
-		final Vector2d first  = new Vector2d(1, 2);
-		final Vector2d second = new Vector2d(1, 1);
-		final Vector2d third  = new Vector2d(2, 1);
+    @Test
+    public void testToString() {
+        assertEquals("(1,-2)", new Vector2d(1, -2).toString());
+        assertEquals("(-40,1)", new Vector2d(-40, 1).toString());
+    }
 
-		assertTrue(first.precedes(first));
+    @Test
+    public void testPrecedes() {
+        Vector2d first = new Vector2d(1, 2);
+        Vector2d second = new Vector2d(1, 1);
+        Vector2d third = new Vector2d(2, 1);
 
-		assertFalse(first.precedes(second));
-		assertFalse(first.precedes(third));
+        assertTrue(first.precedes(first));
+        assertFalse(first.precedes(second));
+        assertFalse(first.precedes(third));
+        assertTrue(second.precedes(first));
+        assertTrue(second.precedes(third));
+        assertFalse(third.precedes(first));
+        assertFalse(third.precedes(second));
+    }
 
-		assertTrue(second.precedes(first));
-		assertTrue(second.precedes(third));
+    @Test
+    public void testFollows() {
+        Vector2d first = new Vector2d(1, 2);
+        Vector2d second = new Vector2d(1, 1);
+        Vector2d third = new Vector2d(2, 1);
 
-		assertFalse(third.precedes(first));
-		assertFalse(third.precedes(second));
-	}
+        assertTrue(first.follows(first));
+        assertTrue(first.follows(second));
+        assertFalse(first.follows(third));
+        assertFalse(second.follows(first));
+        assertFalse(second.follows(third));
+        assertFalse(third.follows(first));
+        assertTrue(third.follows(second));
+    }
 
-	@Test
-	public void testFollows() {
-		final Vector2d first  = new Vector2d(1, 2);
-		final Vector2d second = new Vector2d(1, 1);
-		final Vector2d third  = new Vector2d(2, 1);
+    @Test
+    public void testAdd() {
+        Vector2d first = new Vector2d(3, 7);
+        Vector2d second = new Vector2d(1, 4);
+        Vector2d sum = new Vector2d(4, 11);
 
-		assertTrue(first.follows(first));
+        assertEquals(sum, first.add(second));
+        assertEquals(sum, second.add(first));
+    }
 
-		assertTrue(first.follows(second));
-		assertFalse(first.follows(third));
+    @Test
+    public void testSubtract() {
+        Vector2d first = new Vector2d(3, 7);
+        Vector2d second = new Vector2d(1, 4);
+        Vector2d diffA = new Vector2d(2, 3);
+        Vector2d diffB = new Vector2d(-2, -3);
 
-		assertFalse(second.follows(first));
-		assertFalse(second.follows(third));
+        assertEquals(diffA, first.subtract(second));
+        assertEquals(diffB, second.subtract(first));
+    }
 
-		assertFalse(third.follows(first));
-		assertTrue(third.follows(second));
-	}
+    @Test
+    public void testUpperRight() {
+        Vector2d first = new Vector2d(5, 11);
+        Vector2d second = new Vector2d(7, 6);
+        Vector2d uRight = new Vector2d(7, 11);
 
-	@Test
-	public void testAdd() {
-		final Vector2d first  = new Vector2d(3, 7);
-		final Vector2d second = new Vector2d(1, 4);
-		final Vector2d sum    = new Vector2d(4, 11);
+        assertEquals(uRight, first.upperRight(second));
+        assertEquals(uRight, second.upperRight(first));
+    }
 
-		assertTrue(first.add(second).equals(sum));
-		assertTrue(second.add(first).equals(sum));
-	}
+    @Test
+    public void testLowerLeft() {
+        Vector2d first = new Vector2d(5, 11);
+        Vector2d second = new Vector2d(7, 6);
+        Vector2d lLeft = new Vector2d(5, 6);
 
-	@Test
-	public void testSubtract() {
-		final Vector2d first  = new Vector2d(3, 7);
-		final Vector2d second = new Vector2d(1, 4);
-		final Vector2d diffA  = new Vector2d(2, 3);
-		final Vector2d diffB  = new Vector2d(-2, -3);
+        assertEquals(lLeft, first.lowerLeft(second));
+        assertEquals(lLeft, second.lowerLeft(first));
+    }
 
-		assertTrue(first.subtract(second).equals(diffA));
-		assertTrue(second.subtract(first).equals(diffB));
-	}
+    @Test
+    public void testIsWithinBounds() {
+        Boundary boundary = new Boundary(new Vector2d(0, 0), new Vector2d(10, 10));
+        Vector2d inside = new Vector2d(5, 5);
+        Vector2d outsideX = new Vector2d(11, 5);
+        Vector2d outsideY = new Vector2d(5, 11);
 
-	@Test
-	public void testUpperRight() {
-		final Vector2d first  = new Vector2d(5, 11);
-		final Vector2d second = new Vector2d(7, 6);
-		final Vector2d uRight = new Vector2d(7, 11);
+        assertTrue(inside.isWithinBounds(boundary));
+        assertFalse(outsideX.isWithinBounds(boundary));
+        assertFalse(outsideY.isWithinBounds(boundary));
+    }
 
-		assertTrue(first.upperRight(second).equals(uRight));
-		assertTrue(second.upperRight(first).equals(uRight));
-	}
+    @Test
+    public void testEqualsAndHashCode() {
+        Vector2d vecA = new Vector2d(2, 3);
+        Vector2d vecB = new Vector2d(2, 3);
+        Vector2d vecC = new Vector2d(2, -3);
 
-	@Test
-	public void testLowerLeft() {
-		final Vector2d first  = new Vector2d(5, 11);
-		final Vector2d second = new Vector2d(7, 6);
-		final Vector2d lLeft  = new Vector2d(5, 6);
-
-		assertTrue(first.lowerLeft(second).equals(lLeft));
-		assertTrue(second.lowerLeft(first).equals(lLeft));
-	}
-
-	@Test
-	public void testOpposite() {
-		final Vector2d vecA = new Vector2d(2, 3);
-		final Vector2d vecB = new Vector2d(-2, -3);
-		final Vector2d vecC = new Vector2d(2, -3);
-		final Vector2d vecD = new Vector2d(-2, 3);
-
-		assertTrue(vecA.opposite().equals(vecB));
-		assertTrue(vecC.opposite().equals(vecD));
-	}
-
-	@Test
-	public void testEquals() {
-		final Vector2d vecA = new Vector2d(2, 3);
-		final Vector2d vecB = new Vector2d(2, 3);
-		final Vector2d vecC = new Vector2d(2, -3);
-
-		assertTrue(vecA.equals(vecA));
-
-		assertTrue(vecA.equals(vecB));
-		assertTrue(vecB.equals(vecA));
-
-		assertFalse(vecA.equals(vecC));
-		assertFalse(vecC.equals(vecA));
-
-		assertEquals(vecA, vecB);
-		assertNotEquals(vecA, vecC);
-	}
-
-	 */
+        assertEquals(vecA, vecB);
+        assertEquals(vecA.hashCode(), vecB.hashCode());
+        assertNotEquals(vecA, vecC);
+        assertNotEquals(vecA.hashCode(), vecC.hashCode());
+    }
 }

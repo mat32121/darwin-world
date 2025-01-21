@@ -35,22 +35,28 @@ public class Animal implements WorldElement, Comparable<Animal> {
 	}
 
 	@Override
-	public int compareTo(Animal other) {
-		if(other != null) {
-			int res = other.getEnergy()-this.energy;
-			if(res == 0)
-				res = other.getAge()-this.age;
-			if(res == 0)
-				res = other.getNumChildren()-this.getNumChildren();
-			if(res == 0)
-				res = this.rng.ints(0, 2).findFirst().getAsInt()*2-1;
-			return res;
-		}
-		else
-			throw new IllegalArgumentException("Cannot compare Animal to different class!");
-	}
+    public int compareTo(Animal other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot compare Animal to null");
+        }
 
+        int res = Integer.compare(other.getEnergy(), this.energy);
+        if (res != 0) {
+            return res;
+        }
 
+        res = Integer.compare(other.getAge(), this.age);
+        if (res != 0) {
+            return res;
+        }
+
+        res = Integer.compare(other.getNumChildren(), this.getNumChildren());
+        if (res != 0) {
+            return res;
+        }
+
+        return this.rng.nextBoolean() ? 1 : -1;
+    }
 
 	public boolean getLiveStatus() {
 		return this.liveStatus;

@@ -1,144 +1,76 @@
 package agh.ics.oop.model;
 
+import java.util.HashSet;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RectangularMapTest {
-	/*
-	@Test
-	public void testCanMoveTo() {
-		final RectangularMap map = new RectangularMap(3, 5);
-		final Animal animals[] = {
-			new Animal(new Vector2d(2, 2)),
-			new Animal(new Vector2d(0, 0)),
-			new Animal(new Vector2d(3, 5)),
-			new Animal(new Vector2d(-1, 0))
-		};
 
-		for(int i = 0; i < 2; ++i) {
-			Animal animal = animals[i];
-			assertDoesNotThrow(() -> map.place(animal));
-		}
-		for(int i = 2; i < 4; ++i) {
-			Animal animal = animals[i];
-			assertThrows(IncorrectPositionException.class, () -> map.place(animal));
-		}
+    @Test
+    public void testMove() {
+        final RectangularMap map = new RectangularMap(3, 5, 0, 0, 0, 0, 10, 0, 0, 0, 0);
+        final Animal animal = new Animal(new Vector2d(1, 1), 10, new int[]{0, 1, 2, 3});
 
-		assertTrue(map.canMoveTo(new Vector2d(1, 0)));
-		assertTrue(map.canMoveTo(new Vector2d(2, 4)));
-		assertFalse(map.canMoveTo(new Vector2d(3, 4)));
-		assertFalse(map.canMoveTo(new Vector2d(0, 0)));
-		assertFalse(map.canMoveTo(new Vector2d(2, 2)));
-		assertFalse(map.canMoveTo(new Vector2d(0, -2)));
-	}
-	@Test
-	public void testPlace() {
-		final RectangularMap map = new RectangularMap(3, 5);
-		final Animal animals[] = {
-			new Animal(new Vector2d(2, 2)),
-			new Animal(new Vector2d(0, 0)),
-			new Animal(new Vector2d(3, 5)),
-			new Animal(new Vector2d(-1, 0)),
-			new Animal(new Vector2d(2, 2))
-		};
+        assertDoesNotThrow(() -> map.place(animal));
 
-		assertDoesNotThrow(() -> map.place(animals[0]));
-		assertDoesNotThrow(() -> map.place(animals[1]));
-		assertThrows(IncorrectPositionException.class, () -> map.place(animals[2]));
-		assertThrows(IncorrectPositionException.class, () -> map.place(animals[3]));
-		assertThrows(IncorrectPositionException.class, () -> map.place(animals[4]));
+        // Ruch w granicach mapy
+        map.move(animal);
+        assertNotNull(map.objectAt(animal.getPosition()));
 
-		assertTrue(map.isOccupied(new Vector2d(2, 2)));
-		assertTrue(map.isOccupied(new Vector2d(0, 0)));
-		assertFalse(map.isOccupied(new Vector2d(3, 5)));
-		assertFalse(map.isOccupied(new Vector2d(-1, 0)));
+        // Zwierzę pozostaje w granicach mapy
+        for (int i = 0; i < 10; i++) {
+            map.move(animal);
+        }
+        Vector2d position = animal.getPosition();
+        assertTrue(position.follows(map.getCurrentBounds().lowerLeft()));
+        assertTrue(position.precedes(map.getCurrentBounds().upperRight()));
+    }
 
-		assertSame(animals[0], map.objectAt(new Vector2d(2, 2)));
-		assertSame(animals[1], map.objectAt(new Vector2d(0, 0)));
-		assertNull(map.objectAt(new Vector2d(3, 5)));
-		assertNull(map.objectAt(new Vector2d(-1, 0)));
-	}
-	@Test
-	public void testMove() {
-		final RectangularMap map = new RectangularMap(3, 4);
-		final Animal animals[] = {
-			new Animal(new Vector2d(2, 2)),
-			new Animal(new Vector2d(0, 0)),
-			new Animal(new Vector2d(2, 3))
-		};
+    @Test
+    public void testGetFittestAnimalOnEmptyPosition() {
+        final RectangularMap map = new RectangularMap(3, 5, 0, 0, 0, 0, 10, 0, 0, 0, 0);
 
-		for(Animal animal : animals)
-			assertDoesNotThrow(() -> map.place(animal));
+        // Pobierz najzdrowsze zwierzę na pustej pozycji
+        Animal fittest = map.getFittestAnimalOnPosition(new Vector2d(1, 1));
+        assertNull(fittest, "Na pustej pozycji powinno zwrócić null");
+    }
 
-		map.move(animals[2], MoveDirection.BACKWARD);
-		assertSame(animals[2], map.objectAt(new Vector2d(2, 3)));
-		assertNotSame(animals[2], map.objectAt(new Vector2d(2, 2)));
-		assertNotSame(animals[2], map.objectAt(new Vector2d(1, 0)));
-		assertNotSame(animals[2], map.objectAt(new Vector2d(0, 0)));
-		assertTrue(map.objectAt(new Vector2d(2, 3)).isHeaded(MapDirection.NORTH));
+    @Test
+    public void testGrassGrowth() {
+        final RectangularMap map = new RectangularMap(3, 5, 5, 10, 0, 0, 10, 0, 0, 0, 0);
 
-		map.move(animals[2], MoveDirection.FORWARD);
-		assertSame(animals[2], map.objectAt(new Vector2d(2, 3)));
+        // Początkowa liczba trawy
+        int initialGrassCount = map.getElements().stream()
+                .filter(element -> element instanceof Grass)
+                .toList()
+                .size();
+        assertEquals(5, initialGrassCount);
 
-		map.move(animals[2], MoveDirection.RIGHT);
-		assertTrue(map.objectAt(new Vector2d(2, 3)).isHeaded(MapDirection.EAST));
+        // Dodanie nowej trawy
+        map.grassGrows(3, true);
+        int updatedGrassCount = map.getElements().stream()
+                .filter(element -> element instanceof Grass)
+                .toList()
+                .size();
+        assertEquals(8, updatedGrassCount); // Łącznie 5 początkowych + 3 dodane
+    }
 
-		map.move(animals[2], MoveDirection.FORWARD);
-		assertSame(animals[2], map.objectAt(new Vector2d(2, 3)));
+    @Test
+    public void testDescendants() {
+        final Animal parent = new Animal(new Vector2d(1, 1), 50, new int[]{0, 1, 2, 3});
+        final Animal child1 = new Animal(new Vector2d(1, 1), 20, new int[]{0, 1, 2, 3});
+        final Animal child2 = new Animal(new Vector2d(1, 1), 30, new int[]{0, 1, 2, 3});
+        parent.addChildren(child1);
+        parent.addChildren(child2);
 
-		map.move(animals[1], MoveDirection.LEFT);
-		assertTrue(map.objectAt(new Vector2d(0, 0)).isHeaded(MapDirection.WEST));
-
-		map.move(animals[1], MoveDirection.FORWARD);
-		assertSame(animals[1], map.objectAt(new Vector2d(0, 0)));
-
-		map.move(animals[1], MoveDirection.LEFT);
-		assertTrue(map.objectAt(new Vector2d(0, 0)).isHeaded(MapDirection.SOUTH));
-
-		map.move(animals[1], MoveDirection.FORWARD);
-		assertSame(animals[1], map.objectAt(new Vector2d(0, 0)));
-
-		map.move(animals[1], MoveDirection.BACKWARD);
-		assertSame(animals[1], map.objectAt(new Vector2d(0, 1)));
-	}
-	@Test
-	public void testIsOccupied() {
-		final RectangularMap map = new RectangularMap(3, 5);
-		final Animal animals[] = {
-			new Animal(new Vector2d(2, 2)),
-			new Animal(new Vector2d(3, 5)),
-			new Animal(new Vector2d(0, 0))
-		};
-
-		assertDoesNotThrow(() -> map.place(animals[0]));
-		assertThrows(IncorrectPositionException.class, () -> map.place(animals[1]));
-
-		assertTrue(map.isOccupied(new Vector2d(2, 2)));
-		assertFalse(map.isOccupied(new Vector2d(3, 5)));
-		assertFalse(map.isOccupied(new Vector2d(0, 0)));
-	}
-	@Test
-	public void testObjectAt() {
-		final RectangularMap map = new RectangularMap(3, 5);
-		final Animal animals[] = {
-			new Animal(new Vector2d(2, 2)),
-			new Animal(new Vector2d(0, 0)),
-			new Animal(new Vector2d(-1, 0))
-		};
-
-		for(int i = 0; i < 2; ++i) {
-			Animal animal = animals[i];
-			assertDoesNotThrow(() -> map.place(animal));
-		}
-		for(int i = 2; i < 3; ++i) {
-			Animal animal = animals[i];
-			assertThrows(IncorrectPositionException.class, () -> map.place(animal));
-		}
-
-		assertSame(animals[0], map.objectAt(new Vector2d(2, 2)));
-		assertSame(animals[1], map.objectAt(new Vector2d(0, 0)));
-		assertNull(map.objectAt(new Vector2d(-1, 0)));
-	}
-
-	 */
+        HashSet<Animal> descendants = parent.getAllDescendants(new HashSet<>());
+        assertTrue(descendants.contains(child1));
+        assertTrue(descendants.contains(child2));
+        assertEquals(2, descendants.size());
+    }
 }
