@@ -109,6 +109,17 @@ public class Animal implements WorldElement, Comparable<Animal> {
 		this.children.add(offspring);
 	}
 
+	// TODO: Implement
+	public int getNumGrassEaten() {
+		return -1;
+	}
+	public int getNumDaysAlive() {
+		return -1;
+	}
+	public int getDayOfDeath() {
+		return -1;
+	}
+
 	//public Animal breeding(Animal animal) {
 		//*** trzeba dodac, ze wyrzua blad kiedy zwierzeta nie sa na tej samej pozycji.
 	//	int newEnergy = (this.energy^2 + animal.energy^2)/(this.energy+animal.energy);

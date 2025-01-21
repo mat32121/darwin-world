@@ -126,12 +126,12 @@ public class SimulationPresenter implements MapChangeListener {
             this.animalTrackBox.getChildren().add(new Label("Genome: " + Arrays.stream(this.animalTracked.getGenotype()).boxed().map(a -> Integer.toString(a)).reduce((a, b) -> a + ", " + b).get()));
             this.animalTrackBox.getChildren().add(new Label("Active gene index: " + Integer.toString(this.animalTracked.getGenIndex())));
             this.animalTrackBox.getChildren().add(new Label("Energy: " + Integer.toString(this.animalTracked.getEnergy())));
-            this.animalTrackBox.getChildren().add(new Label("Grass eaten: "));
+            this.animalTrackBox.getChildren().add(new Label("Grass eaten: " + Integer.toString(this.animalTracked.getNumGrassEaten())));
             this.animalTrackBox.getChildren().add(new Label("Number of descendants: " + this.animalTracked.getAllDescendants(new HashSet<Animal>()).size()));
             if(this.animalTracked.getLiveStatus())
-                this.animalTrackBox.getChildren().add(new Label("Days alive: "));
+                this.animalTrackBox.getChildren().add(new Label("Days alive: " + Integer.toString(this.animalTracked.getNumDaysAlive())));
             else
-                this.animalTrackBox.getChildren().add(new Label("Day of death: "));
+                this.animalTrackBox.getChildren().add(new Label("Day of death: " + Integer.toString(this.animalTracked.getDayOfDeath())));
         }
     }
 
