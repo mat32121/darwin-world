@@ -71,8 +71,9 @@ public class Simulation implements Runnable {
 				if(!this.isPaused) {
 					for (Animal animal : animals) {
 						//wpierw usuwamy martwe zwierzaki
-						if (animal.getEnergy() <= 0) {
+						if (animal.getLiveStatus() && animal.getEnergy() <= 0) {
 							animal.setLiveStatus(false);
+							animal.setDayOfDeath(numDays);
 						}
 						//potem ruszamy zwierzakami
 						if (animal.getLiveStatus()) {
@@ -97,6 +98,7 @@ public class Simulation implements Runnable {
 						Animal eatingAnimal = this.worldMap.getFittestAnimalOnPosition(position);
 						this.worldMap.animalEatsGrass(eatingAnimal);
 						this.worldMap.addFreePosition(position);
+						eatingAnimal.incrementEatenGrass();
 						// zwierzeta jedza, potrzebne petle na na kazdy etap
 					}
 
