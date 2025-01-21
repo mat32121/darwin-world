@@ -199,12 +199,13 @@ public class SimulationPresenter implements MapChangeListener {
             if(animal != null)
                 if(animal.getLiveStatus()) {
                     boolean hasMaxGenome = false;
-                    if(animal.getGenotype().length == maxGenome.length) {
-                        hasMaxGenome = true;
-                        for(int i = 0; i < maxGenome.length; ++i)
-                            if(animal.getGenotype()[i] != maxGenome[i])
-                                hasMaxGenome = false;
-                    }
+                    if(maxGenome != null)
+                        if(animal.getGenotype().length == maxGenome.length) {
+                            hasMaxGenome = true;
+                            for(int i = 0; i < maxGenome.length; ++i)
+                                if(animal.getGenotype()[i] != maxGenome[i])
+                                    hasMaxGenome = false;
+                        }
                     Circle newCircle = new Circle();
                     newCircle.setRadius(Math.min(cell_width, cell_height)/2);
                     Color fillColor = (Color.hsb(0.1, 0.5, SimulationPresenter.energyCurve(animal.getEnergy())));

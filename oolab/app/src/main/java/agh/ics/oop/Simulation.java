@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -215,10 +217,13 @@ public class Simulation implements Runnable {
 		}
 
 		// Sortowanie genotypów malejąco według liczby wystąpień i przekształcanie na listę
-		int[] maxGenome = countingGenoms.entrySet()
+		Optional<Entry<int[], Integer>> maxGenome = countingGenoms.entrySet()
 				.stream()
-				.max((e1, e2) -> e2.getValue().compareTo(e1.getValue())).get().getKey();
-		return maxGenome;
+				.max((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+		if(maxGenome.isPresent())
+			return maxGenome.get().getKey();
+		else
+			return null;
 	}
 
 	public List<String> getGenotypeList() {

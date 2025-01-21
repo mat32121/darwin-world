@@ -27,7 +27,6 @@ public class SimulationConfig {
     private int numInitialAnimals = 5;
     private int initialEnergy = 10;
     private int minCopulateEnergy = 6;
-    private int copulateEnergyUsed = 5;
     private int minChildMutations = 1, maxChildMutations = 2;
     private int numGenes = 7;
 
@@ -43,7 +42,6 @@ public class SimulationConfig {
         numInitialAnimalsField,
         initialEnergyField,
         minCopulateEnergyField,
-        copulateEnergyUsedField,
         minChildMutationsField, maxChildMutationsField,
         numGenesField;
     @FXML
@@ -63,7 +61,6 @@ public class SimulationConfig {
             this.numInitialAnimals,
             this.initialEnergy,
             this.minCopulateEnergy,
-            this.copulateEnergyUsed,
             this.minChildMutations, this.maxChildMutations,
             this.numGenes);
         listener.addSimulation(newMap);
@@ -82,7 +79,6 @@ public class SimulationConfig {
         this.numInitialAnimalsField = (TextField)vbox.lookup("#numInitialAnimalsField");
         this.initialEnergyField = (TextField)vbox.lookup("#initialEnergyField");
         this.minCopulateEnergyField = (TextField)vbox.lookup("#minCopulateEnergyField");
-        this.copulateEnergyUsedField = (TextField)vbox.lookup("#copulateEnergyUsedField");
         this.minChildMutationsField = (TextField)vbox.lookup("#minChildMutationsField");
         this.maxChildMutationsField = (TextField)vbox.lookup("#maxChildMutationsField");
         this.numGenesField = (TextField)vbox.lookup("#numGenesField");
@@ -122,7 +118,7 @@ public class SimulationConfig {
         File statFile = fileChooser.showOpenDialog(fileOpenStage);
         try {
             this.statisticsWriter = new PrintWriter(statFile);
-            this.statisticsWriter.println("day;numAnimals;numGrass;numFreeSquares;mostPopularGenotypes;averageEnergy;averageLifespan;averageNumChildren");
+            this.statisticsWriter.println("day;numAnimals;numGrass;numFreeSquares;mostPopularGenotypes;averageEnergy;averageLifespan;averageNumChildren;");
             // System.out.println("Opened stat writer!");
         } catch (FileNotFoundException e) {
             System.err.println("File " + statFile.getName() + " not found!");
@@ -144,7 +140,6 @@ public class SimulationConfig {
         this.numInitialAnimals = Integer.parseInt(this.numInitialAnimalsField.getText());
         this.initialEnergy = Integer.parseInt(this.initialEnergyField.getText());
         this.minCopulateEnergy = Integer.parseInt(this.minCopulateEnergyField.getText());
-        this.copulateEnergyUsed = Integer.parseInt(this.copulateEnergyUsedField.getText());
         this.minChildMutations = Integer.parseInt(this.minChildMutationsField.getText());
         this.maxChildMutations = Integer.parseInt(this.maxChildMutationsField.getText());
         this.numGenes = Integer.parseInt(this.numGenesField.getText());
@@ -159,7 +154,6 @@ public class SimulationConfig {
         this.numInitialAnimalsField.setText(Integer.toString(this.numInitialAnimals));
         this.initialEnergyField.setText(Integer.toString(this.initialEnergy));
         this.minCopulateEnergyField.setText(Integer.toString(this.minCopulateEnergy));
-        this.copulateEnergyUsedField.setText(Integer.toString(this.copulateEnergyUsed));
         this.minChildMutationsField.setText(Integer.toString(this.minChildMutations));
         this.maxChildMutationsField.setText(Integer.toString(this.maxChildMutations));
         this.numGenesField.setText(Integer.toString(this.numGenes));
@@ -180,7 +174,6 @@ public class SimulationConfig {
                 this.numInitialAnimals = scanner.nextInt();
                 this.initialEnergy = scanner.nextInt();
                 this.minCopulateEnergy = scanner.nextInt();
-                this.copulateEnergyUsed = scanner.nextInt();
                 this.minChildMutations = scanner.nextInt();
                 this.maxChildMutations = scanner.nextInt();
                 this.numGenes = scanner.nextInt();
@@ -208,7 +201,6 @@ public class SimulationConfig {
                 writer.println(this.numInitialAnimals);
                 writer.println(this.initialEnergy);
                 writer.println(this.minCopulateEnergy);
-                writer.println(this.copulateEnergyUsed);
                 writer.println(this.minChildMutations);
                 writer.println(this.maxChildMutations);
                 writer.println(this.numGenes);

@@ -31,9 +31,6 @@
     <Label fx:id="minCopulateEnergyFieldLabel" text="Minimal energy needed to copulate" textAlignment="center"/>
     <TextField fx:id="minCopulateEnergyField"/>
 
-    <Label fx:id="copulateEnergyUsedFieldLabel" text="Energy used after copulation" textAlignment="center"/>
-    <TextField fx:id="copulateEnergyUsedField"/>
-
     <Label fx:id="minChildMutationsFieldLabel" text="Minimal number of child mutations" textAlignment="center"/>
     <TextField fx:id="minChildMutationsField"/>
 

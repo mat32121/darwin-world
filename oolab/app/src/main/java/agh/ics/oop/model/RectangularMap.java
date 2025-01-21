@@ -13,7 +13,6 @@ public class RectangularMap extends AbstractWorldMap {
 	private final int energyPerGrass;
 	private final int numGrassPerDay;
 	private final int numInitialAnimals;
-	private final int copulateEnergyUsed;
 	private final int minChildMutations;
 	private final int maxChildMutations;
 	private final int numGenes;
@@ -23,7 +22,7 @@ public class RectangularMap extends AbstractWorldMap {
 
 
 	//*** czy wystepuje startowa ilosc trawy?
-	public RectangularMap(int width, int height, int numInitialGrass, int energyPerGrass, int numGrassPerDay, int numInitialAnimals, int initialEnergy, int minCopulateEnergy, int copulateEnergyUsed, int minChildMutations, int maxChildMutations, int numGenes) {
+	public RectangularMap(int width, int height, int numInitialGrass, int energyPerGrass, int numGrassPerDay, int numInitialAnimals, int initialEnergy, int minCopulateEnergy, int minChildMutations, int maxChildMutations, int numGenes) {
 		this.width = width;
 		this.height = height;
 		this.initialEnergy = initialEnergy;
@@ -36,7 +35,6 @@ public class RectangularMap extends AbstractWorldMap {
 		this.energyPerGrass = energyPerGrass;
 		this.numGrassPerDay = numGrassPerDay;
 		this.numInitialAnimals = numInitialAnimals;
-		this.copulateEnergyUsed = copulateEnergyUsed;
 		this.minChildMutations = minChildMutations;
 		this.maxChildMutations = maxChildMutations;
 		this.numGenes = numGenes;
@@ -74,11 +72,6 @@ public class RectangularMap extends AbstractWorldMap {
 	@Override
 	public int getNumInitialAnimals() {
 		return numInitialAnimals;
-	}
-
-	@Override
-	public int getCopulateEnergyUsed() {
-		return copulateEnergyUsed;
 	}
 
 	@Override

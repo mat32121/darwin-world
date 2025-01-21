@@ -63,8 +63,6 @@ public interface WorldMap extends MoveValidator {
 
     int getNumInitialAnimals();
 
-    int getCopulateEnergyUsed();
-
     int getMinChildMutations();
 
     int getMaxChildMutations();
